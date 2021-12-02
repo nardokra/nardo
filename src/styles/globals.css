@@ -1,16 +1,19 @@
+/* All global styles */
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "tailwindcss/screens";
+
 html,
 body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  @apply p-0 m-0 font-mono;
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+  @apply underline;
 }
 
 * {
-  box-sizing: border-box;
+  @apply box-border;
 }

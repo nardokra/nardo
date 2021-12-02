@@ -1,0 +1,13 @@
+@layer components {
+  .button {
+    @apply py-2 px-4 focus:outline-none;
+
+    &__primary {
+      @apply bg-black text-white hover:bg-gray-500;
+    }
+
+    &__ghost {
+      @apply bg-white text-black hover:bg-gray-500;
+    }
+  }
+}
