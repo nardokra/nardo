@@ -2,10 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { GraphQLClient, gql } from "graphql-request";
 
 // TODO: Optimise this client to function as utility
-export const FetchFromCMS = async (
-  req: NextApiRequest,
-  res: NextApiResponse
-) => {
+export const CmsClient = async (req: NextApiRequest, res: NextApiResponse) => {
   const variables: { eventId: string; name: string; story: string } = req.body;
 
   const mutation = gql`
@@ -22,7 +19,7 @@ export const FetchFromCMS = async (
     }
   `;
 
-  const client = new GraphQLClient(process.env.NEXT_PUBLIC_GRAPHCMS_URL, {
+  const client = new GraphQLClient(process.env.NEXT_PUBLIC_GRAPHCMS_URL || "", {
     headers: {
       Authorization: `Bearer ${process.env.GRAPHCMS_MUTATION_TOKEN}`,
     },
@@ -32,4 +29,9 @@ export const FetchFromCMS = async (
 
   res.status(200).json({ success: true });
 };
-``;
+
+export class CMSClient {
+  constructor() {}
+
+  FetchCms = () => {};
+}
