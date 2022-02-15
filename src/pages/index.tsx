@@ -1,12 +1,15 @@
 // Priority
-import type { NextPage } from "next";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
+
+// Utils
+import { cmsClient } from "@/utils/api/cmsClient";
 
 // Components
 import Head from "next/head";
 import { Layout } from "@/components/templates/layout";
 import { Button } from "@/components/atoms/button";
 
-const Home: NextPage = () => {
+const Home = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <div>
       <Head>
@@ -15,10 +18,27 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <Button>hoi</Button>
+        <Button>{`${data.homepage.title}`}</Button>
       </Layout>
     </div>
   );
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  const query = `query MyQuery {
+    homepage(where: {slug: "home"}) {
+      title
+    }
+  }
+  `;
+
+  const data = await cmsClient<{ homepage: { title: string } }>(query, {
+    slug: "home",
+  });
+
+  return {
+    props: { data },
+  };
 };
 
 export default Home;
