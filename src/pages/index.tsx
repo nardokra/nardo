@@ -2,13 +2,13 @@
 import { InferGetStaticPropsType } from "next";
 
 // Utils
+import useLocalization from "@/utils/hooks/localization/useLocalization";
 import { getStaticProps } from "@/utils/api/homepage/homepageAPI";
 
 // Components
 import Head from "next/head";
 import { Layout } from "@/components/templates/layout";
 import { Button } from "@/components/atoms/button";
-import useLocalization from "@/utils/hooks/localization/useLocalization";
 
 const Home = ({ homepage }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { localizations } = homepage;
