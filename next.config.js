@@ -4,6 +4,11 @@ const path = require("path");
 module.exports = {
   reactStrictMode: true,
 
+  i18n: {
+    locales: ["en", "nl"],
+    defaultLocale: "en",
+  },
+
   webpack(config) {
     config.resolve.alias["@styles"] = path.resolve(__dirname, "src/styles");
     config.resolve.alias["@assets"] = path.resolve(__dirname, "src/assets");
