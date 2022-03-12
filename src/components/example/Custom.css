@@ -1,0 +1,13 @@
+/*
+  If you want to add custom styles:
+  1. Choose the layer: base, components or utilities.
+  2. Write the class styles.
+  3. Prefix you tailwind styles with @apply.
+  4. Import the stylesheet in the global.css file via the designated layer.
+*/
+
+@layer components {
+  .button {
+    @apply py-2 px-4 focus:outline-none;
+  }
+}

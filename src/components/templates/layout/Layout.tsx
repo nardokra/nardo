@@ -14,10 +14,7 @@ export const Layout = ({
   navigation = true,
   footer = true,
 }: ILayoutProps) => {
-  const cls = cx("container", "layout", {
-    navigation: navigation,
-    footer: footer,
-  });
+  const cls = cx("flex flex-col items-center");
 
   return (
     <main className={cls}>

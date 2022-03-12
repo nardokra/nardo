@@ -11,8 +11,9 @@ import { Layout } from "@/components/templates/layout";
 import { Button } from "@/components/atoms/button";
 
 const Home = ({ homepage }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { localizations } = homepage;
-  const content = useLocalization<typeof localizations[number]>(localizations);
+  const content = useLocalization<typeof homepage.localizations[number]>(
+    homepage.localizations
+  );
 
   return (
     <div>
