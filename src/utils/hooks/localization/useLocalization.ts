@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 
 const useLocalization = <T extends { locale: string }>(
-  localizations?: Array<T>
-): T | undefined => {
+  localizations: Array<T>
+): T => {
   let locale = "en";
   const router = useRouter();
 
@@ -10,7 +10,7 @@ const useLocalization = <T extends { locale: string }>(
     locale = router.locale;
   }
 
-  return localizations?.filter(
+  return localizations.filter(
     (language) => locale && language.locale === locale
   )[0];
 };

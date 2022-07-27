@@ -14,6 +14,7 @@ const Home = ({ homepage }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const content = useLocalization<typeof homepage.localizations[number]>(
     homepage.localizations
   );
+  const { title } = content;
 
   return (
     <div>
@@ -26,7 +27,7 @@ const Home = ({ homepage }: InferGetStaticPropsType<typeof getStaticProps>) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <Button>{`${content?.title}`}</Button>
+        <Button>{title}</Button>
       </Layout>
     </div>
   );
