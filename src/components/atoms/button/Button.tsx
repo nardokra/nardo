@@ -17,13 +17,13 @@ export const Button = ({
   onClick,
   variant = ButtonVariants.Primary,
 }: IButtonProps) => {
-  const cls = cx("py-2 px-4 focus:outline-none hover:bg-gray-500", {
+  const classes = cx("py-2 px-6 focus:outline-none hover:bg-gray-500", {
     "bg-black text-white": variant === ButtonVariants.Primary,
     "bg-white text-black": variant === ButtonVariants.Ghost,
   });
 
   return (
-    <button className={cls} onClick={onClick}>
+    <button className={classes} onClick={onClick}>
       {children}
     </button>
   );

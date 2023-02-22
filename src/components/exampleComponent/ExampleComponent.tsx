@@ -12,7 +12,7 @@ interface IButtonProps {
   variant?: ButtonVariants;
 }
 
-export const Example = ({
+export const ExampleComponent = ({
   children,
   onClick,
   variant = ButtonVariants.Primary,
