@@ -16,8 +16,10 @@ const Home = ({ homepage }: InferGetStaticPropsType<typeof getStaticProps>) => {
   );
   const { title } = content;
 
+  const classes = "absolute h-full w-full flex justify-center bg-white";
+
   return (
-    <div>
+    <>
       <Head>
         <title>Nardo Kraaijeveld</title>
         <meta
@@ -26,10 +28,13 @@ const Home = ({ homepage }: InferGetStaticPropsType<typeof getStaticProps>) => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout>
-        <Button>{title}</Button>
-      </Layout>
-    </div>
+
+      <div className={classes}>
+        <Layout>
+          <Button>{title}</Button>
+        </Layout>
+      </div>
+    </>
   );
 };
 
