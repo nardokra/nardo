@@ -1,7 +1,11 @@
 // Priority
 import { InferGetStaticPropsType } from "next";
 
+// Vars
+import { ButtonVariants } from "@/components/atoms/button";
+
 // Utils
+import cx from "classnames";
 import useLocalization from "@/utils/hooks/localization/useLocalization";
 import { getStaticProps } from "@/utils/api/homepage/homepageAPI";
 
@@ -16,7 +20,7 @@ const Home = ({ homepage }: InferGetStaticPropsType<typeof getStaticProps>) => {
   );
   const { title } = content;
 
-  const classes = "absolute h-full w-full flex justify-center bg-white";
+  const classes = cx("absolute h-full w-full flex justify-center bg-white");
 
   return (
     <>
@@ -31,7 +35,7 @@ const Home = ({ homepage }: InferGetStaticPropsType<typeof getStaticProps>) => {
 
       <div className={classes}>
         <Layout>
-          <Button>{title}</Button>
+          <Button variant={ButtonVariants.Ghost}>{title}</Button>
         </Layout>
       </div>
     </>

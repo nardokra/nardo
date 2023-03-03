@@ -1,7 +1,7 @@
 import React from "react";
 import cx from "classnames";
 
-enum ButtonVariants {
+export enum ButtonVariants {
   Primary,
   Ghost,
 }
@@ -17,10 +17,14 @@ export const Button = ({
   onClick,
   variant = ButtonVariants.Primary,
 }: IButtonProps) => {
-  const classes = cx("py-2 px-6 focus:outline-none hover:bg-gray-500", {
-    "bg-black text-white": variant === ButtonVariants.Primary,
-    "bg-white text-black": variant === ButtonVariants.Ghost,
-  });
+  const classes = cx(
+    "py-2 px-6",
+    "focus:outline-none hover:bg-gray-500 rounded-lg",
+    {
+      "bg-black text-white": variant === ButtonVariants.Primary,
+      "bg-white text-black": variant === ButtonVariants.Ghost,
+    }
+  );
 
   return (
     <button className={classes} onClick={onClick}>
