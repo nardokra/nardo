@@ -5,20 +5,25 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "codegen": "graphql-codegen --config codegen.ts -r dotenv/config"
   },
   "dependencies": {
     "classnames": "^2.2.6",
+    "dotenv": "^16.0.3",
     "graphql": "^16.3.0",
     "graphql-request": "^3.7.0",
     "lodash": "^4.17.21",
     "next": "^13.2.1",
-    "postcss-import": "^14.0.2",
     "postcss": "^8.3.11",
+    "postcss-import": "^14.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "3.2.1",
+    "@graphql-codegen/client-preset": "2.1.0",
+    "@graphql-codegen/introspection": "3.0.1",
     "@types/classnames": "^2.3.1",
     "@types/node": "16.11.10",
     "@types/react": "17.0.36",

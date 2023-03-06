@@ -2,7 +2,7 @@ import { GraphQLClient, gql } from "graphql-request";
 
 const client = new GraphQLClient(process.env.NEXT_PUBLIC_GRAPHCMS_URL || "", {
   headers: {
-    Authorization: `Bearer ${process.env.GRAPHCMS_CONTENT_TOKEN}`,
+    Authorization: `Bearer ${process.env.HYGRAPH_API_TOKEN}`,
   },
 });
 
