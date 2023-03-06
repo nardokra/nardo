@@ -1,6 +1,6 @@
 import React from "react";
 
-// Styles
+// Utils
 import cx from "classnames";
 
 interface ILayoutProps {
@@ -8,7 +8,7 @@ interface ILayoutProps {
 }
 
 export const Layout = ({ children }: ILayoutProps) => {
-  const classes = cx("flex bg-red-800 max-w-5xl p-6 w-full rounded-lg");
+  const classes = cx("flex bg-black max-w-5xl p-6 w-full rounded-lg");
 
   return <main className={classes}>{children}</main>;
 };
