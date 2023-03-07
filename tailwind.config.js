@@ -1,3 +1,5 @@
+const plugin = require("tailwindcss/plugin");
+
 module.exports = {
   content: ["./src/pages/**/*.{ts,tsx}", "./src/components/**/*.{ts,tsx}"],
   theme: {
@@ -5,11 +7,11 @@ module.exports = {
     fontSize: {
       sm: "0.6rem",
       base: "0.8rem",
-      xl: "1rem",
-      "2xl": "1.25rem",
-      "3xl": "1.563rem",
-      "4xl": "1.953rem",
-      "5xl": "2.441rem",
+      lg: "1rem",
+      xl: "1.25rem",
+      "2xl": "1.563rem",
+      "3xl": "1.953rem",
+      "4xl": "2.441rem",
     },
     screens: {
       xxs: "320px",
@@ -29,5 +31,13 @@ module.exports = {
       center: true,
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addBase, theme }) {
+      addBase({
+        h1: { fontSize: theme("fontSize.2xl"), fontWeight: "semibold" },
+        h2: { fontSize: theme("fontSize.xl"), fontWeight: "medium" },
+        h3: { fontSize: theme("fontSize.lg") },
+      });
+    }),
+  ],
 };
