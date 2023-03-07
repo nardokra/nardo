@@ -1,4 +1,4 @@
-// Priority
+// Types
 import { InferGetServerSidePropsType } from "next";
 
 // Utils
@@ -9,15 +9,15 @@ import { getServerSideProps } from "@/utils/api/cv/cvPageAPI";
 import Head from "next/head";
 import { Layout } from "@/components/templates/layout";
 import { ImageBrick } from "@/components/molecules/imageBrick";
+import { TitleBrick } from "@/components/atoms/titleBrick";
+import { SvgImage, SvgImageVariants } from "@/components/atoms/svgImage";
 
 const Home = ({
   cvPage,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { profileImageBlock } = cvPage;
+  const { titleBlock, profileImageBlock } = cvPage;
 
-  const classes = cx(
-    "absolute h-full w-full flex justify-center bg-white pt-6 pb-6"
-  );
+  const classes = cx("absolute w-full flex justify-center bg-white pt-6 pb-6");
 
   return (
     <>
@@ -33,6 +33,8 @@ const Home = ({
       <div className={classes}>
         <Layout>
           <ImageBrick imageBlock={profileImageBlock} />
+          <TitleBrick titleBlock={titleBlock} />
+          <SvgImage variant={SvgImageVariants.CSS3} />
         </Layout>
       </div>
     </>
