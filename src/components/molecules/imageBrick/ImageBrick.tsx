@@ -26,7 +26,7 @@ export const ImageBrick = ({
   };
 
   return (
-    <div className="overflow-hidden rounded-lg border-2 h-80 sm:64 md:h-56">
+    <div className="overflow-hidden rounded-lg border-2 h-80 sm:64 md:h-56 bg-blue-500">
       {imageBlock?.imageEntry?.map(({ image, identifier, altText }, index) => (
         <div
           className={cx(

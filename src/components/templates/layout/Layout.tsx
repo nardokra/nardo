@@ -9,7 +9,7 @@ interface ILayoutProps {
 
 export const Layout = ({ children }: ILayoutProps) => {
   const classes = cx(
-    "grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 flex bg-black max-w-5xl p-6 w-full rounded-lg"
+    "grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 flex bg-black max-w-5xl p-6 w-full rounded-lg"
   );
 
   return <main className={classes}>{children}</main>;

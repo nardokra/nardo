@@ -8,6 +8,7 @@ export const cvPageQuery = gql`
         title
         subtitle
         subSubtitle
+        titleWeight
       }
       profileImageBlock {
         imageEntry {
