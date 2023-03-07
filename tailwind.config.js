@@ -1,6 +1,5 @@
 module.exports = {
-  purge: ["./src/pages/**/*.{ts,tsx}", "./src/components/**/*.{ts,tsx}"],
-  darkMode: false, // or 'media' or 'class'
+  content: ["./src/pages/**/*.{ts,tsx}", "./src/components/**/*.{ts,tsx}"],
   theme: {
     extend: {},
     fontSize: {
@@ -29,9 +28,6 @@ module.exports = {
     container: {
       center: true,
     },
-  },
-  variants: {
-    extend: {},
   },
   plugins: [],
 };
