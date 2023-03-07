@@ -9,6 +9,17 @@ module.exports = {
     defaultLocale: "en",
   },
 
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "media.graphassets.com",
+        port: "",
+        pathname: "/**",
+      },
+    ],
+  },
+
   webpack(config) {
     config.resolve.alias["@styles"] = path.resolve(__dirname, "src/styles");
     config.resolve.alias["@assets"] = path.resolve(__dirname, "src/assets");
