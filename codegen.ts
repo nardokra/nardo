@@ -13,10 +13,10 @@ const config: CodegenConfig = {
     },
   ],
   generates: {
-    "./src/types/generated/types.graphql": {
+    "./src/types/generated/hygraph.graphql": {
       plugins: ["schema-ast"],
     },
-    "./src/types/generated/types.ts": {
+    "./src/types/generated/hygraph.ts": {
       plugins: ["typescript", "typescript-operations"],
       config: {
         constEnums: false,

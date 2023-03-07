@@ -1,19 +1,21 @@
 // Priority
-import { InferGetStaticPropsType } from "next";
+import { InferGetServerSidePropsType } from "next";
 
 // Vars
 import { ButtonVariants } from "@/components/atoms/button";
 
 // Utils
 import cx from "classnames";
-import { getStaticProps } from "@/utils/api/cv/cvPageAPI";
+import { getServerSideProps } from "@/utils/api/cv/cvPageAPI";
 
 // Components
 import Head from "next/head";
 import { Layout } from "@/components/templates/layout";
 import { Button } from "@/components/atoms/button";
 
-const Home = ({ cvPage }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const Home = ({
+  cvPage,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { titleBlock } = cvPage;
 
   const classes = cx(
@@ -40,6 +42,6 @@ const Home = ({ cvPage }: InferGetStaticPropsType<typeof getStaticProps>) => {
   );
 };
 
-export { getStaticProps };
+export { getServerSideProps };
 
 export default Home;

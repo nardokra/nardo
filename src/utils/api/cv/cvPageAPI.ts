@@ -1,35 +1,16 @@
-import { GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import { cmsClient } from "../generic/cmsClient";
 import { cvPageQuery } from "./cvPage.graphql";
+import { CvPage } from "@/cmsTypes/hygraph";
 
-type ImageEntry = {
-  image: {
-    url: string;
-  };
-  altText: string;
-  identifier: string;
+type cvPage = {
+  cvPage: CvPage;
 };
 
-type TitleBlock = {
-  title: string;
-  subTitle: string;
-  subSubTitle: string;
-};
-
-export type CvPropsType = {
-  locale: string;
-  id: string;
-  slug: string;
-  titleBlock?: TitleBlock;
-  profileImageBlock?: ImageEntry[];
-};
-
-type CvType = {
-  cvPage: CvPropsType;
-};
-
-export const getStaticProps: GetStaticProps<CvType> = async ({ locale }) => {
-  const props = await cmsClient<CvType>(cvPageQuery, {
+export const getServerSideProps: GetServerSideProps<cvPage> = async ({
+  locale,
+}) => {
+  const props = await cmsClient<cvPage>(cvPageQuery, {
     local: locale,
     slug: "cv",
   });
