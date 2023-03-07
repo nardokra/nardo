@@ -8,7 +8,7 @@ import { getServerSideProps } from "@/utils/api/cv/cvPageAPI";
 // Components
 import Head from "next/head";
 import { Layout } from "@/components/templates/layout";
-import { ImageBlocks } from "@/components/molecules/imageBlocks";
+import { ImageBrick } from "@/components/molecules/imageBrick";
 
 const Home = ({
   cvPage,
@@ -32,7 +32,7 @@ const Home = ({
 
       <div className={classes}>
         <Layout>
-          <ImageBlocks imageBlock={profileImageBlock} />
+          <ImageBrick imageBlock={profileImageBlock} />
         </Layout>
       </div>
     </>

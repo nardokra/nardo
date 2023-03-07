@@ -9,9 +9,11 @@ import cx from "classnames";
 // Components
 import Image from "next/image";
 
-type ImageBlocksType = { imageBlock?: Maybe<ImageBlock> };
-
-export const ImageBlocks = ({ imageBlock }: ImageBlocksType) => {
+export const ImageBrick = ({
+  imageBlock,
+}: {
+  imageBlock?: Maybe<ImageBlock>;
+}) => {
   const [visibleImage, setVisibleImage] = useState(0);
 
   const updateVisibleImage = () => {

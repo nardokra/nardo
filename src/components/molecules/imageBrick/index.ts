@@ -1,0 +1,1 @@
+export { ImageBrick } from "./ImageBrick";
