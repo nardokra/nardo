@@ -1,5 +1,8 @@
 import React from "react";
 
+// Utils
+import cx from "classnames";
+
 // Components
 import {
   Css3,
@@ -36,9 +39,9 @@ export enum SvgImageVariants {
 }
 
 type svgImageType = {
-  variant: SvgImageVariants;
-  hexColorCode?: string;
   className?: string;
+  hexColorCode?: string;
+  variant?: SvgImageVariants;
 };
 
 const SvgElement = {
@@ -63,7 +66,11 @@ export const SvgImage = ({
   hexColorCode,
   className,
 }: svgImageType) => {
-  const SelectedSvgImage = SvgElement[variant] || null;
+  const SelectedSvgImage = variant && SvgElement[variant];
 
-  return <SelectedSvgImage hexColorCode={hexColorCode} className={className} />;
+  const classes = cx("max-h-full", className);
+
+  return !SelectedSvgImage ? null : (
+    <SelectedSvgImage className={classes} hexColorCode={hexColorCode} />
+  );
 };
