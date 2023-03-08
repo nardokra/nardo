@@ -8,11 +8,14 @@ import cx from "classnames";
 
 // Components
 import Image from "next/image";
+import { SizeVariant } from "@/constants/sizeConstants";
 
 export const ImageBrick = ({
   imageBlock,
+  size = SizeVariant.Small,
 }: {
   imageBlock?: Maybe<ImageBlock>;
+  size?: SizeVariant;
 }) => {
   const [visibleImage, setVisibleImage] = useState(0);
 
@@ -25,9 +28,15 @@ export const ImageBrick = ({
     setVisibleImage((currentState) => nextState(currentState));
   };
 
+  const mainClasses = cx(
+    "overflow-hidden rounded-lg",
+    size === SizeVariant.Small && "h-80 xs:h-[30rem] sm:h-56",
+    size === SizeVariant.Medium && "h-[30rem] sm:h-80"
+  );
+
   return (
-    <div className="overflow-hidden rounded-lg border-2 h-80 sm:64 md:h-56 bg-blue-500">
-      {imageBlock?.imageEntry?.map(({ image, identifier, altText }, index) => (
+    <div className={mainClasses}>
+      {imageBlock?.imageEntry.map(({ image, identifier, altText }, index) => (
         <div
           className={cx(
             "relative w-full h-full overflow-hidden",
