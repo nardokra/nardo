@@ -1,5 +1,9 @@
-// Types
-import { InferGetServerSidePropsType } from "next";
+import { useState } from "react";
+
+// Types & Constants
+import type { InferGetServerSidePropsType } from "next";
+import { SizeVariant } from "@/constants/sizeConstants";
+import { SvgImageVariants } from "@/components/atoms/svgImage";
 
 // Utils
 import cx from "classnames";
@@ -10,14 +14,23 @@ import Head from "next/head";
 import { Layout } from "@/components/templates/layout";
 import { ImageBrick } from "@/components/molecules/imageBrick";
 import { TitleBrick } from "@/components/atoms/titleBrick";
-import { SvgImage, SvgImageVariants } from "@/components/atoms/svgImage";
+import { SvgImage } from "@/components/atoms/svgImage";
+import { LayoutBlock } from "@/components/templates/layoutBlock";
+import { LogoDisplay } from "@/components/molecules/logoDisplay";
+import { HoverList } from "@/components/molecules/hoverList";
 
 const Home = ({
   cvPage,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { titleBlock, profileImageBlock } = cvPage;
+  const { titleBlock, profileImageBlock, skillsList, privateImageBlock } =
+    cvPage;
 
-  const classes = cx("absolute w-full flex justify-center bg-white pt-6 pb-6");
+  const [item, setItem] =
+    useState<typeof SvgImageVariants[keyof typeof SvgImageVariants]>();
+
+  const mainClasses = cx(
+    "absolute w-full flex justify-center bg-white pt-6 pb-6"
+  );
 
   return (
     <>
@@ -30,11 +43,27 @@ const Home = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className={classes}>
+      <div className={mainClasses}>
         <Layout>
-          <ImageBrick imageBlock={profileImageBlock} />
-          <TitleBrick titleBlock={titleBlock} />
-          <SvgImage variant={SvgImageVariants.CSS3} />
+          <LayoutBlock>
+            <ImageBrick imageBlock={profileImageBlock} />
+            <TitleBrick titleBlock={titleBlock} />
+          </LayoutBlock>
+          <LayoutBlock>
+            <LayoutBlock size={SizeVariant.Small}>
+              <HoverList list={skillsList} setItem={setItem} />
+            </LayoutBlock>
+
+            <LayoutBlock size={SizeVariant.Small}>
+              <LogoDisplay>
+                <SvgImage variant={item} />
+              </LogoDisplay>
+              <ImageBrick
+                imageBlock={privateImageBlock}
+                size={SizeVariant.Medium}
+              />
+            </LayoutBlock>
+          </LayoutBlock>
         </Layout>
       </div>
     </>

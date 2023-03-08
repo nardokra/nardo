@@ -929,12 +929,7 @@ input ConnectPositionInput {
 
 type CvPage implements Node {
   """The time the document was created"""
-  createdAt(
-    """
-    Variation of DateTime field to return, allows value from base document, current localization, or combined by returning the newer value of both
-    """
-    variation: SystemDateTimeFieldVariation! = COMBINED
-  ): DateTime!
+  createdAt: DateTime!
 
   """User that created this document"""
   createdBy(
@@ -986,28 +981,27 @@ type CvPage implements Node {
 
   """The unique identifier"""
   id: ID!
-
-  """System Locale field"""
-  locale: Locale!
-
-  """Get the other localizations for this document"""
-  localizations(
-    """Decides if the current locale should be included or not"""
-    includeCurrent: Boolean! = false
-
+  privateImageBlock(
     """
-    Potential locales that should be returned. 
+    Sets the locale of the parent document as the first locale in the fallback locales in the query's subtree.
     
-    The order of locales will also override locale fall-backing behaviour in the query's subtree.
-    
-    Note any related model with localized fields in the query's subtree will be affected.
+    Note that `privateImageBlock` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
     The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
-    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
     
-    Consider using this in conjunction with forceParentLocale on the children relation fields.
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
     """
-    locales: [Locale!]! = [en, nl]
-  ): [CvPage!]!
+    forceParentLocale: Boolean
+
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `privateImageBlock` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): ImageBlock
   profileImageBlock(
     """
     Sets the locale of the parent document as the first locale in the fallback locales in the query's subtree.
@@ -1031,12 +1025,7 @@ type CvPage implements Node {
   ): ImageBlock
 
   """The time the document was published. Null on documents in draft stage."""
-  publishedAt(
-    """
-    Variation of DateTime field to return, allows value from base document, current localization, or combined by returning the newer value of both
-    """
-    variation: SystemDateTimeFieldVariation! = COMBINED
-  ): DateTime
+  publishedAt: DateTime
 
   """User that last published this document"""
   publishedBy(
@@ -1088,6 +1077,27 @@ type CvPage implements Node {
     skip: Int
     where: ScheduledOperationWhereInput
   ): [ScheduledOperation!]!
+  skillsList(
+    """
+    Sets the locale of the resolved parent document as the only locale in the query's subtree.
+    
+    Note that `skillsList` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+    """
+    forceParentLocale: Boolean
+
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `skillsList` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): List
   slug: String!
 
   """System stage field"""
@@ -1115,12 +1125,7 @@ type CvPage implements Node {
   ): TitleBlock
 
   """The time the document was updated"""
-  updatedAt(
-    """
-    Variation of DateTime field to return, allows value from base document, current localization, or combined by returning the newer value of both
-    """
-    variation: SystemDateTimeFieldVariation! = COMBINED
-  ): DateTime!
+  updatedAt: DateTime!
 
   """User that last updated this document"""
   updatedBy(
@@ -1174,7 +1179,9 @@ input CvPageCreateInput {
   Inline mutations for managing document localizations excluding the default locale
   """
   localizations: CvPageCreateLocalizationsInput
+  privateImageBlock: ImageBlockCreateOneInlineInput
   profileImageBlock: ImageBlockCreateOneInlineInput
+  skillsList: ListCreateOneInlineInput
   slug: String!
   titleBlock: TitleBlockCreateOneInlineInput
   updatedAt: DateTime
@@ -1288,6 +1295,7 @@ input CvPageManyWhereInput {
 
   """All values starting with the given string."""
   id_starts_with: ID
+  privateImageBlock: ImageBlockWhereInput
   profileImageBlock: ImageBlockWhereInput
   publishedAt: DateTime
 
@@ -1315,6 +1323,7 @@ input CvPageManyWhereInput {
   scheduledIn_every: ScheduledOperationWhereInput
   scheduledIn_none: ScheduledOperationWhereInput
   scheduledIn_some: ScheduledOperationWhereInput
+  skillsList: ListWhereInput
   slug: String
 
   """All values containing the given string."""
@@ -1385,7 +1394,9 @@ enum CvPageOrderByInput {
 input CvPageUpdateInput {
   """Manage document localizations"""
   localizations: CvPageUpdateLocalizationsInput
+  privateImageBlock: ImageBlockUpdateOneInlineInput
   profileImageBlock: ImageBlockUpdateOneInlineInput
+  skillsList: ListUpdateOneInlineInput
   slug: String
   titleBlock: TitleBlockUpdateOneInlineInput
 }
@@ -1557,6 +1568,7 @@ input CvPageWhereInput {
 
   """All values starting with the given string."""
   id_starts_with: ID
+  privateImageBlock: ImageBlockWhereInput
   profileImageBlock: ImageBlockWhereInput
   publishedAt: DateTime
 
@@ -1584,6 +1596,7 @@ input CvPageWhereInput {
   scheduledIn_every: ScheduledOperationWhereInput
   scheduledIn_none: ScheduledOperationWhereInput
   scheduledIn_some: ScheduledOperationWhereInput
+  skillsList: ListWhereInput
   slug: String
 
   """All values containing the given string."""
@@ -2827,6 +2840,968 @@ input ImageTransformationInput {
 """Raw JSON value"""
 scalar Json
 
+type List {
+  """The unique identifier"""
+  id: ID!
+  identifier: String!
+  listEntry(
+    after: String
+    before: String
+    first: Int
+
+    """
+    Sets the locale of the resolved parent document as the only locale in the query's subtree.
+    
+    Note that `listEntry` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+    """
+    forceParentLocale: Boolean
+    last: Int
+
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `listEntry` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+    orderBy: ListEntryOrderByInput
+    skip: Int
+    where: ListEntryWhereInput
+  ): [ListEntry!]!
+
+  """System stage field"""
+  stage: Stage!
+  title: String
+}
+
+input ListConnectInput {
+  """
+  Allow to specify document position in list of connected documents, will default to appending at end of list
+  """
+  position: ConnectPositionInput
+
+  """Document to connect"""
+  where: ListWhereUniqueInput!
+}
+
+"""A connection to a list of items."""
+type ListConnection {
+  aggregate: Aggregate!
+
+  """A list of edges."""
+  edges: [ListEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+}
+
+input ListCreateInput {
+  identifier: String!
+  listEntry: ListEntryCreateManyInlineInput
+  title: String
+}
+
+input ListCreateManyInlineInput {
+  """Create and connect multiple existing List documents"""
+  create: [ListCreateInput!]
+}
+
+input ListCreateOneInlineInput {
+  """Create and connect one List document"""
+  create: ListCreateInput
+}
+
+input ListCreateWithPositionInput {
+  """Document to create"""
+  data: ListCreateInput!
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+}
+
+"""An edge in a connection."""
+type ListEdge {
+  """A cursor for use in pagination."""
+  cursor: String!
+
+  """The item at the end of the edge."""
+  node: List!
+}
+
+type ListEntry {
+  """The unique identifier"""
+  id: ID!
+  identifier: String!
+
+  """System stage field"""
+  stage: Stage!
+  title: String!
+}
+
+input ListEntryConnectInput {
+  """
+  Allow to specify document position in list of connected documents, will default to appending at end of list
+  """
+  position: ConnectPositionInput
+
+  """Document to connect"""
+  where: ListEntryWhereUniqueInput!
+}
+
+"""A connection to a list of items."""
+type ListEntryConnection {
+  aggregate: Aggregate!
+
+  """A list of edges."""
+  edges: [ListEntryEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+}
+
+input ListEntryCreateInput {
+  identifier: String!
+  title: String!
+}
+
+input ListEntryCreateManyInlineInput {
+  """Create and connect multiple existing ListEntry documents"""
+  create: [ListEntryCreateInput!]
+}
+
+input ListEntryCreateOneInlineInput {
+  """Create and connect one ListEntry document"""
+  create: ListEntryCreateInput
+}
+
+input ListEntryCreateWithPositionInput {
+  """Document to create"""
+  data: ListEntryCreateInput!
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+}
+
+"""An edge in a connection."""
+type ListEntryEdge {
+  """A cursor for use in pagination."""
+  cursor: String!
+
+  """The item at the end of the edge."""
+  node: ListEntry!
+}
+
+"""Identifies documents"""
+input ListEntryManyWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ListEntryWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ListEntryWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ListEntryWhereInput!]
+
+  """Contains search across all appropriate fields."""
+  _search: String
+  id: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID]
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID]
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+  identifier: String
+
+  """All values containing the given string."""
+  identifier_contains: String
+
+  """All values ending with the given string."""
+  identifier_ends_with: String
+
+  """All values that are contained in given list."""
+  identifier_in: [String]
+
+  """All values that are not equal to given value."""
+  identifier_not: String
+
+  """All values not containing the given string."""
+  identifier_not_contains: String
+
+  """All values not ending with the given string"""
+  identifier_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  identifier_not_in: [String]
+
+  """All values not starting with the given string."""
+  identifier_not_starts_with: String
+
+  """All values starting with the given string."""
+  identifier_starts_with: String
+  title: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values that are contained in given list."""
+  title_in: [String]
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values not ending with the given string"""
+  title_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  title_not_in: [String]
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+}
+
+enum ListEntryOrderByInput {
+  id_ASC
+  id_DESC
+  identifier_ASC
+  identifier_DESC
+  title_ASC
+  title_DESC
+}
+
+union ListEntryParent = List
+
+input ListEntryParentConnectInput {
+  List: ListConnectInput
+}
+
+input ListEntryParentCreateInput {
+  List: ListCreateInput
+}
+
+input ListEntryParentCreateManyInlineInput {
+  """Create and connect multiple existing ListEntryParent documents"""
+  create: [ListEntryParentCreateInput!]
+}
+
+input ListEntryParentCreateOneInlineInput {
+  """Create and connect one ListEntryParent document"""
+  create: ListEntryParentCreateInput
+}
+
+input ListEntryParentCreateWithPositionInput {
+  List: ListCreateWithPositionInput
+}
+
+input ListEntryParentUpdateInput {
+  List: ListUpdateInput
+}
+
+input ListEntryParentUpdateManyInlineInput {
+  """Create and connect multiple ListEntryParent component instances"""
+  create: [ListEntryParentCreateWithPositionInput!]
+
+  """Delete multiple ListEntryParent documents"""
+  delete: [ListEntryParentWhereUniqueInput!]
+
+  """Update multiple ListEntryParent component instances"""
+  update: [ListEntryParentUpdateWithNestedWhereUniqueAndPositionInput!]
+
+  """Upsert multiple ListEntryParent component instances"""
+  upsert: [ListEntryParentUpsertWithNestedWhereUniqueAndPositionInput!]
+}
+
+input ListEntryParentUpdateManyWithNestedWhereInput {
+  List: ListUpdateManyWithNestedWhereInput
+}
+
+input ListEntryParentUpdateOneInlineInput {
+  """Create and connect one ListEntryParent document"""
+  create: ListEntryParentCreateInput
+
+  """Delete currently connected ListEntryParent document"""
+  delete: Boolean
+
+  """Update single ListEntryParent document"""
+  update: ListEntryParentUpdateWithNestedWhereUniqueInput
+
+  """Upsert single ListEntryParent document"""
+  upsert: ListEntryParentUpsertWithNestedWhereUniqueInput
+}
+
+input ListEntryParentUpdateWithNestedWhereUniqueAndPositionInput {
+  List: ListUpdateWithNestedWhereUniqueAndPositionInput
+}
+
+input ListEntryParentUpdateWithNestedWhereUniqueInput {
+  List: ListUpdateWithNestedWhereUniqueInput
+}
+
+input ListEntryParentUpsertWithNestedWhereUniqueAndPositionInput {
+  List: ListUpsertWithNestedWhereUniqueAndPositionInput
+}
+
+input ListEntryParentUpsertWithNestedWhereUniqueInput {
+  List: ListUpsertWithNestedWhereUniqueInput
+}
+
+input ListEntryParentWhereInput {
+  List: ListWhereInput
+}
+
+input ListEntryParentWhereUniqueInput {
+  List: ListWhereUniqueInput
+}
+
+input ListEntryUpdateInput {
+  identifier: String
+  title: String
+}
+
+input ListEntryUpdateManyInlineInput {
+  """Create and connect multiple ListEntry component instances"""
+  create: [ListEntryCreateWithPositionInput!]
+
+  """Delete multiple ListEntry documents"""
+  delete: [ListEntryWhereUniqueInput!]
+
+  """Update multiple ListEntry component instances"""
+  update: [ListEntryUpdateWithNestedWhereUniqueAndPositionInput!]
+
+  """Upsert multiple ListEntry component instances"""
+  upsert: [ListEntryUpsertWithNestedWhereUniqueAndPositionInput!]
+}
+
+input ListEntryUpdateManyInput {
+  title: String
+}
+
+input ListEntryUpdateManyWithNestedWhereInput {
+  """Update many input"""
+  data: ListEntryUpdateManyInput!
+
+  """Document search"""
+  where: ListEntryWhereInput!
+}
+
+input ListEntryUpdateOneInlineInput {
+  """Create and connect one ListEntry document"""
+  create: ListEntryCreateInput
+
+  """Delete currently connected ListEntry document"""
+  delete: Boolean
+
+  """Update single ListEntry document"""
+  update: ListEntryUpdateWithNestedWhereUniqueInput
+
+  """Upsert single ListEntry document"""
+  upsert: ListEntryUpsertWithNestedWhereUniqueInput
+}
+
+input ListEntryUpdateWithNestedWhereUniqueAndPositionInput {
+  """Document to update"""
+  data: ListEntryUpdateInput
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+
+  """Unique component instance search"""
+  where: ListEntryWhereUniqueInput!
+}
+
+input ListEntryUpdateWithNestedWhereUniqueInput {
+  """Document to update"""
+  data: ListEntryUpdateInput!
+
+  """Unique document search"""
+  where: ListEntryWhereUniqueInput!
+}
+
+input ListEntryUpsertInput {
+  """Create document if it didn't exist"""
+  create: ListEntryCreateInput!
+
+  """Update document if it exists"""
+  update: ListEntryUpdateInput!
+}
+
+input ListEntryUpsertWithNestedWhereUniqueAndPositionInput {
+  """Document to upsert"""
+  data: ListEntryUpsertInput
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+
+  """Unique component instance search"""
+  where: ListEntryWhereUniqueInput!
+}
+
+input ListEntryUpsertWithNestedWhereUniqueInput {
+  """Upsert data"""
+  data: ListEntryUpsertInput!
+
+  """Unique document search"""
+  where: ListEntryWhereUniqueInput!
+}
+
+"""Identifies documents"""
+input ListEntryWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ListEntryWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ListEntryWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ListEntryWhereInput!]
+
+  """Contains search across all appropriate fields."""
+  _search: String
+  id: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID]
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID]
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+  identifier: String
+
+  """All values containing the given string."""
+  identifier_contains: String
+
+  """All values ending with the given string."""
+  identifier_ends_with: String
+
+  """All values that are contained in given list."""
+  identifier_in: [String]
+
+  """All values that are not equal to given value."""
+  identifier_not: String
+
+  """All values not containing the given string."""
+  identifier_not_contains: String
+
+  """All values not ending with the given string"""
+  identifier_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  identifier_not_in: [String]
+
+  """All values not starting with the given string."""
+  identifier_not_starts_with: String
+
+  """All values starting with the given string."""
+  identifier_starts_with: String
+  title: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values that are contained in given list."""
+  title_in: [String]
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values not ending with the given string"""
+  title_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  title_not_in: [String]
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+}
+
+"""References ListEntry record uniquely"""
+input ListEntryWhereUniqueInput {
+  id: ID
+  identifier: String
+}
+
+"""Identifies documents"""
+input ListManyWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ListWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ListWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ListWhereInput!]
+
+  """Contains search across all appropriate fields."""
+  _search: String
+  id: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID]
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID]
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+  identifier: String
+
+  """All values containing the given string."""
+  identifier_contains: String
+
+  """All values ending with the given string."""
+  identifier_ends_with: String
+
+  """All values that are contained in given list."""
+  identifier_in: [String]
+
+  """All values that are not equal to given value."""
+  identifier_not: String
+
+  """All values not containing the given string."""
+  identifier_not_contains: String
+
+  """All values not ending with the given string"""
+  identifier_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  identifier_not_in: [String]
+
+  """All values not starting with the given string."""
+  identifier_not_starts_with: String
+
+  """All values starting with the given string."""
+  identifier_starts_with: String
+  listEntry_every: ListEntryWhereInput
+  listEntry_none: ListEntryWhereInput
+  listEntry_some: ListEntryWhereInput
+  title: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values that are contained in given list."""
+  title_in: [String]
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values not ending with the given string"""
+  title_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  title_not_in: [String]
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+}
+
+enum ListOrderByInput {
+  id_ASC
+  id_DESC
+  identifier_ASC
+  identifier_DESC
+  title_ASC
+  title_DESC
+}
+
+union ListParent = CvPage
+
+input ListParentConnectInput {
+  CvPage: CvPageConnectInput
+}
+
+input ListParentCreateInput {
+  CvPage: CvPageCreateInput
+}
+
+input ListParentCreateManyInlineInput {
+  """Connect multiple existing ListParent documents"""
+  connect: [ListParentWhereUniqueInput!]
+
+  """Create and connect multiple existing ListParent documents"""
+  create: [ListParentCreateInput!]
+}
+
+input ListParentCreateOneInlineInput {
+  """Connect one existing ListParent document"""
+  connect: ListParentWhereUniqueInput
+
+  """Create and connect one ListParent document"""
+  create: ListParentCreateInput
+}
+
+input ListParentUpdateInput {
+  CvPage: CvPageUpdateInput
+}
+
+input ListParentUpdateManyInlineInput {
+  """Connect multiple existing ListParent documents"""
+  connect: [ListParentConnectInput!]
+
+  """Create and connect multiple ListParent documents"""
+  create: [ListParentCreateInput!]
+
+  """Delete multiple ListParent documents"""
+  delete: [ListParentWhereUniqueInput!]
+
+  """Disconnect multiple ListParent documents"""
+  disconnect: [ListParentWhereUniqueInput!]
+
+  """
+  Override currently-connected documents with multiple existing ListParent documents
+  """
+  set: [ListParentWhereUniqueInput!]
+
+  """Update multiple ListParent documents"""
+  update: [ListParentUpdateWithNestedWhereUniqueInput!]
+
+  """Upsert multiple ListParent documents"""
+  upsert: [ListParentUpsertWithNestedWhereUniqueInput!]
+}
+
+input ListParentUpdateManyWithNestedWhereInput {
+  CvPage: CvPageUpdateManyWithNestedWhereInput
+}
+
+input ListParentUpdateOneInlineInput {
+  """Connect existing ListParent document"""
+  connect: ListParentWhereUniqueInput
+
+  """Create and connect one ListParent document"""
+  create: ListParentCreateInput
+
+  """Delete currently connected ListParent document"""
+  delete: Boolean
+
+  """Disconnect currently connected ListParent document"""
+  disconnect: Boolean
+
+  """Update single ListParent document"""
+  update: ListParentUpdateWithNestedWhereUniqueInput
+
+  """Upsert single ListParent document"""
+  upsert: ListParentUpsertWithNestedWhereUniqueInput
+}
+
+input ListParentUpdateWithNestedWhereUniqueInput {
+  CvPage: CvPageUpdateWithNestedWhereUniqueInput
+}
+
+input ListParentUpsertWithNestedWhereUniqueInput {
+  CvPage: CvPageUpsertWithNestedWhereUniqueInput
+}
+
+input ListParentWhereInput {
+  CvPage: CvPageWhereInput
+}
+
+input ListParentWhereUniqueInput {
+  CvPage: CvPageWhereUniqueInput
+}
+
+input ListUpdateInput {
+  identifier: String
+  listEntry: ListEntryUpdateManyInlineInput
+  title: String
+}
+
+input ListUpdateManyInlineInput {
+  """Create and connect multiple List component instances"""
+  create: [ListCreateWithPositionInput!]
+
+  """Delete multiple List documents"""
+  delete: [ListWhereUniqueInput!]
+
+  """Update multiple List component instances"""
+  update: [ListUpdateWithNestedWhereUniqueAndPositionInput!]
+
+  """Upsert multiple List component instances"""
+  upsert: [ListUpsertWithNestedWhereUniqueAndPositionInput!]
+}
+
+input ListUpdateManyInput {
+  title: String
+}
+
+input ListUpdateManyWithNestedWhereInput {
+  """Update many input"""
+  data: ListUpdateManyInput!
+
+  """Document search"""
+  where: ListWhereInput!
+}
+
+input ListUpdateOneInlineInput {
+  """Create and connect one List document"""
+  create: ListCreateInput
+
+  """Delete currently connected List document"""
+  delete: Boolean
+
+  """Update single List document"""
+  update: ListUpdateWithNestedWhereUniqueInput
+
+  """Upsert single List document"""
+  upsert: ListUpsertWithNestedWhereUniqueInput
+}
+
+input ListUpdateWithNestedWhereUniqueAndPositionInput {
+  """Document to update"""
+  data: ListUpdateInput
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+
+  """Unique component instance search"""
+  where: ListWhereUniqueInput!
+}
+
+input ListUpdateWithNestedWhereUniqueInput {
+  """Document to update"""
+  data: ListUpdateInput!
+
+  """Unique document search"""
+  where: ListWhereUniqueInput!
+}
+
+input ListUpsertInput {
+  """Create document if it didn't exist"""
+  create: ListCreateInput!
+
+  """Update document if it exists"""
+  update: ListUpdateInput!
+}
+
+input ListUpsertWithNestedWhereUniqueAndPositionInput {
+  """Document to upsert"""
+  data: ListUpsertInput
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+
+  """Unique component instance search"""
+  where: ListWhereUniqueInput!
+}
+
+input ListUpsertWithNestedWhereUniqueInput {
+  """Upsert data"""
+  data: ListUpsertInput!
+
+  """Unique document search"""
+  where: ListWhereUniqueInput!
+}
+
+"""Identifies documents"""
+input ListWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ListWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ListWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ListWhereInput!]
+
+  """Contains search across all appropriate fields."""
+  _search: String
+  id: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID]
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID]
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+  identifier: String
+
+  """All values containing the given string."""
+  identifier_contains: String
+
+  """All values ending with the given string."""
+  identifier_ends_with: String
+
+  """All values that are contained in given list."""
+  identifier_in: [String]
+
+  """All values that are not equal to given value."""
+  identifier_not: String
+
+  """All values not containing the given string."""
+  identifier_not_contains: String
+
+  """All values not ending with the given string"""
+  identifier_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  identifier_not_in: [String]
+
+  """All values not starting with the given string."""
+  identifier_not_starts_with: String
+
+  """All values starting with the given string."""
+  identifier_starts_with: String
+  listEntry_every: ListEntryWhereInput
+  listEntry_none: ListEntryWhereInput
+  listEntry_some: ListEntryWhereInput
+  title: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values that are contained in given list."""
+  title_in: [String]
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values not ending with the given string"""
+  title_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  title_not_in: [String]
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+}
+
+"""References List record uniquely"""
+input ListWhereUniqueInput {
+  id: ID
+  identifier: String
+}
+
 """Locale system enumeration"""
 enum Locale {
   """System locale"""
@@ -2858,15 +3833,6 @@ type Mutation {
 
   """Create one cvPage"""
   createCvPage(data: CvPageCreateInput!): CvPage
-
-  """Create one navigation"""
-  createNavigation(data: NavigationCreateInput!): Navigation
-
-  """Create one navigationItem"""
-  createNavigationItem(data: NavigationItemCreateInput!): NavigationItem
-
-  """Create one personalProfile"""
-  createPersonalProfile(data: PersonalProfileCreateInput!): PersonalProfile
 
   """Create one scheduledRelease"""
   createScheduledRelease(data: ScheduledReleaseCreateInput!): ScheduledRelease
@@ -2920,84 +3886,6 @@ type Mutation {
     """Documents to delete"""
     where: CvPageManyWhereInput
   ): CvPageConnection!
-
-  """Delete many NavigationItem documents"""
-  deleteManyNavigationItems(
-    """Documents to delete"""
-    where: NavigationItemManyWhereInput
-  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (deleteManyNavigationItemsConnection)")
-
-  """Delete many NavigationItem documents, return deleted documents"""
-  deleteManyNavigationItemsConnection(
-    after: ID
-    before: ID
-    first: Int
-    last: Int
-    skip: Int
-
-    """Documents to delete"""
-    where: NavigationItemManyWhereInput
-  ): NavigationItemConnection!
-
-  """Delete many Navigation documents"""
-  deleteManyNavigations(
-    """Documents to delete"""
-    where: NavigationManyWhereInput
-  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (deleteManyNavigationsConnection)")
-
-  """Delete many Navigation documents, return deleted documents"""
-  deleteManyNavigationsConnection(
-    after: ID
-    before: ID
-    first: Int
-    last: Int
-    skip: Int
-
-    """Documents to delete"""
-    where: NavigationManyWhereInput
-  ): NavigationConnection!
-
-  """Delete many PersonalProfile documents"""
-  deleteManyPersonalProfiles(
-    """Documents to delete"""
-    where: PersonalProfileManyWhereInput
-  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (deleteManyPersonalProfilesConnection)")
-
-  """Delete many PersonalProfile documents, return deleted documents"""
-  deleteManyPersonalProfilesConnection(
-    after: ID
-    before: ID
-    first: Int
-    last: Int
-    skip: Int
-
-    """Documents to delete"""
-    where: PersonalProfileManyWhereInput
-  ): PersonalProfileConnection!
-
-  """
-  Delete one navigation from _all_ existing stages. Returns deleted document.
-  """
-  deleteNavigation(
-    """Document to delete"""
-    where: NavigationWhereUniqueInput!
-  ): Navigation
-
-  """
-  Delete one navigationItem from _all_ existing stages. Returns deleted document.
-  """
-  deleteNavigationItem(
-    """Document to delete"""
-    where: NavigationItemWhereUniqueInput!
-  ): NavigationItem
-
-  """
-  Delete one personalProfile from _all_ existing stages. Returns deleted document.
-  """
-  deletePersonalProfile(
-    """Document to delete"""
-    where: PersonalProfileWhereUniqueInput!
-  ): PersonalProfile
 
   """Delete and return scheduled operation"""
   deleteScheduledOperation(
@@ -3139,141 +4027,6 @@ type Mutation {
     withDefaultLocale: Boolean = true
   ): CvPageConnection!
 
-  """Publish many NavigationItem documents"""
-  publishManyNavigationItems(
-    """Document localizations to publish"""
-    locales: [Locale!]
-
-    """Whether to publish the base document"""
-    publishBase: Boolean = true
-
-    """Stages to publish documents to"""
-    to: [Stage!]! = [PUBLISHED]
-
-    """Identifies documents in each stage to be published"""
-    where: NavigationItemManyWhereInput
-
-    """Whether to include the default locale when publishBase is true"""
-    withDefaultLocale: Boolean = true
-  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (publishManyNavigationItemsConnection)")
-
-  """Publish many NavigationItem documents"""
-  publishManyNavigationItemsConnection(
-    after: ID
-    before: ID
-    first: Int
-
-    """Stage to find matching documents in"""
-    from: Stage = DRAFT
-    last: Int
-
-    """Document localizations to publish"""
-    locales: [Locale!]
-
-    """Whether to publish the base document"""
-    publishBase: Boolean = true
-    skip: Int
-
-    """Stages to publish documents to"""
-    to: [Stage!]! = [PUBLISHED]
-
-    """Identifies documents in each stage to be published"""
-    where: NavigationItemManyWhereInput
-
-    """Whether to include the default locale when publishBase is true"""
-    withDefaultLocale: Boolean = true
-  ): NavigationItemConnection!
-
-  """Publish many Navigation documents"""
-  publishManyNavigations(
-    """Stages to publish documents to"""
-    to: [Stage!]! = [PUBLISHED]
-
-    """Identifies documents in each stage to be published"""
-    where: NavigationManyWhereInput
-  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (publishManyNavigationsConnection)")
-
-  """Publish many Navigation documents"""
-  publishManyNavigationsConnection(
-    after: ID
-    before: ID
-    first: Int
-
-    """Stage to find matching documents in"""
-    from: Stage = DRAFT
-    last: Int
-    skip: Int
-
-    """Stages to publish documents to"""
-    to: [Stage!]! = [PUBLISHED]
-
-    """Identifies documents in each stage to be published"""
-    where: NavigationManyWhereInput
-  ): NavigationConnection!
-
-  """Publish many PersonalProfile documents"""
-  publishManyPersonalProfiles(
-    """Stages to publish documents to"""
-    to: [Stage!]! = [PUBLISHED]
-
-    """Identifies documents in each stage to be published"""
-    where: PersonalProfileManyWhereInput
-  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (publishManyPersonalProfilesConnection)")
-
-  """Publish many PersonalProfile documents"""
-  publishManyPersonalProfilesConnection(
-    after: ID
-    before: ID
-    first: Int
-
-    """Stage to find matching documents in"""
-    from: Stage = DRAFT
-    last: Int
-    skip: Int
-
-    """Stages to publish documents to"""
-    to: [Stage!]! = [PUBLISHED]
-
-    """Identifies documents in each stage to be published"""
-    where: PersonalProfileManyWhereInput
-  ): PersonalProfileConnection!
-
-  """Publish one navigation"""
-  publishNavigation(
-    """Publishing target stage"""
-    to: [Stage!]! = [PUBLISHED]
-
-    """Document to publish"""
-    where: NavigationWhereUniqueInput!
-  ): Navigation
-
-  """Publish one navigationItem"""
-  publishNavigationItem(
-    """Optional localizations to publish"""
-    locales: [Locale!]
-
-    """Whether to publish the base document"""
-    publishBase: Boolean = true
-
-    """Publishing target stage"""
-    to: [Stage!]! = [PUBLISHED]
-
-    """Document to publish"""
-    where: NavigationItemWhereUniqueInput!
-
-    """Whether to include the default locale when publishBase is set"""
-    withDefaultLocale: Boolean = true
-  ): NavigationItem
-
-  """Publish one personalProfile"""
-  publishPersonalProfile(
-    """Publishing target stage"""
-    to: [Stage!]! = [PUBLISHED]
-
-    """Document to publish"""
-    where: PersonalProfileWhereUniqueInput!
-  ): PersonalProfile
-
   """Schedule to publish one asset"""
   schedulePublishAsset(
     """Optional localizations to publish"""
@@ -3325,66 +4078,6 @@ type Mutation {
     """Whether to include the default locale when publishBase is set"""
     withDefaultLocale: Boolean = true
   ): CvPage
-
-  """Schedule to publish one navigation"""
-  schedulePublishNavigation(
-    """
-    Release at point in time, will create new release containing this operation
-    """
-    releaseAt: DateTime
-
-    """Optionally attach this scheduled operation to an existing release"""
-    releaseId: String
-
-    """Publishing target stage"""
-    to: [Stage!]! = [PUBLISHED]
-
-    """Document to publish"""
-    where: NavigationWhereUniqueInput!
-  ): Navigation
-
-  """Schedule to publish one navigationItem"""
-  schedulePublishNavigationItem(
-    """Optional localizations to publish"""
-    locales: [Locale!]
-
-    """Whether to publish the base document"""
-    publishBase: Boolean = true
-
-    """
-    Release at point in time, will create new release containing this operation
-    """
-    releaseAt: DateTime
-
-    """Optionally attach this scheduled operation to an existing release"""
-    releaseId: String
-
-    """Publishing target stage"""
-    to: [Stage!]! = [PUBLISHED]
-
-    """Document to publish"""
-    where: NavigationItemWhereUniqueInput!
-
-    """Whether to include the default locale when publishBase is set"""
-    withDefaultLocale: Boolean = true
-  ): NavigationItem
-
-  """Schedule to publish one personalProfile"""
-  schedulePublishPersonalProfile(
-    """
-    Release at point in time, will create new release containing this operation
-    """
-    releaseAt: DateTime
-
-    """Optionally attach this scheduled operation to an existing release"""
-    releaseId: String
-
-    """Publishing target stage"""
-    to: [Stage!]! = [PUBLISHED]
-
-    """Document to publish"""
-    where: PersonalProfileWhereUniqueInput!
-  ): PersonalProfile
 
   """
   Unpublish one asset from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only.
@@ -3443,73 +4136,6 @@ type Mutation {
     """Document to unpublish"""
     where: CvPageWhereUniqueInput!
   ): CvPage
-
-  """
-  Unpublish one navigation from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only.
-  """
-  scheduleUnpublishNavigation(
-    """Stages to unpublish document from"""
-    from: [Stage!]! = [PUBLISHED]
-
-    """
-    Release at point in time, will create new release containing this operation
-    """
-    releaseAt: DateTime
-
-    """Optionally attach this scheduled operation to an existing release"""
-    releaseId: String
-
-    """Document to unpublish"""
-    where: NavigationWhereUniqueInput!
-  ): Navigation
-
-  """
-  Unpublish one navigationItem from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only.
-  """
-  scheduleUnpublishNavigationItem(
-    """Stages to unpublish document from"""
-    from: [Stage!]! = [PUBLISHED]
-
-    """
-    Optional locales to unpublish. Unpublishing the default locale will completely remove the document from the selected stages
-    """
-    locales: [Locale!]
-
-    """
-    Release at point in time, will create new release containing this operation
-    """
-    releaseAt: DateTime
-
-    """Optionally attach this scheduled operation to an existing release"""
-    releaseId: String
-
-    """
-    Unpublish complete document including default localization and relations from stages. Can be disabled.
-    """
-    unpublishBase: Boolean = true
-
-    """Document to unpublish"""
-    where: NavigationItemWhereUniqueInput!
-  ): NavigationItem
-
-  """
-  Unpublish one personalProfile from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only.
-  """
-  scheduleUnpublishPersonalProfile(
-    """Stages to unpublish document from"""
-    from: [Stage!]! = [PUBLISHED]
-
-    """
-    Release at point in time, will create new release containing this operation
-    """
-    releaseAt: DateTime
-
-    """Optionally attach this scheduled operation to an existing release"""
-    releaseId: String
-
-    """Document to unpublish"""
-    where: PersonalProfileWhereUniqueInput!
-  ): PersonalProfile
 
   """
   Unpublish one asset from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only.
@@ -3635,148 +4261,6 @@ type Mutation {
     where: CvPageManyWhereInput
   ): CvPageConnection!
 
-  """Unpublish many NavigationItem documents"""
-  unpublishManyNavigationItems(
-    """Stages to unpublish documents from"""
-    from: [Stage!]! = [PUBLISHED]
-
-    """Locales to unpublish"""
-    locales: [Locale!]
-
-    """Whether to unpublish the base document and default localization"""
-    unpublishBase: Boolean = true
-
-    """Identifies documents in each stage"""
-    where: NavigationItemManyWhereInput
-  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (unpublishManyNavigationItemsConnection)")
-
-  """
-  Find many NavigationItem documents that match criteria in specified stage and unpublish from target stages
-  """
-  unpublishManyNavigationItemsConnection(
-    after: ID
-    before: ID
-    first: Int
-
-    """Stages to unpublish documents from"""
-    from: [Stage!]! = [PUBLISHED]
-    last: Int
-
-    """Locales to unpublish"""
-    locales: [Locale!]
-    skip: Int
-
-    """Stage to find matching documents in"""
-    stage: Stage = DRAFT
-
-    """Whether to unpublish the base document and default localization"""
-    unpublishBase: Boolean = true
-
-    """Identifies documents in draft stage"""
-    where: NavigationItemManyWhereInput
-  ): NavigationItemConnection!
-
-  """Unpublish many Navigation documents"""
-  unpublishManyNavigations(
-    """Stages to unpublish documents from"""
-    from: [Stage!]! = [PUBLISHED]
-
-    """Identifies documents in each stage"""
-    where: NavigationManyWhereInput
-  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (unpublishManyNavigationsConnection)")
-
-  """
-  Find many Navigation documents that match criteria in specified stage and unpublish from target stages
-  """
-  unpublishManyNavigationsConnection(
-    after: ID
-    before: ID
-    first: Int
-
-    """Stages to unpublish documents from"""
-    from: [Stage!]! = [PUBLISHED]
-    last: Int
-    skip: Int
-
-    """Stage to find matching documents in"""
-    stage: Stage = DRAFT
-
-    """Identifies documents in draft stage"""
-    where: NavigationManyWhereInput
-  ): NavigationConnection!
-
-  """Unpublish many PersonalProfile documents"""
-  unpublishManyPersonalProfiles(
-    """Stages to unpublish documents from"""
-    from: [Stage!]! = [PUBLISHED]
-
-    """Identifies documents in each stage"""
-    where: PersonalProfileManyWhereInput
-  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (unpublishManyPersonalProfilesConnection)")
-
-  """
-  Find many PersonalProfile documents that match criteria in specified stage and unpublish from target stages
-  """
-  unpublishManyPersonalProfilesConnection(
-    after: ID
-    before: ID
-    first: Int
-
-    """Stages to unpublish documents from"""
-    from: [Stage!]! = [PUBLISHED]
-    last: Int
-    skip: Int
-
-    """Stage to find matching documents in"""
-    stage: Stage = DRAFT
-
-    """Identifies documents in draft stage"""
-    where: PersonalProfileManyWhereInput
-  ): PersonalProfileConnection!
-
-  """
-  Unpublish one navigation from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only.
-  """
-  unpublishNavigation(
-    """Stages to unpublish document from"""
-    from: [Stage!]! = [PUBLISHED]
-
-    """Document to unpublish"""
-    where: NavigationWhereUniqueInput!
-  ): Navigation
-
-  """
-  Unpublish one navigationItem from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only.
-  """
-  unpublishNavigationItem(
-    """Stages to unpublish document from"""
-    from: [Stage!]! = [PUBLISHED]
-
-    """
-    Optional locales to unpublish. Unpublishing the default locale will completely remove the document from the selected stages
-    """
-    locales: [Locale!]
-
-    """
-    Unpublish complete document including default localization and relations from stages. Can be disabled.
-    """
-    unpublishBase: Boolean = true
-
-    """Document to unpublish"""
-    where: NavigationItemWhereUniqueInput!
-  ): NavigationItem
-
-  """
-  Unpublish one personalProfile from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only.
-  """
-  unpublishPersonalProfile(
-    """Stages to unpublish document from"""
-    from: [Stage!]! = [PUBLISHED]
-
-    """Document to unpublish"""
-    where: PersonalProfileWhereUniqueInput!
-  ): PersonalProfile
-
   """Update one asset"""
   updateAsset(data: AssetUpdateInput!, where: AssetWhereUniqueInput!): Asset
 
@@ -3831,87 +4315,6 @@ type Mutation {
     where: CvPageManyWhereInput
   ): CvPageConnection!
 
-  """Update many navigationItems"""
-  updateManyNavigationItems(
-    """Updates to document content"""
-    data: NavigationItemUpdateManyInput!
-
-    """Documents to apply update on"""
-    where: NavigationItemManyWhereInput
-  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (updateManyNavigationItemsConnection)")
-
-  """Update many NavigationItem documents"""
-  updateManyNavigationItemsConnection(
-    after: ID
-    before: ID
-
-    """Updates to document content"""
-    data: NavigationItemUpdateManyInput!
-    first: Int
-    last: Int
-    skip: Int
-
-    """Documents to apply update on"""
-    where: NavigationItemManyWhereInput
-  ): NavigationItemConnection!
-
-  """Update many navigations"""
-  updateManyNavigations(
-    """Updates to document content"""
-    data: NavigationUpdateManyInput!
-
-    """Documents to apply update on"""
-    where: NavigationManyWhereInput
-  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (updateManyNavigationsConnection)")
-
-  """Update many Navigation documents"""
-  updateManyNavigationsConnection(
-    after: ID
-    before: ID
-
-    """Updates to document content"""
-    data: NavigationUpdateManyInput!
-    first: Int
-    last: Int
-    skip: Int
-
-    """Documents to apply update on"""
-    where: NavigationManyWhereInput
-  ): NavigationConnection!
-
-  """Update many personalProfiles"""
-  updateManyPersonalProfiles(
-    """Updates to document content"""
-    data: PersonalProfileUpdateManyInput!
-
-    """Documents to apply update on"""
-    where: PersonalProfileManyWhereInput
-  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (updateManyPersonalProfilesConnection)")
-
-  """Update many PersonalProfile documents"""
-  updateManyPersonalProfilesConnection(
-    after: ID
-    before: ID
-
-    """Updates to document content"""
-    data: PersonalProfileUpdateManyInput!
-    first: Int
-    last: Int
-    skip: Int
-
-    """Documents to apply update on"""
-    where: PersonalProfileManyWhereInput
-  ): PersonalProfileConnection!
-
-  """Update one navigation"""
-  updateNavigation(data: NavigationUpdateInput!, where: NavigationWhereUniqueInput!): Navigation
-
-  """Update one navigationItem"""
-  updateNavigationItem(data: NavigationItemUpdateInput!, where: NavigationItemWhereUniqueInput!): NavigationItem
-
-  """Update one personalProfile"""
-  updatePersonalProfile(data: PersonalProfileUpdateInput!, where: PersonalProfileWhereUniqueInput!): PersonalProfile
-
   """Update one scheduledRelease"""
   updateScheduledRelease(data: ScheduledReleaseUpdateInput!, where: ScheduledReleaseWhereUniqueInput!): ScheduledRelease
 
@@ -3920,1415 +4323,6 @@ type Mutation {
 
   """Upsert one cvPage"""
   upsertCvPage(upsert: CvPageUpsertInput!, where: CvPageWhereUniqueInput!): CvPage
-
-  """Upsert one navigation"""
-  upsertNavigation(upsert: NavigationUpsertInput!, where: NavigationWhereUniqueInput!): Navigation
-
-  """Upsert one navigationItem"""
-  upsertNavigationItem(upsert: NavigationItemUpsertInput!, where: NavigationItemWhereUniqueInput!): NavigationItem
-
-  """Upsert one personalProfile"""
-  upsertPersonalProfile(upsert: PersonalProfileUpsertInput!, where: PersonalProfileWhereUniqueInput!): PersonalProfile
-}
-
-"""Navigation with link items"""
-type Navigation implements Node {
-  """The time the document was created"""
-  createdAt: DateTime!
-
-  """User that created this document"""
-  createdBy(
-    """
-    Sets the locale of the resolved parent document as the only locale in the query's subtree.
-    
-    Note that `createdBy` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
-    """
-    forceParentLocale: Boolean
-
-    """
-    Allows to optionally override locale filtering behaviour in the query's subtree.
-    
-    Note that `createdBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
-    """
-    locales: [Locale!]
-  ): User
-
-  """Get the document in other stages"""
-  documentInStages(
-    """Decides if the current stage should be included or not"""
-    includeCurrent: Boolean! = false
-
-    """
-    Decides if the documents should match the parent documents locale or should use the fallback order defined in the tree
-    """
-    inheritLocale: Boolean! = false
-
-    """Potential stages that should be returned"""
-    stages: [Stage!]! = [PUBLISHED, DRAFT]
-  ): [Navigation!]!
-
-  """List of Navigation versions"""
-  history(
-    limit: Int! = 10
-    skip: Int! = 0
-
-    """
-    This is optional and can be used to fetch the document version history for a specific stage instead of the current one
-    """
-    stageOverride: Stage
-  ): [Version!]!
-
-  """The unique identifier"""
-  id: ID!
-
-  """The items which are displayed in the navigation."""
-  navigationItems(
-    after: String
-    before: String
-    first: Int
-
-    """
-    Sets the locale of the parent document as the first locale in the fallback locales in the query's subtree.
-    
-    Note that `navigationItems` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
-    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
-    
-    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
-    """
-    forceParentLocale: Boolean
-    last: Int
-
-    """
-    Allows to optionally override locale filtering behaviour in the query's subtree.
-    
-    Note that `navigationItems` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
-    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
-    
-    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
-    """
-    locales: [Locale!]
-    orderBy: NavigationItemOrderByInput
-    skip: Int
-    where: NavigationItemWhereInput
-  ): [NavigationItem!]!
-  personalProfile(
-    """
-    Sets the locale of the resolved parent document as the only locale in the query's subtree.
-    
-    Note that `personalProfile` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
-    """
-    forceParentLocale: Boolean
-
-    """
-    Allows to optionally override locale filtering behaviour in the query's subtree.
-    
-    Note that `personalProfile` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
-    """
-    locales: [Locale!]
-  ): PersonalProfile
-
-  """The time the document was published. Null on documents in draft stage."""
-  publishedAt: DateTime
-
-  """User that last published this document"""
-  publishedBy(
-    """
-    Sets the locale of the resolved parent document as the only locale in the query's subtree.
-    
-    Note that `publishedBy` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
-    """
-    forceParentLocale: Boolean
-
-    """
-    Allows to optionally override locale filtering behaviour in the query's subtree.
-    
-    Note that `publishedBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
-    """
-    locales: [Locale!]
-  ): User
-  scheduledIn(
-    after: String
-    before: String
-    first: Int
-
-    """
-    Sets the locale of the resolved parent document as the only locale in the query's subtree.
-    
-    Note that `scheduledIn` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
-    """
-    forceParentLocale: Boolean
-    last: Int
-
-    """
-    Allows to optionally override locale filtering behaviour in the query's subtree.
-    
-    Note that `scheduledIn` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
-    """
-    locales: [Locale!]
-    skip: Int
-    where: ScheduledOperationWhereInput
-  ): [ScheduledOperation!]!
-
-  """System stage field"""
-  stage: Stage!
-
-  """The time the document was updated"""
-  updatedAt: DateTime!
-
-  """User that last updated this document"""
-  updatedBy(
-    """
-    Sets the locale of the resolved parent document as the only locale in the query's subtree.
-    
-    Note that `updatedBy` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
-    """
-    forceParentLocale: Boolean
-
-    """
-    Allows to optionally override locale filtering behaviour in the query's subtree.
-    
-    Note that `updatedBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
-    """
-    locales: [Locale!]
-  ): User
-}
-
-input NavigationConnectInput {
-  """
-  Allow to specify document position in list of connected documents, will default to appending at end of list
-  """
-  position: ConnectPositionInput
-
-  """Document to connect"""
-  where: NavigationWhereUniqueInput!
-}
-
-"""A connection to a list of items."""
-type NavigationConnection {
-  aggregate: Aggregate!
-
-  """A list of edges."""
-  edges: [NavigationEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-}
-
-input NavigationCreateInput {
-  createdAt: DateTime
-  navigationItems: NavigationItemCreateManyInlineInput
-  personalProfile: PersonalProfileCreateOneInlineInput
-  updatedAt: DateTime
-}
-
-input NavigationCreateManyInlineInput {
-  """Connect multiple existing Navigation documents"""
-  connect: [NavigationWhereUniqueInput!]
-
-  """Create and connect multiple existing Navigation documents"""
-  create: [NavigationCreateInput!]
-}
-
-input NavigationCreateOneInlineInput {
-  """Connect one existing Navigation document"""
-  connect: NavigationWhereUniqueInput
-
-  """Create and connect one Navigation document"""
-  create: NavigationCreateInput
-}
-
-"""An edge in a connection."""
-type NavigationEdge {
-  """A cursor for use in pagination."""
-  cursor: String!
-
-  """The item at the end of the edge."""
-  node: Navigation!
-}
-
-"""Item for routing"""
-type NavigationItem implements Node {
-  """The time the document was created"""
-  createdAt(
-    """
-    Variation of DateTime field to return, allows value from base document, current localization, or combined by returning the newer value of both
-    """
-    variation: SystemDateTimeFieldVariation! = COMBINED
-  ): DateTime!
-
-  """User that created this document"""
-  createdBy(
-    """
-    Sets the locale of the resolved parent document as the only locale in the query's subtree.
-    
-    Note that `createdBy` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
-    """
-    forceParentLocale: Boolean
-
-    """
-    Allows to optionally override locale filtering behaviour in the query's subtree.
-    
-    Note that `createdBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
-    """
-    locales: [Locale!]
-  ): User
-
-  """Get the document in other stages"""
-  documentInStages(
-    """Decides if the current stage should be included or not"""
-    includeCurrent: Boolean! = false
-
-    """
-    Decides if the documents should match the parent documents locale or should use the fallback order defined in the tree
-    """
-    inheritLocale: Boolean! = false
-
-    """Potential stages that should be returned"""
-    stages: [Stage!]! = [PUBLISHED, DRAFT]
-  ): [NavigationItem!]!
-
-  """List of NavigationItem versions"""
-  history(
-    limit: Int! = 10
-    skip: Int! = 0
-
-    """
-    This is optional and can be used to fetch the document version history for a specific stage instead of the current one
-    """
-    stageOverride: Stage
-  ): [Version!]!
-
-  """The unique identifier"""
-  id: ID!
-
-  """System Locale field"""
-  locale: Locale!
-
-  """Get the other localizations for this document"""
-  localizations(
-    """Decides if the current locale should be included or not"""
-    includeCurrent: Boolean! = false
-
-    """
-    Potential locales that should be returned. 
-    
-    The order of locales will also override locale fall-backing behaviour in the query's subtree.
-    
-    Note any related model with localized fields in the query's subtree will be affected.
-    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
-    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
-    
-    Consider using this in conjunction with forceParentLocale on the children relation fields.
-    """
-    locales: [Locale!]! = [en, nl]
-  ): [NavigationItem!]!
-
-  """The name that is displayed"""
-  name: String!
-  navigation(
-    """
-    Sets the locale of the resolved parent document as the only locale in the query's subtree.
-    
-    Note that `navigation` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
-    """
-    forceParentLocale: Boolean
-
-    """
-    Allows to optionally override locale filtering behaviour in the query's subtree.
-    
-    Note that `navigation` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
-    """
-    locales: [Locale!]
-  ): Navigation
-
-  """The time the document was published. Null on documents in draft stage."""
-  publishedAt(
-    """
-    Variation of DateTime field to return, allows value from base document, current localization, or combined by returning the newer value of both
-    """
-    variation: SystemDateTimeFieldVariation! = COMBINED
-  ): DateTime
-
-  """User that last published this document"""
-  publishedBy(
-    """
-    Sets the locale of the resolved parent document as the only locale in the query's subtree.
-    
-    Note that `publishedBy` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
-    """
-    forceParentLocale: Boolean
-
-    """
-    Allows to optionally override locale filtering behaviour in the query's subtree.
-    
-    Note that `publishedBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
-    """
-    locales: [Locale!]
-  ): User
-  scheduledIn(
-    after: String
-    before: String
-    first: Int
-
-    """
-    Sets the locale of the resolved parent document as the only locale in the query's subtree.
-    
-    Note that `scheduledIn` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
-    """
-    forceParentLocale: Boolean
-    last: Int
-
-    """
-    Allows to optionally override locale filtering behaviour in the query's subtree.
-    
-    Note that `scheduledIn` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
-    """
-    locales: [Locale!]
-    skip: Int
-    where: ScheduledOperationWhereInput
-  ): [ScheduledOperation!]!
-
-  """The slug for routing / linking to pages"""
-  slug: String
-
-  """System stage field"""
-  stage: Stage!
-
-  """The time the document was updated"""
-  updatedAt(
-    """
-    Variation of DateTime field to return, allows value from base document, current localization, or combined by returning the newer value of both
-    """
-    variation: SystemDateTimeFieldVariation! = COMBINED
-  ): DateTime!
-
-  """User that last updated this document"""
-  updatedBy(
-    """
-    Sets the locale of the resolved parent document as the only locale in the query's subtree.
-    
-    Note that `updatedBy` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
-    """
-    forceParentLocale: Boolean
-
-    """
-    Allows to optionally override locale filtering behaviour in the query's subtree.
-    
-    Note that `updatedBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
-    """
-    locales: [Locale!]
-  ): User
-}
-
-input NavigationItemConnectInput {
-  """
-  Allow to specify document position in list of connected documents, will default to appending at end of list
-  """
-  position: ConnectPositionInput
-
-  """Document to connect"""
-  where: NavigationItemWhereUniqueInput!
-}
-
-"""A connection to a list of items."""
-type NavigationItemConnection {
-  aggregate: Aggregate!
-
-  """A list of edges."""
-  edges: [NavigationItemEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-}
-
-input NavigationItemCreateInput {
-  createdAt: DateTime
-
-  """
-  Inline mutations for managing document localizations excluding the default locale
-  """
-  localizations: NavigationItemCreateLocalizationsInput
-
-  """name input for default locale (en)"""
-  name: String!
-  navigation: NavigationCreateOneInlineInput
-  slug: String
-  updatedAt: DateTime
-}
-
-input NavigationItemCreateLocalizationDataInput {
-  createdAt: DateTime
-  name: String!
-  updatedAt: DateTime
-}
-
-input NavigationItemCreateLocalizationInput {
-  """Localization input"""
-  data: NavigationItemCreateLocalizationDataInput!
-  locale: Locale!
-}
-
-input NavigationItemCreateLocalizationsInput {
-  """Create localizations for the newly-created document"""
-  create: [NavigationItemCreateLocalizationInput!]
-}
-
-input NavigationItemCreateManyInlineInput {
-  """Connect multiple existing NavigationItem documents"""
-  connect: [NavigationItemWhereUniqueInput!]
-
-  """Create and connect multiple existing NavigationItem documents"""
-  create: [NavigationItemCreateInput!]
-}
-
-input NavigationItemCreateOneInlineInput {
-  """Connect one existing NavigationItem document"""
-  connect: NavigationItemWhereUniqueInput
-
-  """Create and connect one NavigationItem document"""
-  create: NavigationItemCreateInput
-}
-
-"""An edge in a connection."""
-type NavigationItemEdge {
-  """A cursor for use in pagination."""
-  cursor: String!
-
-  """The item at the end of the edge."""
-  node: NavigationItem!
-}
-
-"""Identifies documents"""
-input NavigationItemManyWhereInput {
-  """Logical AND on all given filters."""
-  AND: [NavigationItemWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [NavigationItemWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [NavigationItemWhereInput!]
-
-  """Contains search across all appropriate fields."""
-  _search: String
-  createdAt: DateTime
-
-  """All values greater than the given value."""
-  createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  createdAt_gte: DateTime
-
-  """All values that are contained in given list."""
-  createdAt_in: [DateTime]
-
-  """All values less than the given value."""
-  createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  createdAt_lte: DateTime
-
-  """All values that are not equal to given value."""
-  createdAt_not: DateTime
-
-  """All values that are not contained in given list."""
-  createdAt_not_in: [DateTime]
-  createdBy: UserWhereInput
-  documentInStages_every: NavigationItemWhereStageInput
-  documentInStages_none: NavigationItemWhereStageInput
-  documentInStages_some: NavigationItemWhereStageInput
-  id: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID]
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values not ending with the given string"""
-  id_not_ends_with: ID
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID]
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-  navigation: NavigationWhereInput
-  publishedAt: DateTime
-
-  """All values greater than the given value."""
-  publishedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  publishedAt_gte: DateTime
-
-  """All values that are contained in given list."""
-  publishedAt_in: [DateTime]
-
-  """All values less than the given value."""
-  publishedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  publishedAt_lte: DateTime
-
-  """All values that are not equal to given value."""
-  publishedAt_not: DateTime
-
-  """All values that are not contained in given list."""
-  publishedAt_not_in: [DateTime]
-  publishedBy: UserWhereInput
-  scheduledIn_every: ScheduledOperationWhereInput
-  scheduledIn_none: ScheduledOperationWhereInput
-  scheduledIn_some: ScheduledOperationWhereInput
-  slug: String
-
-  """All values containing the given string."""
-  slug_contains: String
-
-  """All values ending with the given string."""
-  slug_ends_with: String
-
-  """All values that are contained in given list."""
-  slug_in: [String]
-
-  """All values that are not equal to given value."""
-  slug_not: String
-
-  """All values not containing the given string."""
-  slug_not_contains: String
-
-  """All values not ending with the given string"""
-  slug_not_ends_with: String
-
-  """All values that are not contained in given list."""
-  slug_not_in: [String]
-
-  """All values not starting with the given string."""
-  slug_not_starts_with: String
-
-  """All values starting with the given string."""
-  slug_starts_with: String
-  updatedAt: DateTime
-
-  """All values greater than the given value."""
-  updatedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  updatedAt_gte: DateTime
-
-  """All values that are contained in given list."""
-  updatedAt_in: [DateTime]
-
-  """All values less than the given value."""
-  updatedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  updatedAt_lte: DateTime
-
-  """All values that are not equal to given value."""
-  updatedAt_not: DateTime
-
-  """All values that are not contained in given list."""
-  updatedAt_not_in: [DateTime]
-  updatedBy: UserWhereInput
-}
-
-enum NavigationItemOrderByInput {
-  createdAt_ASC
-  createdAt_DESC
-  id_ASC
-  id_DESC
-  name_ASC
-  name_DESC
-  publishedAt_ASC
-  publishedAt_DESC
-  slug_ASC
-  slug_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-input NavigationItemUpdateInput {
-  """Manage document localizations"""
-  localizations: NavigationItemUpdateLocalizationsInput
-
-  """name input for default locale (en)"""
-  name: String
-  navigation: NavigationUpdateOneInlineInput
-  slug: String
-}
-
-input NavigationItemUpdateLocalizationDataInput {
-  name: String
-}
-
-input NavigationItemUpdateLocalizationInput {
-  data: NavigationItemUpdateLocalizationDataInput!
-  locale: Locale!
-}
-
-input NavigationItemUpdateLocalizationsInput {
-  """Localizations to create"""
-  create: [NavigationItemCreateLocalizationInput!]
-
-  """Localizations to delete"""
-  delete: [Locale!]
-
-  """Localizations to update"""
-  update: [NavigationItemUpdateLocalizationInput!]
-  upsert: [NavigationItemUpsertLocalizationInput!]
-}
-
-input NavigationItemUpdateManyInlineInput {
-  """Connect multiple existing NavigationItem documents"""
-  connect: [NavigationItemConnectInput!]
-
-  """Create and connect multiple NavigationItem documents"""
-  create: [NavigationItemCreateInput!]
-
-  """Delete multiple NavigationItem documents"""
-  delete: [NavigationItemWhereUniqueInput!]
-
-  """Disconnect multiple NavigationItem documents"""
-  disconnect: [NavigationItemWhereUniqueInput!]
-
-  """
-  Override currently-connected documents with multiple existing NavigationItem documents
-  """
-  set: [NavigationItemWhereUniqueInput!]
-
-  """Update multiple NavigationItem documents"""
-  update: [NavigationItemUpdateWithNestedWhereUniqueInput!]
-
-  """Upsert multiple NavigationItem documents"""
-  upsert: [NavigationItemUpsertWithNestedWhereUniqueInput!]
-}
-
-input NavigationItemUpdateManyInput {
-  """No fields in updateMany data input"""
-  _: String
-}
-
-input NavigationItemUpdateManyWithNestedWhereInput {
-  """Update many input"""
-  data: NavigationItemUpdateManyInput!
-
-  """Document search"""
-  where: NavigationItemWhereInput!
-}
-
-input NavigationItemUpdateOneInlineInput {
-  """Connect existing NavigationItem document"""
-  connect: NavigationItemWhereUniqueInput
-
-  """Create and connect one NavigationItem document"""
-  create: NavigationItemCreateInput
-
-  """Delete currently connected NavigationItem document"""
-  delete: Boolean
-
-  """Disconnect currently connected NavigationItem document"""
-  disconnect: Boolean
-
-  """Update single NavigationItem document"""
-  update: NavigationItemUpdateWithNestedWhereUniqueInput
-
-  """Upsert single NavigationItem document"""
-  upsert: NavigationItemUpsertWithNestedWhereUniqueInput
-}
-
-input NavigationItemUpdateWithNestedWhereUniqueInput {
-  """Document to update"""
-  data: NavigationItemUpdateInput!
-
-  """Unique document search"""
-  where: NavigationItemWhereUniqueInput!
-}
-
-input NavigationItemUpsertInput {
-  """Create document if it didn't exist"""
-  create: NavigationItemCreateInput!
-
-  """Update document if it exists"""
-  update: NavigationItemUpdateInput!
-}
-
-input NavigationItemUpsertLocalizationInput {
-  create: NavigationItemCreateLocalizationDataInput!
-  locale: Locale!
-  update: NavigationItemUpdateLocalizationDataInput!
-}
-
-input NavigationItemUpsertWithNestedWhereUniqueInput {
-  """Upsert data"""
-  data: NavigationItemUpsertInput!
-
-  """Unique document search"""
-  where: NavigationItemWhereUniqueInput!
-}
-
-"""
-This contains a set of filters that can be used to compare values internally
-"""
-input NavigationItemWhereComparatorInput {
-  """
-  This field can be used to request to check if the entry is outdated by internal comparison
-  """
-  outdated_to: Boolean
-}
-
-"""Identifies documents"""
-input NavigationItemWhereInput {
-  """Logical AND on all given filters."""
-  AND: [NavigationItemWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [NavigationItemWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [NavigationItemWhereInput!]
-
-  """Contains search across all appropriate fields."""
-  _search: String
-  createdAt: DateTime
-
-  """All values greater than the given value."""
-  createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  createdAt_gte: DateTime
-
-  """All values that are contained in given list."""
-  createdAt_in: [DateTime]
-
-  """All values less than the given value."""
-  createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  createdAt_lte: DateTime
-
-  """All values that are not equal to given value."""
-  createdAt_not: DateTime
-
-  """All values that are not contained in given list."""
-  createdAt_not_in: [DateTime]
-  createdBy: UserWhereInput
-  documentInStages_every: NavigationItemWhereStageInput
-  documentInStages_none: NavigationItemWhereStageInput
-  documentInStages_some: NavigationItemWhereStageInput
-  id: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID]
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values not ending with the given string"""
-  id_not_ends_with: ID
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID]
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-  name: String
-
-  """All values containing the given string."""
-  name_contains: String
-
-  """All values ending with the given string."""
-  name_ends_with: String
-
-  """All values that are contained in given list."""
-  name_in: [String]
-
-  """All values that are not equal to given value."""
-  name_not: String
-
-  """All values not containing the given string."""
-  name_not_contains: String
-
-  """All values not ending with the given string"""
-  name_not_ends_with: String
-
-  """All values that are not contained in given list."""
-  name_not_in: [String]
-
-  """All values not starting with the given string."""
-  name_not_starts_with: String
-
-  """All values starting with the given string."""
-  name_starts_with: String
-  navigation: NavigationWhereInput
-  publishedAt: DateTime
-
-  """All values greater than the given value."""
-  publishedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  publishedAt_gte: DateTime
-
-  """All values that are contained in given list."""
-  publishedAt_in: [DateTime]
-
-  """All values less than the given value."""
-  publishedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  publishedAt_lte: DateTime
-
-  """All values that are not equal to given value."""
-  publishedAt_not: DateTime
-
-  """All values that are not contained in given list."""
-  publishedAt_not_in: [DateTime]
-  publishedBy: UserWhereInput
-  scheduledIn_every: ScheduledOperationWhereInput
-  scheduledIn_none: ScheduledOperationWhereInput
-  scheduledIn_some: ScheduledOperationWhereInput
-  slug: String
-
-  """All values containing the given string."""
-  slug_contains: String
-
-  """All values ending with the given string."""
-  slug_ends_with: String
-
-  """All values that are contained in given list."""
-  slug_in: [String]
-
-  """All values that are not equal to given value."""
-  slug_not: String
-
-  """All values not containing the given string."""
-  slug_not_contains: String
-
-  """All values not ending with the given string"""
-  slug_not_ends_with: String
-
-  """All values that are not contained in given list."""
-  slug_not_in: [String]
-
-  """All values not starting with the given string."""
-  slug_not_starts_with: String
-
-  """All values starting with the given string."""
-  slug_starts_with: String
-  updatedAt: DateTime
-
-  """All values greater than the given value."""
-  updatedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  updatedAt_gte: DateTime
-
-  """All values that are contained in given list."""
-  updatedAt_in: [DateTime]
-
-  """All values less than the given value."""
-  updatedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  updatedAt_lte: DateTime
-
-  """All values that are not equal to given value."""
-  updatedAt_not: DateTime
-
-  """All values that are not contained in given list."""
-  updatedAt_not_in: [DateTime]
-  updatedBy: UserWhereInput
-}
-
-"""
-The document in stages filter allows specifying a stage entry to cross compare the same document between different stages
-"""
-input NavigationItemWhereStageInput {
-  """Logical AND on all given filters."""
-  AND: [NavigationItemWhereStageInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [NavigationItemWhereStageInput!]
-
-  """Logical OR on all given filters."""
-  OR: [NavigationItemWhereStageInput!]
-
-  """
-  This field contains fields which can be set as true or false to specify an internal comparison
-  """
-  compareWithParent: NavigationItemWhereComparatorInput
-
-  """Specify the stage to compare with"""
-  stage: Stage
-}
-
-"""References NavigationItem record uniquely"""
-input NavigationItemWhereUniqueInput {
-  id: ID
-  slug: String
-}
-
-"""Identifies documents"""
-input NavigationManyWhereInput {
-  """Logical AND on all given filters."""
-  AND: [NavigationWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [NavigationWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [NavigationWhereInput!]
-
-  """Contains search across all appropriate fields."""
-  _search: String
-  createdAt: DateTime
-
-  """All values greater than the given value."""
-  createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  createdAt_gte: DateTime
-
-  """All values that are contained in given list."""
-  createdAt_in: [DateTime]
-
-  """All values less than the given value."""
-  createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  createdAt_lte: DateTime
-
-  """All values that are not equal to given value."""
-  createdAt_not: DateTime
-
-  """All values that are not contained in given list."""
-  createdAt_not_in: [DateTime]
-  createdBy: UserWhereInput
-  documentInStages_every: NavigationWhereStageInput
-  documentInStages_none: NavigationWhereStageInput
-  documentInStages_some: NavigationWhereStageInput
-  id: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID]
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values not ending with the given string"""
-  id_not_ends_with: ID
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID]
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-  navigationItems_every: NavigationItemWhereInput
-  navigationItems_none: NavigationItemWhereInput
-  navigationItems_some: NavigationItemWhereInput
-  personalProfile: PersonalProfileWhereInput
-  publishedAt: DateTime
-
-  """All values greater than the given value."""
-  publishedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  publishedAt_gte: DateTime
-
-  """All values that are contained in given list."""
-  publishedAt_in: [DateTime]
-
-  """All values less than the given value."""
-  publishedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  publishedAt_lte: DateTime
-
-  """All values that are not equal to given value."""
-  publishedAt_not: DateTime
-
-  """All values that are not contained in given list."""
-  publishedAt_not_in: [DateTime]
-  publishedBy: UserWhereInput
-  scheduledIn_every: ScheduledOperationWhereInput
-  scheduledIn_none: ScheduledOperationWhereInput
-  scheduledIn_some: ScheduledOperationWhereInput
-  updatedAt: DateTime
-
-  """All values greater than the given value."""
-  updatedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  updatedAt_gte: DateTime
-
-  """All values that are contained in given list."""
-  updatedAt_in: [DateTime]
-
-  """All values less than the given value."""
-  updatedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  updatedAt_lte: DateTime
-
-  """All values that are not equal to given value."""
-  updatedAt_not: DateTime
-
-  """All values that are not contained in given list."""
-  updatedAt_not_in: [DateTime]
-  updatedBy: UserWhereInput
-}
-
-enum NavigationOrderByInput {
-  createdAt_ASC
-  createdAt_DESC
-  id_ASC
-  id_DESC
-  publishedAt_ASC
-  publishedAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-input NavigationUpdateInput {
-  navigationItems: NavigationItemUpdateManyInlineInput
-  personalProfile: PersonalProfileUpdateOneInlineInput
-}
-
-input NavigationUpdateManyInlineInput {
-  """Connect multiple existing Navigation documents"""
-  connect: [NavigationConnectInput!]
-
-  """Create and connect multiple Navigation documents"""
-  create: [NavigationCreateInput!]
-
-  """Delete multiple Navigation documents"""
-  delete: [NavigationWhereUniqueInput!]
-
-  """Disconnect multiple Navigation documents"""
-  disconnect: [NavigationWhereUniqueInput!]
-
-  """
-  Override currently-connected documents with multiple existing Navigation documents
-  """
-  set: [NavigationWhereUniqueInput!]
-
-  """Update multiple Navigation documents"""
-  update: [NavigationUpdateWithNestedWhereUniqueInput!]
-
-  """Upsert multiple Navigation documents"""
-  upsert: [NavigationUpsertWithNestedWhereUniqueInput!]
-}
-
-input NavigationUpdateManyInput {
-  """No fields in updateMany data input"""
-  _: String
-}
-
-input NavigationUpdateManyWithNestedWhereInput {
-  """Update many input"""
-  data: NavigationUpdateManyInput!
-
-  """Document search"""
-  where: NavigationWhereInput!
-}
-
-input NavigationUpdateOneInlineInput {
-  """Connect existing Navigation document"""
-  connect: NavigationWhereUniqueInput
-
-  """Create and connect one Navigation document"""
-  create: NavigationCreateInput
-
-  """Delete currently connected Navigation document"""
-  delete: Boolean
-
-  """Disconnect currently connected Navigation document"""
-  disconnect: Boolean
-
-  """Update single Navigation document"""
-  update: NavigationUpdateWithNestedWhereUniqueInput
-
-  """Upsert single Navigation document"""
-  upsert: NavigationUpsertWithNestedWhereUniqueInput
-}
-
-input NavigationUpdateWithNestedWhereUniqueInput {
-  """Document to update"""
-  data: NavigationUpdateInput!
-
-  """Unique document search"""
-  where: NavigationWhereUniqueInput!
-}
-
-input NavigationUpsertInput {
-  """Create document if it didn't exist"""
-  create: NavigationCreateInput!
-
-  """Update document if it exists"""
-  update: NavigationUpdateInput!
-}
-
-input NavigationUpsertWithNestedWhereUniqueInput {
-  """Upsert data"""
-  data: NavigationUpsertInput!
-
-  """Unique document search"""
-  where: NavigationWhereUniqueInput!
-}
-
-"""
-This contains a set of filters that can be used to compare values internally
-"""
-input NavigationWhereComparatorInput {
-  """
-  This field can be used to request to check if the entry is outdated by internal comparison
-  """
-  outdated_to: Boolean
-}
-
-"""Identifies documents"""
-input NavigationWhereInput {
-  """Logical AND on all given filters."""
-  AND: [NavigationWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [NavigationWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [NavigationWhereInput!]
-
-  """Contains search across all appropriate fields."""
-  _search: String
-  createdAt: DateTime
-
-  """All values greater than the given value."""
-  createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  createdAt_gte: DateTime
-
-  """All values that are contained in given list."""
-  createdAt_in: [DateTime]
-
-  """All values less than the given value."""
-  createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  createdAt_lte: DateTime
-
-  """All values that are not equal to given value."""
-  createdAt_not: DateTime
-
-  """All values that are not contained in given list."""
-  createdAt_not_in: [DateTime]
-  createdBy: UserWhereInput
-  documentInStages_every: NavigationWhereStageInput
-  documentInStages_none: NavigationWhereStageInput
-  documentInStages_some: NavigationWhereStageInput
-  id: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID]
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values not ending with the given string"""
-  id_not_ends_with: ID
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID]
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-  navigationItems_every: NavigationItemWhereInput
-  navigationItems_none: NavigationItemWhereInput
-  navigationItems_some: NavigationItemWhereInput
-  personalProfile: PersonalProfileWhereInput
-  publishedAt: DateTime
-
-  """All values greater than the given value."""
-  publishedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  publishedAt_gte: DateTime
-
-  """All values that are contained in given list."""
-  publishedAt_in: [DateTime]
-
-  """All values less than the given value."""
-  publishedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  publishedAt_lte: DateTime
-
-  """All values that are not equal to given value."""
-  publishedAt_not: DateTime
-
-  """All values that are not contained in given list."""
-  publishedAt_not_in: [DateTime]
-  publishedBy: UserWhereInput
-  scheduledIn_every: ScheduledOperationWhereInput
-  scheduledIn_none: ScheduledOperationWhereInput
-  scheduledIn_some: ScheduledOperationWhereInput
-  updatedAt: DateTime
-
-  """All values greater than the given value."""
-  updatedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  updatedAt_gte: DateTime
-
-  """All values that are contained in given list."""
-  updatedAt_in: [DateTime]
-
-  """All values less than the given value."""
-  updatedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  updatedAt_lte: DateTime
-
-  """All values that are not equal to given value."""
-  updatedAt_not: DateTime
-
-  """All values that are not contained in given list."""
-  updatedAt_not_in: [DateTime]
-  updatedBy: UserWhereInput
-}
-
-"""
-The document in stages filter allows specifying a stage entry to cross compare the same document between different stages
-"""
-input NavigationWhereStageInput {
-  """Logical AND on all given filters."""
-  AND: [NavigationWhereStageInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [NavigationWhereStageInput!]
-
-  """Logical OR on all given filters."""
-  OR: [NavigationWhereStageInput!]
-
-  """
-  This field contains fields which can be set as true or false to specify an internal comparison
-  """
-  compareWithParent: NavigationWhereComparatorInput
-
-  """Specify the stage to compare with"""
-  stage: Stage
-}
-
-"""References Navigation record uniquely"""
-input NavigationWhereUniqueInput {
-  id: ID
 }
 
 """An object with an ID"""
@@ -5356,818 +4350,6 @@ type PageInfo {
 
   """When paginating backwards, the cursor to continue."""
   startCursor: String
-}
-
-"""Enter here your personal info."""
-type PersonalProfile implements Node {
-  """The time the document was created"""
-  createdAt: DateTime!
-
-  """User that created this document"""
-  createdBy(
-    """
-    Sets the locale of the resolved parent document as the only locale in the query's subtree.
-    
-    Note that `createdBy` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
-    """
-    forceParentLocale: Boolean
-
-    """
-    Allows to optionally override locale filtering behaviour in the query's subtree.
-    
-    Note that `createdBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
-    """
-    locales: [Locale!]
-  ): User
-
-  """Get the document in other stages"""
-  documentInStages(
-    """Decides if the current stage should be included or not"""
-    includeCurrent: Boolean! = false
-
-    """
-    Decides if the documents should match the parent documents locale or should use the fallback order defined in the tree
-    """
-    inheritLocale: Boolean! = false
-
-    """Potential stages that should be returned"""
-    stages: [Stage!]! = [PUBLISHED, DRAFT]
-  ): [PersonalProfile!]!
-  firstName: String!
-
-  """List of PersonalProfile versions"""
-  history(
-    limit: Int! = 10
-    skip: Int! = 0
-
-    """
-    This is optional and can be used to fetch the document version history for a specific stage instead of the current one
-    """
-    stageOverride: Stage
-  ): [Version!]!
-
-  """The unique identifier"""
-  id: ID!
-
-  """Enter here your current job title."""
-  jobTitle: String
-  lastName: String
-
-  """The location you're situated currently."""
-  location: String
-
-  """The time the document was published. Null on documents in draft stage."""
-  publishedAt: DateTime
-
-  """User that last published this document"""
-  publishedBy(
-    """
-    Sets the locale of the resolved parent document as the only locale in the query's subtree.
-    
-    Note that `publishedBy` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
-    """
-    forceParentLocale: Boolean
-
-    """
-    Allows to optionally override locale filtering behaviour in the query's subtree.
-    
-    Note that `publishedBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
-    """
-    locales: [Locale!]
-  ): User
-  scheduledIn(
-    after: String
-    before: String
-    first: Int
-
-    """
-    Sets the locale of the resolved parent document as the only locale in the query's subtree.
-    
-    Note that `scheduledIn` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
-    """
-    forceParentLocale: Boolean
-    last: Int
-
-    """
-    Allows to optionally override locale filtering behaviour in the query's subtree.
-    
-    Note that `scheduledIn` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
-    """
-    locales: [Locale!]
-    skip: Int
-    where: ScheduledOperationWhereInput
-  ): [ScheduledOperation!]!
-
-  """System stage field"""
-  stage: Stage!
-
-  """The time the document was updated"""
-  updatedAt: DateTime!
-
-  """User that last updated this document"""
-  updatedBy(
-    """
-    Sets the locale of the resolved parent document as the only locale in the query's subtree.
-    
-    Note that `updatedBy` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
-    """
-    forceParentLocale: Boolean
-
-    """
-    Allows to optionally override locale filtering behaviour in the query's subtree.
-    
-    Note that `updatedBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
-    """
-    locales: [Locale!]
-  ): User
-}
-
-input PersonalProfileConnectInput {
-  """
-  Allow to specify document position in list of connected documents, will default to appending at end of list
-  """
-  position: ConnectPositionInput
-
-  """Document to connect"""
-  where: PersonalProfileWhereUniqueInput!
-}
-
-"""A connection to a list of items."""
-type PersonalProfileConnection {
-  aggregate: Aggregate!
-
-  """A list of edges."""
-  edges: [PersonalProfileEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-}
-
-input PersonalProfileCreateInput {
-  cky4x1deh0lrw01z53tvna2x4: NavigationCreateManyInlineInput
-  createdAt: DateTime
-  firstName: String!
-  jobTitle: String
-  lastName: String
-  location: String
-  updatedAt: DateTime
-}
-
-input PersonalProfileCreateManyInlineInput {
-  """Connect multiple existing PersonalProfile documents"""
-  connect: [PersonalProfileWhereUniqueInput!]
-
-  """Create and connect multiple existing PersonalProfile documents"""
-  create: [PersonalProfileCreateInput!]
-}
-
-input PersonalProfileCreateOneInlineInput {
-  """Connect one existing PersonalProfile document"""
-  connect: PersonalProfileWhereUniqueInput
-
-  """Create and connect one PersonalProfile document"""
-  create: PersonalProfileCreateInput
-}
-
-"""An edge in a connection."""
-type PersonalProfileEdge {
-  """A cursor for use in pagination."""
-  cursor: String!
-
-  """The item at the end of the edge."""
-  node: PersonalProfile!
-}
-
-"""Identifies documents"""
-input PersonalProfileManyWhereInput {
-  """Logical AND on all given filters."""
-  AND: [PersonalProfileWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [PersonalProfileWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [PersonalProfileWhereInput!]
-
-  """Contains search across all appropriate fields."""
-  _search: String
-  createdAt: DateTime
-
-  """All values greater than the given value."""
-  createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  createdAt_gte: DateTime
-
-  """All values that are contained in given list."""
-  createdAt_in: [DateTime]
-
-  """All values less than the given value."""
-  createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  createdAt_lte: DateTime
-
-  """All values that are not equal to given value."""
-  createdAt_not: DateTime
-
-  """All values that are not contained in given list."""
-  createdAt_not_in: [DateTime]
-  createdBy: UserWhereInput
-  documentInStages_every: PersonalProfileWhereStageInput
-  documentInStages_none: PersonalProfileWhereStageInput
-  documentInStages_some: PersonalProfileWhereStageInput
-  firstName: String
-
-  """All values containing the given string."""
-  firstName_contains: String
-
-  """All values ending with the given string."""
-  firstName_ends_with: String
-
-  """All values that are contained in given list."""
-  firstName_in: [String]
-
-  """All values that are not equal to given value."""
-  firstName_not: String
-
-  """All values not containing the given string."""
-  firstName_not_contains: String
-
-  """All values not ending with the given string"""
-  firstName_not_ends_with: String
-
-  """All values that are not contained in given list."""
-  firstName_not_in: [String]
-
-  """All values not starting with the given string."""
-  firstName_not_starts_with: String
-
-  """All values starting with the given string."""
-  firstName_starts_with: String
-  id: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID]
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values not ending with the given string"""
-  id_not_ends_with: ID
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID]
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-  jobTitle: String
-
-  """All values containing the given string."""
-  jobTitle_contains: String
-
-  """All values ending with the given string."""
-  jobTitle_ends_with: String
-
-  """All values that are contained in given list."""
-  jobTitle_in: [String]
-
-  """All values that are not equal to given value."""
-  jobTitle_not: String
-
-  """All values not containing the given string."""
-  jobTitle_not_contains: String
-
-  """All values not ending with the given string"""
-  jobTitle_not_ends_with: String
-
-  """All values that are not contained in given list."""
-  jobTitle_not_in: [String]
-
-  """All values not starting with the given string."""
-  jobTitle_not_starts_with: String
-
-  """All values starting with the given string."""
-  jobTitle_starts_with: String
-  lastName: String
-
-  """All values containing the given string."""
-  lastName_contains: String
-
-  """All values ending with the given string."""
-  lastName_ends_with: String
-
-  """All values that are contained in given list."""
-  lastName_in: [String]
-
-  """All values that are not equal to given value."""
-  lastName_not: String
-
-  """All values not containing the given string."""
-  lastName_not_contains: String
-
-  """All values not ending with the given string"""
-  lastName_not_ends_with: String
-
-  """All values that are not contained in given list."""
-  lastName_not_in: [String]
-
-  """All values not starting with the given string."""
-  lastName_not_starts_with: String
-
-  """All values starting with the given string."""
-  lastName_starts_with: String
-  location: String
-
-  """All values containing the given string."""
-  location_contains: String
-
-  """All values ending with the given string."""
-  location_ends_with: String
-
-  """All values that are contained in given list."""
-  location_in: [String]
-
-  """All values that are not equal to given value."""
-  location_not: String
-
-  """All values not containing the given string."""
-  location_not_contains: String
-
-  """All values not ending with the given string"""
-  location_not_ends_with: String
-
-  """All values that are not contained in given list."""
-  location_not_in: [String]
-
-  """All values not starting with the given string."""
-  location_not_starts_with: String
-
-  """All values starting with the given string."""
-  location_starts_with: String
-  publishedAt: DateTime
-
-  """All values greater than the given value."""
-  publishedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  publishedAt_gte: DateTime
-
-  """All values that are contained in given list."""
-  publishedAt_in: [DateTime]
-
-  """All values less than the given value."""
-  publishedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  publishedAt_lte: DateTime
-
-  """All values that are not equal to given value."""
-  publishedAt_not: DateTime
-
-  """All values that are not contained in given list."""
-  publishedAt_not_in: [DateTime]
-  publishedBy: UserWhereInput
-  scheduledIn_every: ScheduledOperationWhereInput
-  scheduledIn_none: ScheduledOperationWhereInput
-  scheduledIn_some: ScheduledOperationWhereInput
-  updatedAt: DateTime
-
-  """All values greater than the given value."""
-  updatedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  updatedAt_gte: DateTime
-
-  """All values that are contained in given list."""
-  updatedAt_in: [DateTime]
-
-  """All values less than the given value."""
-  updatedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  updatedAt_lte: DateTime
-
-  """All values that are not equal to given value."""
-  updatedAt_not: DateTime
-
-  """All values that are not contained in given list."""
-  updatedAt_not_in: [DateTime]
-  updatedBy: UserWhereInput
-}
-
-enum PersonalProfileOrderByInput {
-  createdAt_ASC
-  createdAt_DESC
-  firstName_ASC
-  firstName_DESC
-  id_ASC
-  id_DESC
-  jobTitle_ASC
-  jobTitle_DESC
-  lastName_ASC
-  lastName_DESC
-  location_ASC
-  location_DESC
-  publishedAt_ASC
-  publishedAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-input PersonalProfileUpdateInput {
-  cky4x1deh0lrw01z53tvna2x4: NavigationUpdateManyInlineInput
-  firstName: String
-  jobTitle: String
-  lastName: String
-  location: String
-}
-
-input PersonalProfileUpdateManyInlineInput {
-  """Connect multiple existing PersonalProfile documents"""
-  connect: [PersonalProfileConnectInput!]
-
-  """Create and connect multiple PersonalProfile documents"""
-  create: [PersonalProfileCreateInput!]
-
-  """Delete multiple PersonalProfile documents"""
-  delete: [PersonalProfileWhereUniqueInput!]
-
-  """Disconnect multiple PersonalProfile documents"""
-  disconnect: [PersonalProfileWhereUniqueInput!]
-
-  """
-  Override currently-connected documents with multiple existing PersonalProfile documents
-  """
-  set: [PersonalProfileWhereUniqueInput!]
-
-  """Update multiple PersonalProfile documents"""
-  update: [PersonalProfileUpdateWithNestedWhereUniqueInput!]
-
-  """Upsert multiple PersonalProfile documents"""
-  upsert: [PersonalProfileUpsertWithNestedWhereUniqueInput!]
-}
-
-input PersonalProfileUpdateManyInput {
-  firstName: String
-  jobTitle: String
-  lastName: String
-  location: String
-}
-
-input PersonalProfileUpdateManyWithNestedWhereInput {
-  """Update many input"""
-  data: PersonalProfileUpdateManyInput!
-
-  """Document search"""
-  where: PersonalProfileWhereInput!
-}
-
-input PersonalProfileUpdateOneInlineInput {
-  """Connect existing PersonalProfile document"""
-  connect: PersonalProfileWhereUniqueInput
-
-  """Create and connect one PersonalProfile document"""
-  create: PersonalProfileCreateInput
-
-  """Delete currently connected PersonalProfile document"""
-  delete: Boolean
-
-  """Disconnect currently connected PersonalProfile document"""
-  disconnect: Boolean
-
-  """Update single PersonalProfile document"""
-  update: PersonalProfileUpdateWithNestedWhereUniqueInput
-
-  """Upsert single PersonalProfile document"""
-  upsert: PersonalProfileUpsertWithNestedWhereUniqueInput
-}
-
-input PersonalProfileUpdateWithNestedWhereUniqueInput {
-  """Document to update"""
-  data: PersonalProfileUpdateInput!
-
-  """Unique document search"""
-  where: PersonalProfileWhereUniqueInput!
-}
-
-input PersonalProfileUpsertInput {
-  """Create document if it didn't exist"""
-  create: PersonalProfileCreateInput!
-
-  """Update document if it exists"""
-  update: PersonalProfileUpdateInput!
-}
-
-input PersonalProfileUpsertWithNestedWhereUniqueInput {
-  """Upsert data"""
-  data: PersonalProfileUpsertInput!
-
-  """Unique document search"""
-  where: PersonalProfileWhereUniqueInput!
-}
-
-"""
-This contains a set of filters that can be used to compare values internally
-"""
-input PersonalProfileWhereComparatorInput {
-  """
-  This field can be used to request to check if the entry is outdated by internal comparison
-  """
-  outdated_to: Boolean
-}
-
-"""Identifies documents"""
-input PersonalProfileWhereInput {
-  """Logical AND on all given filters."""
-  AND: [PersonalProfileWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [PersonalProfileWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [PersonalProfileWhereInput!]
-
-  """Contains search across all appropriate fields."""
-  _search: String
-  createdAt: DateTime
-
-  """All values greater than the given value."""
-  createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  createdAt_gte: DateTime
-
-  """All values that are contained in given list."""
-  createdAt_in: [DateTime]
-
-  """All values less than the given value."""
-  createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  createdAt_lte: DateTime
-
-  """All values that are not equal to given value."""
-  createdAt_not: DateTime
-
-  """All values that are not contained in given list."""
-  createdAt_not_in: [DateTime]
-  createdBy: UserWhereInput
-  documentInStages_every: PersonalProfileWhereStageInput
-  documentInStages_none: PersonalProfileWhereStageInput
-  documentInStages_some: PersonalProfileWhereStageInput
-  firstName: String
-
-  """All values containing the given string."""
-  firstName_contains: String
-
-  """All values ending with the given string."""
-  firstName_ends_with: String
-
-  """All values that are contained in given list."""
-  firstName_in: [String]
-
-  """All values that are not equal to given value."""
-  firstName_not: String
-
-  """All values not containing the given string."""
-  firstName_not_contains: String
-
-  """All values not ending with the given string"""
-  firstName_not_ends_with: String
-
-  """All values that are not contained in given list."""
-  firstName_not_in: [String]
-
-  """All values not starting with the given string."""
-  firstName_not_starts_with: String
-
-  """All values starting with the given string."""
-  firstName_starts_with: String
-  id: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID]
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values not ending with the given string"""
-  id_not_ends_with: ID
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID]
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-  jobTitle: String
-
-  """All values containing the given string."""
-  jobTitle_contains: String
-
-  """All values ending with the given string."""
-  jobTitle_ends_with: String
-
-  """All values that are contained in given list."""
-  jobTitle_in: [String]
-
-  """All values that are not equal to given value."""
-  jobTitle_not: String
-
-  """All values not containing the given string."""
-  jobTitle_not_contains: String
-
-  """All values not ending with the given string"""
-  jobTitle_not_ends_with: String
-
-  """All values that are not contained in given list."""
-  jobTitle_not_in: [String]
-
-  """All values not starting with the given string."""
-  jobTitle_not_starts_with: String
-
-  """All values starting with the given string."""
-  jobTitle_starts_with: String
-  lastName: String
-
-  """All values containing the given string."""
-  lastName_contains: String
-
-  """All values ending with the given string."""
-  lastName_ends_with: String
-
-  """All values that are contained in given list."""
-  lastName_in: [String]
-
-  """All values that are not equal to given value."""
-  lastName_not: String
-
-  """All values not containing the given string."""
-  lastName_not_contains: String
-
-  """All values not ending with the given string"""
-  lastName_not_ends_with: String
-
-  """All values that are not contained in given list."""
-  lastName_not_in: [String]
-
-  """All values not starting with the given string."""
-  lastName_not_starts_with: String
-
-  """All values starting with the given string."""
-  lastName_starts_with: String
-  location: String
-
-  """All values containing the given string."""
-  location_contains: String
-
-  """All values ending with the given string."""
-  location_ends_with: String
-
-  """All values that are contained in given list."""
-  location_in: [String]
-
-  """All values that are not equal to given value."""
-  location_not: String
-
-  """All values not containing the given string."""
-  location_not_contains: String
-
-  """All values not ending with the given string"""
-  location_not_ends_with: String
-
-  """All values that are not contained in given list."""
-  location_not_in: [String]
-
-  """All values not starting with the given string."""
-  location_not_starts_with: String
-
-  """All values starting with the given string."""
-  location_starts_with: String
-  publishedAt: DateTime
-
-  """All values greater than the given value."""
-  publishedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  publishedAt_gte: DateTime
-
-  """All values that are contained in given list."""
-  publishedAt_in: [DateTime]
-
-  """All values less than the given value."""
-  publishedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  publishedAt_lte: DateTime
-
-  """All values that are not equal to given value."""
-  publishedAt_not: DateTime
-
-  """All values that are not contained in given list."""
-  publishedAt_not_in: [DateTime]
-  publishedBy: UserWhereInput
-  scheduledIn_every: ScheduledOperationWhereInput
-  scheduledIn_none: ScheduledOperationWhereInput
-  scheduledIn_some: ScheduledOperationWhereInput
-  updatedAt: DateTime
-
-  """All values greater than the given value."""
-  updatedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  updatedAt_gte: DateTime
-
-  """All values that are contained in given list."""
-  updatedAt_in: [DateTime]
-
-  """All values less than the given value."""
-  updatedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  updatedAt_lte: DateTime
-
-  """All values that are not equal to given value."""
-  updatedAt_not: DateTime
-
-  """All values that are not contained in given list."""
-  updatedAt_not_in: [DateTime]
-  updatedBy: UserWhereInput
-}
-
-"""
-The document in stages filter allows specifying a stage entry to cross compare the same document between different stages
-"""
-input PersonalProfileWhereStageInput {
-  """Logical AND on all given filters."""
-  AND: [PersonalProfileWhereStageInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [PersonalProfileWhereStageInput!]
-
-  """Logical OR on all given filters."""
-  OR: [PersonalProfileWhereStageInput!]
-
-  """
-  This field contains fields which can be set as true or false to specify an internal comparison
-  """
-  compareWithParent: PersonalProfileWhereComparatorInput
-
-  """Specify the stage to compare with"""
-  stage: Stage
-}
-
-"""References PersonalProfile record uniquely"""
-input PersonalProfileWhereUniqueInput {
-  id: ID
 }
 
 input PublishLocaleInput {
@@ -6303,130 +4485,6 @@ type Query {
     where: CvPageWhereInput
   ): CvPageConnection!
 
-  """Retrieve a single navigation"""
-  navigation(
-    """
-    Defines which locales should be returned.
-    
-    Note that `Navigation` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
-    """
-    locales: [Locale!]! = [en]
-    stage: Stage! = PUBLISHED
-    where: NavigationWhereUniqueInput!
-  ): Navigation
-
-  """Retrieve a single navigationItem"""
-  navigationItem(
-    """
-    Defines which locales should be returned.
-    
-    Note that `NavigationItem` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
-    The first locale matching the provided list will be returned, entries with non matching locales will be filtered out.
-    
-    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
-    """
-    locales: [Locale!]! = [en]
-    stage: Stage! = PUBLISHED
-    where: NavigationItemWhereUniqueInput!
-  ): NavigationItem
-
-  """Retrieve document version"""
-  navigationItemVersion(where: VersionWhereInput!): DocumentVersion
-
-  """Retrieve multiple navigationItems"""
-  navigationItems(
-    after: String
-    before: String
-    first: Int
-    last: Int
-
-    """
-    Defines which locales should be returned.
-    
-    Note that `NavigationItem` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
-    The first locale matching the provided list will be returned, entries with non matching locales will be filtered out.
-    
-    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
-    """
-    locales: [Locale!]! = [en]
-    orderBy: NavigationItemOrderByInput
-    skip: Int
-    stage: Stage! = PUBLISHED
-    where: NavigationItemWhereInput
-  ): [NavigationItem!]!
-
-  """Retrieve multiple navigationItems using the Relay connection interface"""
-  navigationItemsConnection(
-    after: String
-    before: String
-    first: Int
-    last: Int
-
-    """
-    Defines which locales should be returned.
-    
-    Note that `NavigationItem` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
-    The first locale matching the provided list will be returned, entries with non matching locales will be filtered out.
-    
-    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
-    """
-    locales: [Locale!]! = [en]
-    orderBy: NavigationItemOrderByInput
-    skip: Int
-    stage: Stage! = PUBLISHED
-    where: NavigationItemWhereInput
-  ): NavigationItemConnection!
-
-  """Retrieve document version"""
-  navigationVersion(where: VersionWhereInput!): DocumentVersion
-
-  """Retrieve multiple navigations"""
-  navigations(
-    after: String
-    before: String
-    first: Int
-    last: Int
-
-    """
-    Defines which locales should be returned.
-    
-    Note that `Navigation` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
-    """
-    locales: [Locale!]! = [en]
-    orderBy: NavigationOrderByInput
-    skip: Int
-    stage: Stage! = PUBLISHED
-    where: NavigationWhereInput
-  ): [Navigation!]!
-
-  """Retrieve multiple navigations using the Relay connection interface"""
-  navigationsConnection(
-    after: String
-    before: String
-    first: Int
-    last: Int
-
-    """
-    Defines which locales should be returned.
-    
-    Note that `Navigation` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
-    """
-    locales: [Locale!]! = [en]
-    orderBy: NavigationOrderByInput
-    skip: Int
-    stage: Stage! = PUBLISHED
-    where: NavigationWhereInput
-  ): NavigationConnection!
-
   """Fetches an object given its ID"""
   node(
     """The ID of an object"""
@@ -6443,70 +4501,6 @@ type Query {
     locales: [Locale!]! = [en]
     stage: Stage! = PUBLISHED
   ): Node
-
-  """Retrieve a single personalProfile"""
-  personalProfile(
-    """
-    Defines which locales should be returned.
-    
-    Note that `PersonalProfile` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
-    """
-    locales: [Locale!]! = [en]
-    stage: Stage! = PUBLISHED
-    where: PersonalProfileWhereUniqueInput!
-  ): PersonalProfile
-
-  """Retrieve document version"""
-  personalProfileVersion(where: VersionWhereInput!): DocumentVersion
-
-  """Retrieve multiple personalProfiles"""
-  personalProfiles(
-    after: String
-    before: String
-    first: Int
-    last: Int
-
-    """
-    Defines which locales should be returned.
-    
-    Note that `PersonalProfile` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
-    """
-    locales: [Locale!]! = [en]
-    orderBy: PersonalProfileOrderByInput
-    skip: Int
-    stage: Stage! = PUBLISHED
-    where: PersonalProfileWhereInput
-  ): [PersonalProfile!]!
-
-  """
-  Retrieve multiple personalProfiles using the Relay connection interface
-  """
-  personalProfilesConnection(
-    after: String
-    before: String
-    first: Int
-    last: Int
-
-    """
-    Defines which locales should be returned.
-    
-    Note that `PersonalProfile` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
-    
-    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
-    """
-    locales: [Locale!]! = [en]
-    orderBy: PersonalProfileOrderByInput
-    skip: Int
-    stage: Stage! = PUBLISHED
-    where: PersonalProfileWhereInput
-  ): PersonalProfileConnection!
 
   """Retrieve a single scheduledOperation"""
   scheduledOperation(
@@ -6900,7 +4894,7 @@ type ScheduledOperation implements Node {
   ): User
 }
 
-union ScheduledOperationAffectedDocument = Asset | CvPage | Navigation | NavigationItem | PersonalProfile
+union ScheduledOperationAffectedDocument = Asset | CvPage
 
 input ScheduledOperationConnectInput {
   """

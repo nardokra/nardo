@@ -19,6 +19,22 @@ export const cvPageQuery = gql`
           identifier
         }
       }
+      skillsList {
+        title
+        listEntry {
+          identifier
+          title
+        }
+      }
+      privateImageBlock {
+        imageEntry {
+          image {
+            url
+          }
+          altText
+          identifier
+        }
+      }
     }
   }
 `;
