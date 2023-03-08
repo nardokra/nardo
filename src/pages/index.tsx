@@ -28,10 +28,6 @@ const Home = ({
   const [item, setItem] =
     useState<typeof SvgImageVariants[keyof typeof SvgImageVariants]>();
 
-  const mainClasses = cx(
-    "absolute w-full flex justify-center bg-white pt-6 pb-6"
-  );
-
   return (
     <>
       <Head>
@@ -43,7 +39,13 @@ const Home = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className={mainClasses}>
+      <div
+        className={cx(
+          "absolute w-full",
+          "flex justify-center",
+          "bg-white pt-6 pb-6"
+        )}
+      >
         <Layout>
           <LayoutBlock>
             <ImageBrick imageBlock={profileImageBlock} />
@@ -51,13 +53,11 @@ const Home = ({
           </LayoutBlock>
           <LayoutBlock>
             <LayoutBlock size={SizeVariant.Small}>
-              <HoverList list={skillsList} setItem={setItem} />
+              <HoverList list={skillsList} item={item} setItem={setItem} />
             </LayoutBlock>
 
             <LayoutBlock size={SizeVariant.Small}>
-              <LogoDisplay>
-                <SvgImage variant={item} />
-              </LogoDisplay>
+              <LogoDisplay>{item && <SvgImage variant={item} />}</LogoDisplay>
               <ImageBrick
                 imageBlock={privateImageBlock}
                 size={SizeVariant.Medium}
