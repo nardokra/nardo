@@ -1,22 +1,53 @@
 import { ReactNode } from "react";
 
-// Constants
-import { SizeVariant } from "@/constants/sizeConstants";
-
 // Utils
 import cx from "classnames";
 
-type LayoutBlockType = { children: ReactNode; size?: SizeVariant };
+type LayoutBlockType = {
+  children?: ReactNode;
+  xxsColumns?: number;
+  xsColumns?: number;
+  smColumns?: number;
+  mdColumns?: number;
+  lgColumns?: number;
+  xlColumns?: number;
+  maxHeight?: boolean;
+  maxWidth?: boolean;
+};
 
 export const LayoutBlock = ({
   children,
-  size = SizeVariant.Medium,
+  xxsColumns = 1,
+  xsColumns,
+  smColumns,
+  mdColumns,
+  lgColumns,
+  xlColumns,
+  maxHeight,
+  maxWidth,
 }: LayoutBlockType) => {
+  const xxs = `xxs:grid-cols-${xxsColumns}`;
+  const xs = xsColumns && `xs:grid-cols-${xsColumns}`;
+  const sm = smColumns && `sm:grid-cols-${smColumns}`;
+  const md = mdColumns && `md:grid-cols-${mdColumns}`;
+  const lg = lgColumns && `lg:grid-cols-${lgColumns}`;
+  const xl = xlColumns && `xl:grid-cols-${xlColumns}`;
+
   const classes = cx(
     "flex flex-start grid gap-8 items-start",
-    size === SizeVariant.Small && "grid-cols-1",
-    size === SizeVariant.Medium && "xs:grid-cols-2"
+    maxHeight && "h-full",
+    maxWidth && "w-full",
+    xxs,
+    xs,
+    sm,
+    md,
+    lg,
+    xl
   );
 
-  return <div className={classes}>{children}</div>;
+  return (
+    <div className={classes} id="gridblock">
+      {children}
+    </div>
+  );
 };
