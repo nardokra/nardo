@@ -2,7 +2,6 @@ import { useState } from "react";
 
 // Types & Constants
 import type { InferGetServerSidePropsType } from "next";
-import { SizeVariant } from "@/constants/sizeConstants";
 import { SvgImageVariants } from "@/components/atoms/svgImage";
 
 // Utils
@@ -18,12 +17,20 @@ import { SvgImage } from "@/components/atoms/svgImage";
 import { LayoutBlock } from "@/components/templates/layoutBlock";
 import { LogoDisplay } from "@/components/molecules/logoDisplay";
 import { HoverList } from "@/components/molecules/hoverList";
+import { EnrichedList } from "@/components/molecules/enrichedList";
+import { ExtendedEnrichedList } from "@/components/molecules/extendedEnrichedList";
 
 const Home = ({
   cvPage,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { titleBlock, profileImageBlock, skillsList, privateImageBlock } =
-    cvPage;
+  const {
+    pageTitleBlock,
+    profileImageBlock,
+    skillsList,
+    privateImageBlock,
+    educationList,
+    experienceList,
+  } = cvPage;
 
   const [item, setItem] =
     useState<typeof SvgImageVariants[keyof typeof SvgImageVariants]>();
@@ -43,26 +50,35 @@ const Home = ({
         className={cx(
           "absolute w-full",
           "flex justify-center",
-          "bg-white pt-6 pb-6"
+          "bg-white p-1 sm:p-6"
         )}
       >
         <Layout>
-          <LayoutBlock>
-            <ImageBrick imageBlock={profileImageBlock} />
-            <TitleBrick titleBlock={titleBlock} />
-          </LayoutBlock>
-          <LayoutBlock>
-            <LayoutBlock size={SizeVariant.Small}>
-              <HoverList list={skillsList} item={item} setItem={setItem} />
+          <LayoutBlock smColumns={2}>
+            <LayoutBlock smColumns={2}>
+              <ImageBrick imageBlock={profileImageBlock} priority />
+              <TitleBrick titleBlock={pageTitleBlock} />
             </LayoutBlock>
-
-            <LayoutBlock size={SizeVariant.Small}>
+            <LayoutBlock>
               <LogoDisplay>{item && <SvgImage variant={item} />}</LogoDisplay>
-              <ImageBrick
-                imageBlock={privateImageBlock}
-                size={SizeVariant.Medium}
-              />
             </LayoutBlock>
+          </LayoutBlock>
+
+          <LayoutBlock smColumns={2}>
+            <LayoutBlock maxHeight>
+              <ExtendedEnrichedList list={experienceList} />
+            </LayoutBlock>
+            <LayoutBlock smColumns={2}>
+              <HoverList list={skillsList} item={item} setItem={setItem} />
+              <LayoutBlock>
+                <LogoDisplay>{item && <SvgImage variant={item} />}</LogoDisplay>
+                <ImageBrick imageBlock={privateImageBlock} priority />
+              </LayoutBlock>
+            </LayoutBlock>
+          </LayoutBlock>
+
+          <LayoutBlock>
+            <EnrichedList titleVerticalOriented list={educationList} />
           </LayoutBlock>
         </Layout>
       </div>

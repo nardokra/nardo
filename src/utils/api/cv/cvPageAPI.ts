@@ -1,6 +1,9 @@
+// Utils
 import { GetServerSideProps } from "next";
 import { cmsClient } from "../generic/cmsClient";
 import { cvPageQuery } from "./cvPage.graphql";
+
+// Types
 import { CvPage } from "@/cmsTypes/hygraph";
 
 type cvPage = {

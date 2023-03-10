@@ -967,6 +967,48 @@ type CvPage implements Node {
     """Potential stages that should be returned"""
     stages: [Stage!]! = [PUBLISHED, DRAFT]
   ): [CvPage!]!
+  educationList(
+    """
+    Sets the locale of the parent document as the first locale in the fallback locales in the query's subtree.
+    
+    Note that `educationList` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+    """
+    forceParentLocale: Boolean
+
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `educationList` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): List
+  experienceList(
+    """
+    Sets the locale of the parent document as the first locale in the fallback locales in the query's subtree.
+    
+    Note that `experienceList` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+    """
+    forceParentLocale: Boolean
+
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `experienceList` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): TopicList
 
   """List of CvPage versions"""
   history(
@@ -981,6 +1023,27 @@ type CvPage implements Node {
 
   """The unique identifier"""
   id: ID!
+  pageTitleBlock(
+    """
+    Sets the locale of the parent document as the first locale in the fallback locales in the query's subtree.
+    
+    Note that `pageTitleBlock` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+    """
+    forceParentLocale: Boolean
+
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `pageTitleBlock` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): TitleBlock
   privateImageBlock(
     """
     Sets the locale of the parent document as the first locale in the fallback locales in the query's subtree.
@@ -1079,10 +1142,10 @@ type CvPage implements Node {
   ): [ScheduledOperation!]!
   skillsList(
     """
-    Sets the locale of the resolved parent document as the only locale in the query's subtree.
+    Sets the locale of the parent document as the first locale in the fallback locales in the query's subtree.
     
-    Note that `skillsList` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    Note that `skillsList` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
     
     This argument will affect any existing locale filtering defined in the query's tree for the subtree.
     """
@@ -1091,8 +1154,8 @@ type CvPage implements Node {
     """
     Allows to optionally override locale filtering behaviour in the query's subtree.
     
-    Note that `skillsList` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    Note that `skillsList` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
     
     This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
     """
@@ -1102,27 +1165,6 @@ type CvPage implements Node {
 
   """System stage field"""
   stage: Stage!
-  titleBlock(
-    """
-    Sets the locale of the parent document as the first locale in the fallback locales in the query's subtree.
-    
-    Note that `titleBlock` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
-    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
-    
-    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
-    """
-    forceParentLocale: Boolean
-
-    """
-    Allows to optionally override locale filtering behaviour in the query's subtree.
-    
-    Note that `titleBlock` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
-    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
-    
-    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
-    """
-    locales: [Locale!]
-  ): TitleBlock
 
   """The time the document was updated"""
   updatedAt: DateTime!
@@ -1174,16 +1216,18 @@ type CvPageConnection {
 
 input CvPageCreateInput {
   createdAt: DateTime
+  educationList: ListCreateOneInlineInput
+  experienceList: TopicListCreateOneInlineInput
 
   """
   Inline mutations for managing document localizations excluding the default locale
   """
   localizations: CvPageCreateLocalizationsInput
+  pageTitleBlock: TitleBlockCreateOneInlineInput
   privateImageBlock: ImageBlockCreateOneInlineInput
   profileImageBlock: ImageBlockCreateOneInlineInput
   skillsList: ListCreateOneInlineInput
   slug: String!
-  titleBlock: TitleBlockCreateOneInlineInput
   updatedAt: DateTime
 }
 
@@ -1267,6 +1311,8 @@ input CvPageManyWhereInput {
   documentInStages_every: CvPageWhereStageInput
   documentInStages_none: CvPageWhereStageInput
   documentInStages_some: CvPageWhereStageInput
+  educationList: ListWhereInput
+  experienceList: TopicListWhereInput
   id: ID
 
   """All values containing the given string."""
@@ -1295,6 +1341,7 @@ input CvPageManyWhereInput {
 
   """All values starting with the given string."""
   id_starts_with: ID
+  pageTitleBlock: TitleBlockWhereInput
   privateImageBlock: ImageBlockWhereInput
   profileImageBlock: ImageBlockWhereInput
   publishedAt: DateTime
@@ -1352,7 +1399,6 @@ input CvPageManyWhereInput {
 
   """All values starting with the given string."""
   slug_starts_with: String
-  titleBlock: TitleBlockWhereInput
   updatedAt: DateTime
 
   """All values greater than the given value."""
@@ -1392,13 +1438,16 @@ enum CvPageOrderByInput {
 }
 
 input CvPageUpdateInput {
+  educationList: ListUpdateOneInlineInput
+  experienceList: TopicListUpdateOneInlineInput
+
   """Manage document localizations"""
   localizations: CvPageUpdateLocalizationsInput
+  pageTitleBlock: TitleBlockUpdateOneInlineInput
   privateImageBlock: ImageBlockUpdateOneInlineInput
   profileImageBlock: ImageBlockUpdateOneInlineInput
   skillsList: ListUpdateOneInlineInput
   slug: String
-  titleBlock: TitleBlockUpdateOneInlineInput
 }
 
 input CvPageUpdateLocalizationsInput {
@@ -1540,6 +1589,8 @@ input CvPageWhereInput {
   documentInStages_every: CvPageWhereStageInput
   documentInStages_none: CvPageWhereStageInput
   documentInStages_some: CvPageWhereStageInput
+  educationList: ListWhereInput
+  experienceList: TopicListWhereInput
   id: ID
 
   """All values containing the given string."""
@@ -1568,6 +1619,7 @@ input CvPageWhereInput {
 
   """All values starting with the given string."""
   id_starts_with: ID
+  pageTitleBlock: TitleBlockWhereInput
   privateImageBlock: ImageBlockWhereInput
   profileImageBlock: ImageBlockWhereInput
   publishedAt: DateTime
@@ -1625,7 +1677,6 @@ input CvPageWhereInput {
 
   """All values starting with the given string."""
   slug_starts_with: String
-  titleBlock: TitleBlockWhereInput
   updatedAt: DateTime
 
   """All values greater than the given value."""
@@ -2850,10 +2901,10 @@ type List {
     first: Int
 
     """
-    Sets the locale of the resolved parent document as the only locale in the query's subtree.
+    Sets the locale of the parent document as the first locale in the fallback locales in the query's subtree.
     
-    Note that `listEntry` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    Note that `listEntry` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
     
     This argument will affect any existing locale filtering defined in the query's tree for the subtree.
     """
@@ -2863,8 +2914,8 @@ type List {
     """
     Allows to optionally override locale filtering behaviour in the query's subtree.
     
-    Note that `listEntry` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
-    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    Note that `listEntry` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
     
     This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
     """
@@ -2873,6 +2924,28 @@ type List {
     skip: Int
     where: ListEntryWhereInput
   ): [ListEntry!]!
+
+  """System Locale field"""
+  locale: Locale!
+
+  """Get the other localizations for this document"""
+  localizations(
+    """Decides if the current locale should be included or not"""
+    includeCurrent: Boolean! = false
+
+    """
+    Potential locales that should be returned. 
+    
+    The order of locales will also override locale fall-backing behaviour in the query's subtree.
+    
+    Note any related model with localized fields in the query's subtree will be affected.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    
+    Consider using this in conjunction with forceParentLocale on the children relation fields.
+    """
+    locales: [Locale!]! = [en, nl]
+  ): [List!]!
 
   """System stage field"""
   stage: Stage!
@@ -2903,7 +2976,29 @@ type ListConnection {
 input ListCreateInput {
   identifier: String!
   listEntry: ListEntryCreateManyInlineInput
+
+  """
+  Inline mutations for managing document localizations excluding the default locale
+  """
+  localizations: ListCreateLocalizationsInput
+
+  """title input for default locale (en)"""
   title: String
+}
+
+input ListCreateLocalizationDataInput {
+  title: String
+}
+
+input ListCreateLocalizationInput {
+  """Localization input"""
+  data: ListCreateLocalizationDataInput!
+  locale: Locale!
+}
+
+input ListCreateLocalizationsInput {
+  """Create localizations for the newly-created document"""
+  create: [ListCreateLocalizationInput!]
 }
 
 input ListCreateManyInlineInput {
@@ -2936,9 +3031,33 @@ type ListEdge {
 }
 
 type ListEntry {
+  description: [String!]!
+
   """The unique identifier"""
   id: ID!
   identifier: String!
+
+  """System Locale field"""
+  locale: Locale!
+
+  """Get the other localizations for this document"""
+  localizations(
+    """Decides if the current locale should be included or not"""
+    includeCurrent: Boolean! = false
+
+    """
+    Potential locales that should be returned. 
+    
+    The order of locales will also override locale fall-backing behaviour in the query's subtree.
+    
+    Note any related model with localized fields in the query's subtree will be affected.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    
+    Consider using this in conjunction with forceParentLocale on the children relation fields.
+    """
+    locales: [Locale!]! = [en, nl]
+  ): [ListEntry!]!
 
   """System stage field"""
   stage: Stage!
@@ -2967,8 +3086,33 @@ type ListEntryConnection {
 }
 
 input ListEntryCreateInput {
+  """description input for default locale (en)"""
+  description: [String!]
   identifier: String!
+
+  """
+  Inline mutations for managing document localizations excluding the default locale
+  """
+  localizations: ListEntryCreateLocalizationsInput
+
+  """title input for default locale (en)"""
   title: String!
+}
+
+input ListEntryCreateLocalizationDataInput {
+  description: [String!]
+  title: String!
+}
+
+input ListEntryCreateLocalizationInput {
+  """Localization input"""
+  data: ListEntryCreateLocalizationDataInput!
+  locale: Locale!
+}
+
+input ListEntryCreateLocalizationsInput {
+  """Create localizations for the newly-created document"""
+  create: [ListEntryCreateLocalizationInput!]
 }
 
 input ListEntryCreateManyInlineInput {
@@ -3069,37 +3213,11 @@ input ListEntryManyWhereInput {
 
   """All values starting with the given string."""
   identifier_starts_with: String
-  title: String
-
-  """All values containing the given string."""
-  title_contains: String
-
-  """All values ending with the given string."""
-  title_ends_with: String
-
-  """All values that are contained in given list."""
-  title_in: [String]
-
-  """All values that are not equal to given value."""
-  title_not: String
-
-  """All values not containing the given string."""
-  title_not_contains: String
-
-  """All values not ending with the given string"""
-  title_not_ends_with: String
-
-  """All values that are not contained in given list."""
-  title_not_in: [String]
-
-  """All values not starting with the given string."""
-  title_not_starts_with: String
-
-  """All values starting with the given string."""
-  title_starts_with: String
 }
 
 enum ListEntryOrderByInput {
+  description_ASC
+  description_DESC
   id_ASC
   id_DESC
   identifier_ASC
@@ -3193,8 +3311,37 @@ input ListEntryParentWhereUniqueInput {
 }
 
 input ListEntryUpdateInput {
+  """description input for default locale (en)"""
+  description: [String!]
   identifier: String
+
+  """Manage document localizations"""
+  localizations: ListEntryUpdateLocalizationsInput
+
+  """title input for default locale (en)"""
   title: String
+}
+
+input ListEntryUpdateLocalizationDataInput {
+  description: [String!]
+  title: String
+}
+
+input ListEntryUpdateLocalizationInput {
+  data: ListEntryUpdateLocalizationDataInput!
+  locale: Locale!
+}
+
+input ListEntryUpdateLocalizationsInput {
+  """Localizations to create"""
+  create: [ListEntryCreateLocalizationInput!]
+
+  """Localizations to delete"""
+  delete: [Locale!]
+
+  """Localizations to update"""
+  update: [ListEntryUpdateLocalizationInput!]
+  upsert: [ListEntryUpsertLocalizationInput!]
 }
 
 input ListEntryUpdateManyInlineInput {
@@ -3212,7 +3359,29 @@ input ListEntryUpdateManyInlineInput {
 }
 
 input ListEntryUpdateManyInput {
+  """description input for default locale (en)"""
+  description: [String!]
+
+  """Optional updates to localizations"""
+  localizations: ListEntryUpdateManyLocalizationsInput
+
+  """title input for default locale (en)"""
   title: String
+}
+
+input ListEntryUpdateManyLocalizationDataInput {
+  description: [String!]
+  title: String
+}
+
+input ListEntryUpdateManyLocalizationInput {
+  data: ListEntryUpdateManyLocalizationDataInput!
+  locale: Locale!
+}
+
+input ListEntryUpdateManyLocalizationsInput {
+  """Localizations to update"""
+  update: [ListEntryUpdateManyLocalizationInput!]
 }
 
 input ListEntryUpdateManyWithNestedWhereInput {
@@ -3266,6 +3435,12 @@ input ListEntryUpsertInput {
   update: ListEntryUpdateInput!
 }
 
+input ListEntryUpsertLocalizationInput {
+  create: ListEntryCreateLocalizationDataInput!
+  locale: Locale!
+  update: ListEntryUpdateLocalizationDataInput!
+}
+
 input ListEntryUpsertWithNestedWhereUniqueAndPositionInput {
   """Document to upsert"""
   data: ListEntryUpsertInput
@@ -3300,6 +3475,29 @@ input ListEntryWhereInput {
 
   """Contains search across all appropriate fields."""
   _search: String
+
+  """
+  Matches if the field array contains *all* items provided to the filter and order does match
+  """
+  description: [String!]
+
+  """Matches if the field array contains *all* items provided to the filter"""
+  description_contains_all: [String!]
+
+  """
+  Matches if the field array does not contain any of the items provided to the filter
+  """
+  description_contains_none: [String!]
+
+  """
+  Matches if the field array contains at least one item provided to the filter
+  """
+  description_contains_some: [String!]
+
+  """
+  Matches if the field array does not contains *all* items provided to the filter or order does not match
+  """
+  description_not: [String!]
   id: ID
 
   """All values containing the given string."""
@@ -3464,34 +3662,6 @@ input ListManyWhereInput {
   listEntry_every: ListEntryWhereInput
   listEntry_none: ListEntryWhereInput
   listEntry_some: ListEntryWhereInput
-  title: String
-
-  """All values containing the given string."""
-  title_contains: String
-
-  """All values ending with the given string."""
-  title_ends_with: String
-
-  """All values that are contained in given list."""
-  title_in: [String]
-
-  """All values that are not equal to given value."""
-  title_not: String
-
-  """All values not containing the given string."""
-  title_not_contains: String
-
-  """All values not ending with the given string"""
-  title_not_ends_with: String
-
-  """All values that are not contained in given list."""
-  title_not_in: [String]
-
-  """All values not starting with the given string."""
-  title_not_starts_with: String
-
-  """All values starting with the given string."""
-  title_starts_with: String
 }
 
 enum ListOrderByInput {
@@ -3601,7 +3771,33 @@ input ListParentWhereUniqueInput {
 input ListUpdateInput {
   identifier: String
   listEntry: ListEntryUpdateManyInlineInput
+
+  """Manage document localizations"""
+  localizations: ListUpdateLocalizationsInput
+
+  """title input for default locale (en)"""
   title: String
+}
+
+input ListUpdateLocalizationDataInput {
+  title: String
+}
+
+input ListUpdateLocalizationInput {
+  data: ListUpdateLocalizationDataInput!
+  locale: Locale!
+}
+
+input ListUpdateLocalizationsInput {
+  """Localizations to create"""
+  create: [ListCreateLocalizationInput!]
+
+  """Localizations to delete"""
+  delete: [Locale!]
+
+  """Localizations to update"""
+  update: [ListUpdateLocalizationInput!]
+  upsert: [ListUpsertLocalizationInput!]
 }
 
 input ListUpdateManyInlineInput {
@@ -3619,7 +3815,25 @@ input ListUpdateManyInlineInput {
 }
 
 input ListUpdateManyInput {
+  """Optional updates to localizations"""
+  localizations: ListUpdateManyLocalizationsInput
+
+  """title input for default locale (en)"""
   title: String
+}
+
+input ListUpdateManyLocalizationDataInput {
+  title: String
+}
+
+input ListUpdateManyLocalizationInput {
+  data: ListUpdateManyLocalizationDataInput!
+  locale: Locale!
+}
+
+input ListUpdateManyLocalizationsInput {
+  """Localizations to update"""
+  update: [ListUpdateManyLocalizationInput!]
 }
 
 input ListUpdateManyWithNestedWhereInput {
@@ -3671,6 +3885,12 @@ input ListUpsertInput {
 
   """Update document if it exists"""
   update: ListUpdateInput!
+}
+
+input ListUpsertLocalizationInput {
+  create: ListCreateLocalizationDataInput!
+  locale: Locale!
+  update: ListUpdateLocalizationDataInput!
 }
 
 input ListUpsertWithNestedWhereUniqueAndPositionInput {
@@ -6234,6 +6454,7 @@ type TitleBlock {
   subtitle: String
   title: String
   titleWeight: TitleWeight
+  verticalOrientation: Boolean
 }
 
 input TitleBlockConnectInput {
@@ -6274,6 +6495,7 @@ input TitleBlockCreateInput {
   """title input for default locale (en)"""
   title: String
   titleWeight: TitleWeight
+  verticalOrientation: Boolean
 }
 
 input TitleBlockCreateLocalizationDataInput {
@@ -6401,6 +6623,10 @@ input TitleBlockManyWhereInput {
 
   """All values that are not contained in given list."""
   titleWeight_not_in: [TitleWeight]
+  verticalOrientation: Boolean
+
+  """All values that are not equal to given value."""
+  verticalOrientation_not: Boolean
 }
 
 enum TitleBlockOrderByInput {
@@ -6416,6 +6642,8 @@ enum TitleBlockOrderByInput {
   titleWeight_DESC
   title_ASC
   title_DESC
+  verticalOrientation_ASC
+  verticalOrientation_DESC
 }
 
 union TitleBlockParent = CvPage
@@ -6528,6 +6756,7 @@ input TitleBlockUpdateInput {
   """title input for default locale (en)"""
   title: String
   titleWeight: TitleWeight
+  verticalOrientation: Boolean
 }
 
 input TitleBlockUpdateLocalizationDataInput {
@@ -6580,6 +6809,7 @@ input TitleBlockUpdateManyInput {
   """title input for default locale (en)"""
   title: String
   titleWeight: TitleWeight
+  verticalOrientation: Boolean
 }
 
 input TitleBlockUpdateManyLocalizationDataInput {
@@ -6839,6 +7069,10 @@ input TitleBlockWhereInput {
 
   """All values starting with the given string."""
   title_starts_with: String
+  verticalOrientation: Boolean
+
+  """All values that are not equal to given value."""
+  verticalOrientation_not: Boolean
 }
 
 """References TitleBlock record uniquely"""
@@ -6854,6 +7088,1229 @@ enum TitleWeight {
   h1
   h2
   h3
+}
+
+type TopicList {
+  """The unique identifier"""
+  id: ID!
+  identifier: String!
+
+  """System Locale field"""
+  locale: Locale!
+
+  """Get the other localizations for this document"""
+  localizations(
+    """Decides if the current locale should be included or not"""
+    includeCurrent: Boolean! = false
+
+    """
+    Potential locales that should be returned. 
+    
+    The order of locales will also override locale fall-backing behaviour in the query's subtree.
+    
+    Note any related model with localized fields in the query's subtree will be affected.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    
+    Consider using this in conjunction with forceParentLocale on the children relation fields.
+    """
+    locales: [Locale!]! = [en, nl]
+  ): [TopicList!]!
+
+  """System stage field"""
+  stage: Stage!
+  title: String
+  topicListEntry(
+    after: String
+    before: String
+    first: Int
+
+    """
+    Sets the locale of the parent document as the first locale in the fallback locales in the query's subtree.
+    
+    Note that `topicListEntry` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+    """
+    forceParentLocale: Boolean
+    last: Int
+
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `topicListEntry` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+    orderBy: TopicListEntryOrderByInput
+    skip: Int
+    where: TopicListEntryWhereInput
+  ): [TopicListEntry!]!
+}
+
+input TopicListConnectInput {
+  """
+  Allow to specify document position in list of connected documents, will default to appending at end of list
+  """
+  position: ConnectPositionInput
+
+  """Document to connect"""
+  where: TopicListWhereUniqueInput!
+}
+
+"""A connection to a list of items."""
+type TopicListConnection {
+  aggregate: Aggregate!
+
+  """A list of edges."""
+  edges: [TopicListEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+}
+
+input TopicListCreateInput {
+  identifier: String!
+
+  """
+  Inline mutations for managing document localizations excluding the default locale
+  """
+  localizations: TopicListCreateLocalizationsInput
+
+  """title input for default locale (en)"""
+  title: String
+  topicListEntry: TopicListEntryCreateManyInlineInput
+}
+
+input TopicListCreateLocalizationDataInput {
+  title: String
+}
+
+input TopicListCreateLocalizationInput {
+  """Localization input"""
+  data: TopicListCreateLocalizationDataInput!
+  locale: Locale!
+}
+
+input TopicListCreateLocalizationsInput {
+  """Create localizations for the newly-created document"""
+  create: [TopicListCreateLocalizationInput!]
+}
+
+input TopicListCreateManyInlineInput {
+  """Create and connect multiple existing TopicList documents"""
+  create: [TopicListCreateInput!]
+}
+
+input TopicListCreateOneInlineInput {
+  """Create and connect one TopicList document"""
+  create: TopicListCreateInput
+}
+
+input TopicListCreateWithPositionInput {
+  """Document to create"""
+  data: TopicListCreateInput!
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+}
+
+"""An edge in a connection."""
+type TopicListEdge {
+  """A cursor for use in pagination."""
+  cursor: String!
+
+  """The item at the end of the edge."""
+  node: TopicList!
+}
+
+type TopicListEntry {
+  description: String
+
+  """The unique identifier"""
+  id: ID!
+  identifier: String!
+
+  """System Locale field"""
+  locale: Locale!
+
+  """Get the other localizations for this document"""
+  localizations(
+    """Decides if the current locale should be included or not"""
+    includeCurrent: Boolean! = false
+
+    """
+    Potential locales that should be returned. 
+    
+    The order of locales will also override locale fall-backing behaviour in the query's subtree.
+    
+    Note any related model with localized fields in the query's subtree will be affected.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    
+    Consider using this in conjunction with forceParentLocale on the children relation fields.
+    """
+    locales: [Locale!]! = [en, nl]
+  ): [TopicListEntry!]!
+
+  """System stage field"""
+  stage: Stage!
+  subDescription: String
+  subtitle: String
+  title: String
+}
+
+input TopicListEntryConnectInput {
+  """
+  Allow to specify document position in list of connected documents, will default to appending at end of list
+  """
+  position: ConnectPositionInput
+
+  """Document to connect"""
+  where: TopicListEntryWhereUniqueInput!
+}
+
+"""A connection to a list of items."""
+type TopicListEntryConnection {
+  aggregate: Aggregate!
+
+  """A list of edges."""
+  edges: [TopicListEntryEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+}
+
+input TopicListEntryCreateInput {
+  """description input for default locale (en)"""
+  description: String
+  identifier: String!
+
+  """
+  Inline mutations for managing document localizations excluding the default locale
+  """
+  localizations: TopicListEntryCreateLocalizationsInput
+
+  """subDescription input for default locale (en)"""
+  subDescription: String
+
+  """subtitle input for default locale (en)"""
+  subtitle: String
+
+  """title input for default locale (en)"""
+  title: String
+}
+
+input TopicListEntryCreateLocalizationDataInput {
+  description: String
+  subDescription: String
+  subtitle: String
+  title: String
+}
+
+input TopicListEntryCreateLocalizationInput {
+  """Localization input"""
+  data: TopicListEntryCreateLocalizationDataInput!
+  locale: Locale!
+}
+
+input TopicListEntryCreateLocalizationsInput {
+  """Create localizations for the newly-created document"""
+  create: [TopicListEntryCreateLocalizationInput!]
+}
+
+input TopicListEntryCreateManyInlineInput {
+  """Create and connect multiple existing TopicListEntry documents"""
+  create: [TopicListEntryCreateInput!]
+}
+
+input TopicListEntryCreateOneInlineInput {
+  """Create and connect one TopicListEntry document"""
+  create: TopicListEntryCreateInput
+}
+
+input TopicListEntryCreateWithPositionInput {
+  """Document to create"""
+  data: TopicListEntryCreateInput!
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+}
+
+"""An edge in a connection."""
+type TopicListEntryEdge {
+  """A cursor for use in pagination."""
+  cursor: String!
+
+  """The item at the end of the edge."""
+  node: TopicListEntry!
+}
+
+"""Identifies documents"""
+input TopicListEntryManyWhereInput {
+  """Logical AND on all given filters."""
+  AND: [TopicListEntryWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [TopicListEntryWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [TopicListEntryWhereInput!]
+
+  """Contains search across all appropriate fields."""
+  _search: String
+  id: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID]
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID]
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+  identifier: String
+
+  """All values containing the given string."""
+  identifier_contains: String
+
+  """All values ending with the given string."""
+  identifier_ends_with: String
+
+  """All values that are contained in given list."""
+  identifier_in: [String]
+
+  """All values that are not equal to given value."""
+  identifier_not: String
+
+  """All values not containing the given string."""
+  identifier_not_contains: String
+
+  """All values not ending with the given string"""
+  identifier_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  identifier_not_in: [String]
+
+  """All values not starting with the given string."""
+  identifier_not_starts_with: String
+
+  """All values starting with the given string."""
+  identifier_starts_with: String
+}
+
+enum TopicListEntryOrderByInput {
+  description_ASC
+  description_DESC
+  id_ASC
+  id_DESC
+  identifier_ASC
+  identifier_DESC
+  subDescription_ASC
+  subDescription_DESC
+  subtitle_ASC
+  subtitle_DESC
+  title_ASC
+  title_DESC
+}
+
+union TopicListEntryParent = TopicList
+
+input TopicListEntryParentConnectInput {
+  TopicList: TopicListConnectInput
+}
+
+input TopicListEntryParentCreateInput {
+  TopicList: TopicListCreateInput
+}
+
+input TopicListEntryParentCreateManyInlineInput {
+  """Create and connect multiple existing TopicListEntryParent documents"""
+  create: [TopicListEntryParentCreateInput!]
+}
+
+input TopicListEntryParentCreateOneInlineInput {
+  """Create and connect one TopicListEntryParent document"""
+  create: TopicListEntryParentCreateInput
+}
+
+input TopicListEntryParentCreateWithPositionInput {
+  TopicList: TopicListCreateWithPositionInput
+}
+
+input TopicListEntryParentUpdateInput {
+  TopicList: TopicListUpdateInput
+}
+
+input TopicListEntryParentUpdateManyInlineInput {
+  """Create and connect multiple TopicListEntryParent component instances"""
+  create: [TopicListEntryParentCreateWithPositionInput!]
+
+  """Delete multiple TopicListEntryParent documents"""
+  delete: [TopicListEntryParentWhereUniqueInput!]
+
+  """Update multiple TopicListEntryParent component instances"""
+  update: [TopicListEntryParentUpdateWithNestedWhereUniqueAndPositionInput!]
+
+  """Upsert multiple TopicListEntryParent component instances"""
+  upsert: [TopicListEntryParentUpsertWithNestedWhereUniqueAndPositionInput!]
+}
+
+input TopicListEntryParentUpdateManyWithNestedWhereInput {
+  TopicList: TopicListUpdateManyWithNestedWhereInput
+}
+
+input TopicListEntryParentUpdateOneInlineInput {
+  """Create and connect one TopicListEntryParent document"""
+  create: TopicListEntryParentCreateInput
+
+  """Delete currently connected TopicListEntryParent document"""
+  delete: Boolean
+
+  """Update single TopicListEntryParent document"""
+  update: TopicListEntryParentUpdateWithNestedWhereUniqueInput
+
+  """Upsert single TopicListEntryParent document"""
+  upsert: TopicListEntryParentUpsertWithNestedWhereUniqueInput
+}
+
+input TopicListEntryParentUpdateWithNestedWhereUniqueAndPositionInput {
+  TopicList: TopicListUpdateWithNestedWhereUniqueAndPositionInput
+}
+
+input TopicListEntryParentUpdateWithNestedWhereUniqueInput {
+  TopicList: TopicListUpdateWithNestedWhereUniqueInput
+}
+
+input TopicListEntryParentUpsertWithNestedWhereUniqueAndPositionInput {
+  TopicList: TopicListUpsertWithNestedWhereUniqueAndPositionInput
+}
+
+input TopicListEntryParentUpsertWithNestedWhereUniqueInput {
+  TopicList: TopicListUpsertWithNestedWhereUniqueInput
+}
+
+input TopicListEntryParentWhereInput {
+  TopicList: TopicListWhereInput
+}
+
+input TopicListEntryParentWhereUniqueInput {
+  TopicList: TopicListWhereUniqueInput
+}
+
+input TopicListEntryUpdateInput {
+  """description input for default locale (en)"""
+  description: String
+  identifier: String
+
+  """Manage document localizations"""
+  localizations: TopicListEntryUpdateLocalizationsInput
+
+  """subDescription input for default locale (en)"""
+  subDescription: String
+
+  """subtitle input for default locale (en)"""
+  subtitle: String
+
+  """title input for default locale (en)"""
+  title: String
+}
+
+input TopicListEntryUpdateLocalizationDataInput {
+  description: String
+  subDescription: String
+  subtitle: String
+  title: String
+}
+
+input TopicListEntryUpdateLocalizationInput {
+  data: TopicListEntryUpdateLocalizationDataInput!
+  locale: Locale!
+}
+
+input TopicListEntryUpdateLocalizationsInput {
+  """Localizations to create"""
+  create: [TopicListEntryCreateLocalizationInput!]
+
+  """Localizations to delete"""
+  delete: [Locale!]
+
+  """Localizations to update"""
+  update: [TopicListEntryUpdateLocalizationInput!]
+  upsert: [TopicListEntryUpsertLocalizationInput!]
+}
+
+input TopicListEntryUpdateManyInlineInput {
+  """Create and connect multiple TopicListEntry component instances"""
+  create: [TopicListEntryCreateWithPositionInput!]
+
+  """Delete multiple TopicListEntry documents"""
+  delete: [TopicListEntryWhereUniqueInput!]
+
+  """Update multiple TopicListEntry component instances"""
+  update: [TopicListEntryUpdateWithNestedWhereUniqueAndPositionInput!]
+
+  """Upsert multiple TopicListEntry component instances"""
+  upsert: [TopicListEntryUpsertWithNestedWhereUniqueAndPositionInput!]
+}
+
+input TopicListEntryUpdateManyInput {
+  """description input for default locale (en)"""
+  description: String
+
+  """Optional updates to localizations"""
+  localizations: TopicListEntryUpdateManyLocalizationsInput
+
+  """subDescription input for default locale (en)"""
+  subDescription: String
+
+  """subtitle input for default locale (en)"""
+  subtitle: String
+
+  """title input for default locale (en)"""
+  title: String
+}
+
+input TopicListEntryUpdateManyLocalizationDataInput {
+  description: String
+  subDescription: String
+  subtitle: String
+  title: String
+}
+
+input TopicListEntryUpdateManyLocalizationInput {
+  data: TopicListEntryUpdateManyLocalizationDataInput!
+  locale: Locale!
+}
+
+input TopicListEntryUpdateManyLocalizationsInput {
+  """Localizations to update"""
+  update: [TopicListEntryUpdateManyLocalizationInput!]
+}
+
+input TopicListEntryUpdateManyWithNestedWhereInput {
+  """Update many input"""
+  data: TopicListEntryUpdateManyInput!
+
+  """Document search"""
+  where: TopicListEntryWhereInput!
+}
+
+input TopicListEntryUpdateOneInlineInput {
+  """Create and connect one TopicListEntry document"""
+  create: TopicListEntryCreateInput
+
+  """Delete currently connected TopicListEntry document"""
+  delete: Boolean
+
+  """Update single TopicListEntry document"""
+  update: TopicListEntryUpdateWithNestedWhereUniqueInput
+
+  """Upsert single TopicListEntry document"""
+  upsert: TopicListEntryUpsertWithNestedWhereUniqueInput
+}
+
+input TopicListEntryUpdateWithNestedWhereUniqueAndPositionInput {
+  """Document to update"""
+  data: TopicListEntryUpdateInput
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+
+  """Unique component instance search"""
+  where: TopicListEntryWhereUniqueInput!
+}
+
+input TopicListEntryUpdateWithNestedWhereUniqueInput {
+  """Document to update"""
+  data: TopicListEntryUpdateInput!
+
+  """Unique document search"""
+  where: TopicListEntryWhereUniqueInput!
+}
+
+input TopicListEntryUpsertInput {
+  """Create document if it didn't exist"""
+  create: TopicListEntryCreateInput!
+
+  """Update document if it exists"""
+  update: TopicListEntryUpdateInput!
+}
+
+input TopicListEntryUpsertLocalizationInput {
+  create: TopicListEntryCreateLocalizationDataInput!
+  locale: Locale!
+  update: TopicListEntryUpdateLocalizationDataInput!
+}
+
+input TopicListEntryUpsertWithNestedWhereUniqueAndPositionInput {
+  """Document to upsert"""
+  data: TopicListEntryUpsertInput
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+
+  """Unique component instance search"""
+  where: TopicListEntryWhereUniqueInput!
+}
+
+input TopicListEntryUpsertWithNestedWhereUniqueInput {
+  """Upsert data"""
+  data: TopicListEntryUpsertInput!
+
+  """Unique document search"""
+  where: TopicListEntryWhereUniqueInput!
+}
+
+"""Identifies documents"""
+input TopicListEntryWhereInput {
+  """Logical AND on all given filters."""
+  AND: [TopicListEntryWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [TopicListEntryWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [TopicListEntryWhereInput!]
+
+  """Contains search across all appropriate fields."""
+  _search: String
+  description: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values that are contained in given list."""
+  description_in: [String]
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values not ending with the given string"""
+  description_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  description_not_in: [String]
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+  id: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID]
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID]
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+  identifier: String
+
+  """All values containing the given string."""
+  identifier_contains: String
+
+  """All values ending with the given string."""
+  identifier_ends_with: String
+
+  """All values that are contained in given list."""
+  identifier_in: [String]
+
+  """All values that are not equal to given value."""
+  identifier_not: String
+
+  """All values not containing the given string."""
+  identifier_not_contains: String
+
+  """All values not ending with the given string"""
+  identifier_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  identifier_not_in: [String]
+
+  """All values not starting with the given string."""
+  identifier_not_starts_with: String
+
+  """All values starting with the given string."""
+  identifier_starts_with: String
+  subDescription: String
+
+  """All values containing the given string."""
+  subDescription_contains: String
+
+  """All values ending with the given string."""
+  subDescription_ends_with: String
+
+  """All values that are contained in given list."""
+  subDescription_in: [String]
+
+  """All values that are not equal to given value."""
+  subDescription_not: String
+
+  """All values not containing the given string."""
+  subDescription_not_contains: String
+
+  """All values not ending with the given string"""
+  subDescription_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  subDescription_not_in: [String]
+
+  """All values not starting with the given string."""
+  subDescription_not_starts_with: String
+
+  """All values starting with the given string."""
+  subDescription_starts_with: String
+  subtitle: String
+
+  """All values containing the given string."""
+  subtitle_contains: String
+
+  """All values ending with the given string."""
+  subtitle_ends_with: String
+
+  """All values that are contained in given list."""
+  subtitle_in: [String]
+
+  """All values that are not equal to given value."""
+  subtitle_not: String
+
+  """All values not containing the given string."""
+  subtitle_not_contains: String
+
+  """All values not ending with the given string"""
+  subtitle_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  subtitle_not_in: [String]
+
+  """All values not starting with the given string."""
+  subtitle_not_starts_with: String
+
+  """All values starting with the given string."""
+  subtitle_starts_with: String
+  title: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values that are contained in given list."""
+  title_in: [String]
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values not ending with the given string"""
+  title_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  title_not_in: [String]
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+}
+
+"""References TopicListEntry record uniquely"""
+input TopicListEntryWhereUniqueInput {
+  id: ID
+  identifier: String
+}
+
+"""Identifies documents"""
+input TopicListManyWhereInput {
+  """Logical AND on all given filters."""
+  AND: [TopicListWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [TopicListWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [TopicListWhereInput!]
+
+  """Contains search across all appropriate fields."""
+  _search: String
+  id: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID]
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID]
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+  identifier: String
+
+  """All values containing the given string."""
+  identifier_contains: String
+
+  """All values ending with the given string."""
+  identifier_ends_with: String
+
+  """All values that are contained in given list."""
+  identifier_in: [String]
+
+  """All values that are not equal to given value."""
+  identifier_not: String
+
+  """All values not containing the given string."""
+  identifier_not_contains: String
+
+  """All values not ending with the given string"""
+  identifier_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  identifier_not_in: [String]
+
+  """All values not starting with the given string."""
+  identifier_not_starts_with: String
+
+  """All values starting with the given string."""
+  identifier_starts_with: String
+  topicListEntry_every: TopicListEntryWhereInput
+  topicListEntry_none: TopicListEntryWhereInput
+  topicListEntry_some: TopicListEntryWhereInput
+}
+
+enum TopicListOrderByInput {
+  id_ASC
+  id_DESC
+  identifier_ASC
+  identifier_DESC
+  title_ASC
+  title_DESC
+}
+
+union TopicListParent = CvPage
+
+input TopicListParentConnectInput {
+  CvPage: CvPageConnectInput
+}
+
+input TopicListParentCreateInput {
+  CvPage: CvPageCreateInput
+}
+
+input TopicListParentCreateManyInlineInput {
+  """Connect multiple existing TopicListParent documents"""
+  connect: [TopicListParentWhereUniqueInput!]
+
+  """Create and connect multiple existing TopicListParent documents"""
+  create: [TopicListParentCreateInput!]
+}
+
+input TopicListParentCreateOneInlineInput {
+  """Connect one existing TopicListParent document"""
+  connect: TopicListParentWhereUniqueInput
+
+  """Create and connect one TopicListParent document"""
+  create: TopicListParentCreateInput
+}
+
+input TopicListParentUpdateInput {
+  CvPage: CvPageUpdateInput
+}
+
+input TopicListParentUpdateManyInlineInput {
+  """Connect multiple existing TopicListParent documents"""
+  connect: [TopicListParentConnectInput!]
+
+  """Create and connect multiple TopicListParent documents"""
+  create: [TopicListParentCreateInput!]
+
+  """Delete multiple TopicListParent documents"""
+  delete: [TopicListParentWhereUniqueInput!]
+
+  """Disconnect multiple TopicListParent documents"""
+  disconnect: [TopicListParentWhereUniqueInput!]
+
+  """
+  Override currently-connected documents with multiple existing TopicListParent documents
+  """
+  set: [TopicListParentWhereUniqueInput!]
+
+  """Update multiple TopicListParent documents"""
+  update: [TopicListParentUpdateWithNestedWhereUniqueInput!]
+
+  """Upsert multiple TopicListParent documents"""
+  upsert: [TopicListParentUpsertWithNestedWhereUniqueInput!]
+}
+
+input TopicListParentUpdateManyWithNestedWhereInput {
+  CvPage: CvPageUpdateManyWithNestedWhereInput
+}
+
+input TopicListParentUpdateOneInlineInput {
+  """Connect existing TopicListParent document"""
+  connect: TopicListParentWhereUniqueInput
+
+  """Create and connect one TopicListParent document"""
+  create: TopicListParentCreateInput
+
+  """Delete currently connected TopicListParent document"""
+  delete: Boolean
+
+  """Disconnect currently connected TopicListParent document"""
+  disconnect: Boolean
+
+  """Update single TopicListParent document"""
+  update: TopicListParentUpdateWithNestedWhereUniqueInput
+
+  """Upsert single TopicListParent document"""
+  upsert: TopicListParentUpsertWithNestedWhereUniqueInput
+}
+
+input TopicListParentUpdateWithNestedWhereUniqueInput {
+  CvPage: CvPageUpdateWithNestedWhereUniqueInput
+}
+
+input TopicListParentUpsertWithNestedWhereUniqueInput {
+  CvPage: CvPageUpsertWithNestedWhereUniqueInput
+}
+
+input TopicListParentWhereInput {
+  CvPage: CvPageWhereInput
+}
+
+input TopicListParentWhereUniqueInput {
+  CvPage: CvPageWhereUniqueInput
+}
+
+input TopicListUpdateInput {
+  identifier: String
+
+  """Manage document localizations"""
+  localizations: TopicListUpdateLocalizationsInput
+
+  """title input for default locale (en)"""
+  title: String
+  topicListEntry: TopicListEntryUpdateManyInlineInput
+}
+
+input TopicListUpdateLocalizationDataInput {
+  title: String
+}
+
+input TopicListUpdateLocalizationInput {
+  data: TopicListUpdateLocalizationDataInput!
+  locale: Locale!
+}
+
+input TopicListUpdateLocalizationsInput {
+  """Localizations to create"""
+  create: [TopicListCreateLocalizationInput!]
+
+  """Localizations to delete"""
+  delete: [Locale!]
+
+  """Localizations to update"""
+  update: [TopicListUpdateLocalizationInput!]
+  upsert: [TopicListUpsertLocalizationInput!]
+}
+
+input TopicListUpdateManyInlineInput {
+  """Create and connect multiple TopicList component instances"""
+  create: [TopicListCreateWithPositionInput!]
+
+  """Delete multiple TopicList documents"""
+  delete: [TopicListWhereUniqueInput!]
+
+  """Update multiple TopicList component instances"""
+  update: [TopicListUpdateWithNestedWhereUniqueAndPositionInput!]
+
+  """Upsert multiple TopicList component instances"""
+  upsert: [TopicListUpsertWithNestedWhereUniqueAndPositionInput!]
+}
+
+input TopicListUpdateManyInput {
+  identifier: String
+
+  """Optional updates to localizations"""
+  localizations: TopicListUpdateManyLocalizationsInput
+
+  """title input for default locale (en)"""
+  title: String
+}
+
+input TopicListUpdateManyLocalizationDataInput {
+  title: String
+}
+
+input TopicListUpdateManyLocalizationInput {
+  data: TopicListUpdateManyLocalizationDataInput!
+  locale: Locale!
+}
+
+input TopicListUpdateManyLocalizationsInput {
+  """Localizations to update"""
+  update: [TopicListUpdateManyLocalizationInput!]
+}
+
+input TopicListUpdateManyWithNestedWhereInput {
+  """Update many input"""
+  data: TopicListUpdateManyInput!
+
+  """Document search"""
+  where: TopicListWhereInput!
+}
+
+input TopicListUpdateOneInlineInput {
+  """Create and connect one TopicList document"""
+  create: TopicListCreateInput
+
+  """Delete currently connected TopicList document"""
+  delete: Boolean
+
+  """Update single TopicList document"""
+  update: TopicListUpdateWithNestedWhereUniqueInput
+
+  """Upsert single TopicList document"""
+  upsert: TopicListUpsertWithNestedWhereUniqueInput
+}
+
+input TopicListUpdateWithNestedWhereUniqueAndPositionInput {
+  """Document to update"""
+  data: TopicListUpdateInput
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+
+  """Unique component instance search"""
+  where: TopicListWhereUniqueInput!
+}
+
+input TopicListUpdateWithNestedWhereUniqueInput {
+  """Document to update"""
+  data: TopicListUpdateInput!
+
+  """Unique document search"""
+  where: TopicListWhereUniqueInput!
+}
+
+input TopicListUpsertInput {
+  """Create document if it didn't exist"""
+  create: TopicListCreateInput!
+
+  """Update document if it exists"""
+  update: TopicListUpdateInput!
+}
+
+input TopicListUpsertLocalizationInput {
+  create: TopicListCreateLocalizationDataInput!
+  locale: Locale!
+  update: TopicListUpdateLocalizationDataInput!
+}
+
+input TopicListUpsertWithNestedWhereUniqueAndPositionInput {
+  """Document to upsert"""
+  data: TopicListUpsertInput
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+
+  """Unique component instance search"""
+  where: TopicListWhereUniqueInput!
+}
+
+input TopicListUpsertWithNestedWhereUniqueInput {
+  """Upsert data"""
+  data: TopicListUpsertInput!
+
+  """Unique document search"""
+  where: TopicListWhereUniqueInput!
+}
+
+"""Identifies documents"""
+input TopicListWhereInput {
+  """Logical AND on all given filters."""
+  AND: [TopicListWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [TopicListWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [TopicListWhereInput!]
+
+  """Contains search across all appropriate fields."""
+  _search: String
+  id: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID]
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID]
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+  identifier: String
+
+  """All values containing the given string."""
+  identifier_contains: String
+
+  """All values ending with the given string."""
+  identifier_ends_with: String
+
+  """All values that are contained in given list."""
+  identifier_in: [String]
+
+  """All values that are not equal to given value."""
+  identifier_not: String
+
+  """All values not containing the given string."""
+  identifier_not_contains: String
+
+  """All values not ending with the given string"""
+  identifier_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  identifier_not_in: [String]
+
+  """All values not starting with the given string."""
+  identifier_not_starts_with: String
+
+  """All values starting with the given string."""
+  identifier_starts_with: String
+  title: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values that are contained in given list."""
+  title_in: [String]
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values not ending with the given string"""
+  title_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  title_not_in: [String]
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+  topicListEntry_every: TopicListEntryWhereInput
+  topicListEntry_none: TopicListEntryWhereInput
+  topicListEntry_some: TopicListEntryWhereInput
+}
+
+"""References TopicList record uniquely"""
+input TopicListWhereUniqueInput {
+  id: ID
 }
 
 input UnpublishLocaleInput {

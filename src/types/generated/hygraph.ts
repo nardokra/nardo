@@ -723,10 +723,13 @@ export type CvPage = Node & {
   createdBy?: Maybe<User>;
   /** Get the document in other stages */
   documentInStages: Array<CvPage>;
+  educationList?: Maybe<List>;
+  experienceList?: Maybe<TopicList>;
   /** List of CvPage versions */
   history: Array<Version>;
   /** The unique identifier */
   id: Scalars['ID'];
+  pageTitleBlock?: Maybe<TitleBlock>;
   privateImageBlock?: Maybe<ImageBlock>;
   profileImageBlock?: Maybe<ImageBlock>;
   /** The time the document was published. Null on documents in draft stage. */
@@ -738,7 +741,6 @@ export type CvPage = Node & {
   slug: Scalars['String'];
   /** System stage field */
   stage: Stage;
-  titleBlock?: Maybe<TitleBlock>;
   /** The time the document was updated */
   updatedAt: Scalars['DateTime'];
   /** User that last updated this document */
@@ -759,10 +761,28 @@ export type CvPageDocumentInStagesArgs = {
 };
 
 
+export type CvPageEducationListArgs = {
+  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
+  locales?: InputMaybe<Array<Locale>>;
+};
+
+
+export type CvPageExperienceListArgs = {
+  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
+  locales?: InputMaybe<Array<Locale>>;
+};
+
+
 export type CvPageHistoryArgs = {
   limit?: Scalars['Int'];
   skip?: Scalars['Int'];
   stageOverride?: InputMaybe<Stage>;
+};
+
+
+export type CvPagePageTitleBlockArgs = {
+  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
+  locales?: InputMaybe<Array<Locale>>;
 };
 
 
@@ -802,12 +822,6 @@ export type CvPageSkillsListArgs = {
 };
 
 
-export type CvPageTitleBlockArgs = {
-  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
-  locales?: InputMaybe<Array<Locale>>;
-};
-
-
 export type CvPageUpdatedByArgs = {
   forceParentLocale?: InputMaybe<Scalars['Boolean']>;
   locales?: InputMaybe<Array<Locale>>;
@@ -832,13 +846,15 @@ export type CvPageConnection = {
 
 export type CvPageCreateInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
+  educationList?: InputMaybe<ListCreateOneInlineInput>;
+  experienceList?: InputMaybe<TopicListCreateOneInlineInput>;
   /** Inline mutations for managing document localizations excluding the default locale */
   localizations?: InputMaybe<CvPageCreateLocalizationsInput>;
+  pageTitleBlock?: InputMaybe<TitleBlockCreateOneInlineInput>;
   privateImageBlock?: InputMaybe<ImageBlockCreateOneInlineInput>;
   profileImageBlock?: InputMaybe<ImageBlockCreateOneInlineInput>;
   skillsList?: InputMaybe<ListCreateOneInlineInput>;
   slug: Scalars['String'];
-  titleBlock?: InputMaybe<TitleBlockCreateOneInlineInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
@@ -910,6 +926,8 @@ export type CvPageManyWhereInput = {
   documentInStages_every?: InputMaybe<CvPageWhereStageInput>;
   documentInStages_none?: InputMaybe<CvPageWhereStageInput>;
   documentInStages_some?: InputMaybe<CvPageWhereStageInput>;
+  educationList?: InputMaybe<ListWhereInput>;
+  experienceList?: InputMaybe<TopicListWhereInput>;
   id?: InputMaybe<Scalars['ID']>;
   /** All values containing the given string. */
   id_contains?: InputMaybe<Scalars['ID']>;
@@ -929,6 +947,7 @@ export type CvPageManyWhereInput = {
   id_not_starts_with?: InputMaybe<Scalars['ID']>;
   /** All values starting with the given string. */
   id_starts_with?: InputMaybe<Scalars['ID']>;
+  pageTitleBlock?: InputMaybe<TitleBlockWhereInput>;
   privateImageBlock?: InputMaybe<ImageBlockWhereInput>;
   profileImageBlock?: InputMaybe<ImageBlockWhereInput>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
@@ -970,7 +989,6 @@ export type CvPageManyWhereInput = {
   slug_not_starts_with?: InputMaybe<Scalars['String']>;
   /** All values starting with the given string. */
   slug_starts_with?: InputMaybe<Scalars['String']>;
-  titleBlock?: InputMaybe<TitleBlockWhereInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -1003,13 +1021,15 @@ export enum CvPageOrderByInput {
 }
 
 export type CvPageUpdateInput = {
+  educationList?: InputMaybe<ListUpdateOneInlineInput>;
+  experienceList?: InputMaybe<TopicListUpdateOneInlineInput>;
   /** Manage document localizations */
   localizations?: InputMaybe<CvPageUpdateLocalizationsInput>;
+  pageTitleBlock?: InputMaybe<TitleBlockUpdateOneInlineInput>;
   privateImageBlock?: InputMaybe<ImageBlockUpdateOneInlineInput>;
   profileImageBlock?: InputMaybe<ImageBlockUpdateOneInlineInput>;
   skillsList?: InputMaybe<ListUpdateOneInlineInput>;
   slug?: InputMaybe<Scalars['String']>;
-  titleBlock?: InputMaybe<TitleBlockUpdateOneInlineInput>;
 };
 
 export type CvPageUpdateLocalizationsInput = {
@@ -1119,6 +1139,8 @@ export type CvPageWhereInput = {
   documentInStages_every?: InputMaybe<CvPageWhereStageInput>;
   documentInStages_none?: InputMaybe<CvPageWhereStageInput>;
   documentInStages_some?: InputMaybe<CvPageWhereStageInput>;
+  educationList?: InputMaybe<ListWhereInput>;
+  experienceList?: InputMaybe<TopicListWhereInput>;
   id?: InputMaybe<Scalars['ID']>;
   /** All values containing the given string. */
   id_contains?: InputMaybe<Scalars['ID']>;
@@ -1138,6 +1160,7 @@ export type CvPageWhereInput = {
   id_not_starts_with?: InputMaybe<Scalars['ID']>;
   /** All values starting with the given string. */
   id_starts_with?: InputMaybe<Scalars['ID']>;
+  pageTitleBlock?: InputMaybe<TitleBlockWhereInput>;
   privateImageBlock?: InputMaybe<ImageBlockWhereInput>;
   profileImageBlock?: InputMaybe<ImageBlockWhereInput>;
   publishedAt?: InputMaybe<Scalars['DateTime']>;
@@ -1179,7 +1202,6 @@ export type CvPageWhereInput = {
   slug_not_starts_with?: InputMaybe<Scalars['String']>;
   /** All values starting with the given string. */
   slug_starts_with?: InputMaybe<Scalars['String']>;
-  titleBlock?: InputMaybe<TitleBlockWhereInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -2132,6 +2154,10 @@ export type List = {
   id: Scalars['ID'];
   identifier: Scalars['String'];
   listEntry: Array<ListEntry>;
+  /** System Locale field */
+  locale: Locale;
+  /** Get the other localizations for this document */
+  localizations: Array<List>;
   /** System stage field */
   stage: Stage;
   title?: Maybe<Scalars['String']>;
@@ -2148,6 +2174,12 @@ export type ListListEntryArgs = {
   orderBy?: InputMaybe<ListEntryOrderByInput>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ListEntryWhereInput>;
+};
+
+
+export type ListLocalizationsArgs = {
+  includeCurrent?: Scalars['Boolean'];
+  locales?: Array<Locale>;
 };
 
 export type ListConnectInput = {
@@ -2170,7 +2202,25 @@ export type ListConnection = {
 export type ListCreateInput = {
   identifier: Scalars['String'];
   listEntry?: InputMaybe<ListEntryCreateManyInlineInput>;
+  /** Inline mutations for managing document localizations excluding the default locale */
+  localizations?: InputMaybe<ListCreateLocalizationsInput>;
+  /** title input for default locale (en) */
   title?: InputMaybe<Scalars['String']>;
+};
+
+export type ListCreateLocalizationDataInput = {
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type ListCreateLocalizationInput = {
+  /** Localization input */
+  data: ListCreateLocalizationDataInput;
+  locale: Locale;
+};
+
+export type ListCreateLocalizationsInput = {
+  /** Create localizations for the newly-created document */
+  create?: InputMaybe<Array<ListCreateLocalizationInput>>;
 };
 
 export type ListCreateManyInlineInput = {
@@ -2201,12 +2251,23 @@ export type ListEdge = {
 
 export type ListEntry = {
   __typename?: 'ListEntry';
+  description: Array<Scalars['String']>;
   /** The unique identifier */
   id: Scalars['ID'];
   identifier: Scalars['String'];
+  /** System Locale field */
+  locale: Locale;
+  /** Get the other localizations for this document */
+  localizations: Array<ListEntry>;
   /** System stage field */
   stage: Stage;
   title: Scalars['String'];
+};
+
+
+export type ListEntryLocalizationsArgs = {
+  includeCurrent?: Scalars['Boolean'];
+  locales?: Array<Locale>;
 };
 
 export type ListEntryConnectInput = {
@@ -2227,8 +2288,29 @@ export type ListEntryConnection = {
 };
 
 export type ListEntryCreateInput = {
+  /** description input for default locale (en) */
+  description?: InputMaybe<Array<Scalars['String']>>;
   identifier: Scalars['String'];
+  /** Inline mutations for managing document localizations excluding the default locale */
+  localizations?: InputMaybe<ListEntryCreateLocalizationsInput>;
+  /** title input for default locale (en) */
   title: Scalars['String'];
+};
+
+export type ListEntryCreateLocalizationDataInput = {
+  description?: InputMaybe<Array<Scalars['String']>>;
+  title: Scalars['String'];
+};
+
+export type ListEntryCreateLocalizationInput = {
+  /** Localization input */
+  data: ListEntryCreateLocalizationDataInput;
+  locale: Locale;
+};
+
+export type ListEntryCreateLocalizationsInput = {
+  /** Create localizations for the newly-created document */
+  create?: InputMaybe<Array<ListEntryCreateLocalizationInput>>;
 };
 
 export type ListEntryCreateManyInlineInput = {
@@ -2305,28 +2387,11 @@ export type ListEntryManyWhereInput = {
   identifier_not_starts_with?: InputMaybe<Scalars['String']>;
   /** All values starting with the given string. */
   identifier_starts_with?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
-  /** All values containing the given string. */
-  title_contains?: InputMaybe<Scalars['String']>;
-  /** All values ending with the given string. */
-  title_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are contained in given list. */
-  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  /** All values that are not equal to given value. */
-  title_not?: InputMaybe<Scalars['String']>;
-  /** All values not containing the given string. */
-  title_not_contains?: InputMaybe<Scalars['String']>;
-  /** All values not ending with the given string */
-  title_not_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are not contained in given list. */
-  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  /** All values not starting with the given string. */
-  title_not_starts_with?: InputMaybe<Scalars['String']>;
-  /** All values starting with the given string. */
-  title_starts_with?: InputMaybe<Scalars['String']>;
 };
 
 export enum ListEntryOrderByInput {
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
   IdentifierAsc = 'identifier_ASC',
@@ -2414,8 +2479,33 @@ export type ListEntryParentWhereUniqueInput = {
 };
 
 export type ListEntryUpdateInput = {
+  /** description input for default locale (en) */
+  description?: InputMaybe<Array<Scalars['String']>>;
   identifier?: InputMaybe<Scalars['String']>;
+  /** Manage document localizations */
+  localizations?: InputMaybe<ListEntryUpdateLocalizationsInput>;
+  /** title input for default locale (en) */
   title?: InputMaybe<Scalars['String']>;
+};
+
+export type ListEntryUpdateLocalizationDataInput = {
+  description?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type ListEntryUpdateLocalizationInput = {
+  data: ListEntryUpdateLocalizationDataInput;
+  locale: Locale;
+};
+
+export type ListEntryUpdateLocalizationsInput = {
+  /** Localizations to create */
+  create?: InputMaybe<Array<ListEntryCreateLocalizationInput>>;
+  /** Localizations to delete */
+  delete?: InputMaybe<Array<Locale>>;
+  /** Localizations to update */
+  update?: InputMaybe<Array<ListEntryUpdateLocalizationInput>>;
+  upsert?: InputMaybe<Array<ListEntryUpsertLocalizationInput>>;
 };
 
 export type ListEntryUpdateManyInlineInput = {
@@ -2430,7 +2520,27 @@ export type ListEntryUpdateManyInlineInput = {
 };
 
 export type ListEntryUpdateManyInput = {
+  /** description input for default locale (en) */
+  description?: InputMaybe<Array<Scalars['String']>>;
+  /** Optional updates to localizations */
+  localizations?: InputMaybe<ListEntryUpdateManyLocalizationsInput>;
+  /** title input for default locale (en) */
   title?: InputMaybe<Scalars['String']>;
+};
+
+export type ListEntryUpdateManyLocalizationDataInput = {
+  description?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type ListEntryUpdateManyLocalizationInput = {
+  data: ListEntryUpdateManyLocalizationDataInput;
+  locale: Locale;
+};
+
+export type ListEntryUpdateManyLocalizationsInput = {
+  /** Localizations to update */
+  update?: InputMaybe<Array<ListEntryUpdateManyLocalizationInput>>;
 };
 
 export type ListEntryUpdateManyWithNestedWhereInput = {
@@ -2474,6 +2584,12 @@ export type ListEntryUpsertInput = {
   update: ListEntryUpdateInput;
 };
 
+export type ListEntryUpsertLocalizationInput = {
+  create: ListEntryCreateLocalizationDataInput;
+  locale: Locale;
+  update: ListEntryUpdateLocalizationDataInput;
+};
+
 export type ListEntryUpsertWithNestedWhereUniqueAndPositionInput = {
   /** Document to upsert */
   data?: InputMaybe<ListEntryUpsertInput>;
@@ -2500,6 +2616,16 @@ export type ListEntryWhereInput = {
   OR?: InputMaybe<Array<ListEntryWhereInput>>;
   /** Contains search across all appropriate fields. */
   _search?: InputMaybe<Scalars['String']>;
+  /** Matches if the field array contains *all* items provided to the filter and order does match */
+  description?: InputMaybe<Array<Scalars['String']>>;
+  /** Matches if the field array contains *all* items provided to the filter */
+  description_contains_all?: InputMaybe<Array<Scalars['String']>>;
+  /** Matches if the field array does not contain any of the items provided to the filter */
+  description_contains_none?: InputMaybe<Array<Scalars['String']>>;
+  /** Matches if the field array contains at least one item provided to the filter */
+  description_contains_some?: InputMaybe<Array<Scalars['String']>>;
+  /** Matches if the field array does not contains *all* items provided to the filter or order does not match */
+  description_not?: InputMaybe<Array<Scalars['String']>>;
   id?: InputMaybe<Scalars['ID']>;
   /** All values containing the given string. */
   id_contains?: InputMaybe<Scalars['ID']>;
@@ -2616,25 +2742,6 @@ export type ListManyWhereInput = {
   listEntry_every?: InputMaybe<ListEntryWhereInput>;
   listEntry_none?: InputMaybe<ListEntryWhereInput>;
   listEntry_some?: InputMaybe<ListEntryWhereInput>;
-  title?: InputMaybe<Scalars['String']>;
-  /** All values containing the given string. */
-  title_contains?: InputMaybe<Scalars['String']>;
-  /** All values ending with the given string. */
-  title_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are contained in given list. */
-  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  /** All values that are not equal to given value. */
-  title_not?: InputMaybe<Scalars['String']>;
-  /** All values not containing the given string. */
-  title_not_contains?: InputMaybe<Scalars['String']>;
-  /** All values not ending with the given string */
-  title_not_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are not contained in given list. */
-  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  /** All values not starting with the given string. */
-  title_not_starts_with?: InputMaybe<Scalars['String']>;
-  /** All values starting with the given string. */
-  title_starts_with?: InputMaybe<Scalars['String']>;
 };
 
 export enum ListOrderByInput {
@@ -2729,7 +2836,29 @@ export type ListParentWhereUniqueInput = {
 export type ListUpdateInput = {
   identifier?: InputMaybe<Scalars['String']>;
   listEntry?: InputMaybe<ListEntryUpdateManyInlineInput>;
+  /** Manage document localizations */
+  localizations?: InputMaybe<ListUpdateLocalizationsInput>;
+  /** title input for default locale (en) */
   title?: InputMaybe<Scalars['String']>;
+};
+
+export type ListUpdateLocalizationDataInput = {
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type ListUpdateLocalizationInput = {
+  data: ListUpdateLocalizationDataInput;
+  locale: Locale;
+};
+
+export type ListUpdateLocalizationsInput = {
+  /** Localizations to create */
+  create?: InputMaybe<Array<ListCreateLocalizationInput>>;
+  /** Localizations to delete */
+  delete?: InputMaybe<Array<Locale>>;
+  /** Localizations to update */
+  update?: InputMaybe<Array<ListUpdateLocalizationInput>>;
+  upsert?: InputMaybe<Array<ListUpsertLocalizationInput>>;
 };
 
 export type ListUpdateManyInlineInput = {
@@ -2744,7 +2873,24 @@ export type ListUpdateManyInlineInput = {
 };
 
 export type ListUpdateManyInput = {
+  /** Optional updates to localizations */
+  localizations?: InputMaybe<ListUpdateManyLocalizationsInput>;
+  /** title input for default locale (en) */
   title?: InputMaybe<Scalars['String']>;
+};
+
+export type ListUpdateManyLocalizationDataInput = {
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type ListUpdateManyLocalizationInput = {
+  data: ListUpdateManyLocalizationDataInput;
+  locale: Locale;
+};
+
+export type ListUpdateManyLocalizationsInput = {
+  /** Localizations to update */
+  update?: InputMaybe<Array<ListUpdateManyLocalizationInput>>;
 };
 
 export type ListUpdateManyWithNestedWhereInput = {
@@ -2786,6 +2932,12 @@ export type ListUpsertInput = {
   create: ListCreateInput;
   /** Update document if it exists */
   update: ListUpdateInput;
+};
+
+export type ListUpsertLocalizationInput = {
+  create: ListCreateLocalizationDataInput;
+  locale: Locale;
+  update: ListUpdateLocalizationDataInput;
 };
 
 export type ListUpsertWithNestedWhereUniqueAndPositionInput = {
@@ -4635,6 +4787,7 @@ export type TitleBlock = {
   subtitle?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   titleWeight?: Maybe<TitleWeight>;
+  verticalOrientation?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -4671,6 +4824,7 @@ export type TitleBlockCreateInput = {
   /** title input for default locale (en) */
   title?: InputMaybe<Scalars['String']>;
   titleWeight?: InputMaybe<TitleWeight>;
+  verticalOrientation?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type TitleBlockCreateLocalizationDataInput = {
@@ -4771,6 +4925,9 @@ export type TitleBlockManyWhereInput = {
   titleWeight_not?: InputMaybe<TitleWeight>;
   /** All values that are not contained in given list. */
   titleWeight_not_in?: InputMaybe<Array<InputMaybe<TitleWeight>>>;
+  verticalOrientation?: InputMaybe<Scalars['Boolean']>;
+  /** All values that are not equal to given value. */
+  verticalOrientation_not?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum TitleBlockOrderByInput {
@@ -4785,7 +4942,9 @@ export enum TitleBlockOrderByInput {
   TitleWeightAsc = 'titleWeight_ASC',
   TitleWeightDesc = 'titleWeight_DESC',
   TitleAsc = 'title_ASC',
-  TitleDesc = 'title_DESC'
+  TitleDesc = 'title_DESC',
+  VerticalOrientationAsc = 'verticalOrientation_ASC',
+  VerticalOrientationDesc = 'verticalOrientation_DESC'
 }
 
 export type TitleBlockParent = CvPage;
@@ -4879,6 +5038,7 @@ export type TitleBlockUpdateInput = {
   /** title input for default locale (en) */
   title?: InputMaybe<Scalars['String']>;
   titleWeight?: InputMaybe<TitleWeight>;
+  verticalOrientation?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type TitleBlockUpdateLocalizationDataInput = {
@@ -4923,6 +5083,7 @@ export type TitleBlockUpdateManyInput = {
   /** title input for default locale (en) */
   title?: InputMaybe<Scalars['String']>;
   titleWeight?: InputMaybe<TitleWeight>;
+  verticalOrientation?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type TitleBlockUpdateManyLocalizationDataInput = {
@@ -5116,6 +5277,9 @@ export type TitleBlockWhereInput = {
   title_not_starts_with?: InputMaybe<Scalars['String']>;
   /** All values starting with the given string. */
   title_starts_with?: InputMaybe<Scalars['String']>;
+  verticalOrientation?: InputMaybe<Scalars['Boolean']>;
+  /** All values that are not equal to given value. */
+  verticalOrientation_not?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** References TitleBlock record uniquely */
@@ -5130,6 +5294,963 @@ export enum TitleWeight {
   H2 = 'h2',
   H3 = 'h3'
 }
+
+export type TopicList = {
+  __typename?: 'TopicList';
+  /** The unique identifier */
+  id: Scalars['ID'];
+  identifier: Scalars['String'];
+  /** System Locale field */
+  locale: Locale;
+  /** Get the other localizations for this document */
+  localizations: Array<TopicList>;
+  /** System stage field */
+  stage: Stage;
+  title?: Maybe<Scalars['String']>;
+  topicListEntry: Array<TopicListEntry>;
+};
+
+
+export type TopicListLocalizationsArgs = {
+  includeCurrent?: Scalars['Boolean'];
+  locales?: Array<Locale>;
+};
+
+
+export type TopicListTopicListEntryArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
+  last?: InputMaybe<Scalars['Int']>;
+  locales?: InputMaybe<Array<Locale>>;
+  orderBy?: InputMaybe<TopicListEntryOrderByInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<TopicListEntryWhereInput>;
+};
+
+export type TopicListConnectInput = {
+  /** Allow to specify document position in list of connected documents, will default to appending at end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+  /** Document to connect */
+  where: TopicListWhereUniqueInput;
+};
+
+/** A connection to a list of items. */
+export type TopicListConnection = {
+  __typename?: 'TopicListConnection';
+  aggregate: Aggregate;
+  /** A list of edges. */
+  edges: Array<TopicListEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+export type TopicListCreateInput = {
+  identifier: Scalars['String'];
+  /** Inline mutations for managing document localizations excluding the default locale */
+  localizations?: InputMaybe<TopicListCreateLocalizationsInput>;
+  /** title input for default locale (en) */
+  title?: InputMaybe<Scalars['String']>;
+  topicListEntry?: InputMaybe<TopicListEntryCreateManyInlineInput>;
+};
+
+export type TopicListCreateLocalizationDataInput = {
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type TopicListCreateLocalizationInput = {
+  /** Localization input */
+  data: TopicListCreateLocalizationDataInput;
+  locale: Locale;
+};
+
+export type TopicListCreateLocalizationsInput = {
+  /** Create localizations for the newly-created document */
+  create?: InputMaybe<Array<TopicListCreateLocalizationInput>>;
+};
+
+export type TopicListCreateManyInlineInput = {
+  /** Create and connect multiple existing TopicList documents */
+  create?: InputMaybe<Array<TopicListCreateInput>>;
+};
+
+export type TopicListCreateOneInlineInput = {
+  /** Create and connect one TopicList document */
+  create?: InputMaybe<TopicListCreateInput>;
+};
+
+export type TopicListCreateWithPositionInput = {
+  /** Document to create */
+  data: TopicListCreateInput;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+};
+
+/** An edge in a connection. */
+export type TopicListEdge = {
+  __typename?: 'TopicListEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String'];
+  /** The item at the end of the edge. */
+  node: TopicList;
+};
+
+export type TopicListEntry = {
+  __typename?: 'TopicListEntry';
+  description?: Maybe<Scalars['String']>;
+  /** The unique identifier */
+  id: Scalars['ID'];
+  identifier: Scalars['String'];
+  /** System Locale field */
+  locale: Locale;
+  /** Get the other localizations for this document */
+  localizations: Array<TopicListEntry>;
+  /** System stage field */
+  stage: Stage;
+  subDescription?: Maybe<Scalars['String']>;
+  subtitle?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+};
+
+
+export type TopicListEntryLocalizationsArgs = {
+  includeCurrent?: Scalars['Boolean'];
+  locales?: Array<Locale>;
+};
+
+export type TopicListEntryConnectInput = {
+  /** Allow to specify document position in list of connected documents, will default to appending at end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+  /** Document to connect */
+  where: TopicListEntryWhereUniqueInput;
+};
+
+/** A connection to a list of items. */
+export type TopicListEntryConnection = {
+  __typename?: 'TopicListEntryConnection';
+  aggregate: Aggregate;
+  /** A list of edges. */
+  edges: Array<TopicListEntryEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+export type TopicListEntryCreateInput = {
+  /** description input for default locale (en) */
+  description?: InputMaybe<Scalars['String']>;
+  identifier: Scalars['String'];
+  /** Inline mutations for managing document localizations excluding the default locale */
+  localizations?: InputMaybe<TopicListEntryCreateLocalizationsInput>;
+  /** subDescription input for default locale (en) */
+  subDescription?: InputMaybe<Scalars['String']>;
+  /** subtitle input for default locale (en) */
+  subtitle?: InputMaybe<Scalars['String']>;
+  /** title input for default locale (en) */
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type TopicListEntryCreateLocalizationDataInput = {
+  description?: InputMaybe<Scalars['String']>;
+  subDescription?: InputMaybe<Scalars['String']>;
+  subtitle?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type TopicListEntryCreateLocalizationInput = {
+  /** Localization input */
+  data: TopicListEntryCreateLocalizationDataInput;
+  locale: Locale;
+};
+
+export type TopicListEntryCreateLocalizationsInput = {
+  /** Create localizations for the newly-created document */
+  create?: InputMaybe<Array<TopicListEntryCreateLocalizationInput>>;
+};
+
+export type TopicListEntryCreateManyInlineInput = {
+  /** Create and connect multiple existing TopicListEntry documents */
+  create?: InputMaybe<Array<TopicListEntryCreateInput>>;
+};
+
+export type TopicListEntryCreateOneInlineInput = {
+  /** Create and connect one TopicListEntry document */
+  create?: InputMaybe<TopicListEntryCreateInput>;
+};
+
+export type TopicListEntryCreateWithPositionInput = {
+  /** Document to create */
+  data: TopicListEntryCreateInput;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+};
+
+/** An edge in a connection. */
+export type TopicListEntryEdge = {
+  __typename?: 'TopicListEntryEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String'];
+  /** The item at the end of the edge. */
+  node: TopicListEntry;
+};
+
+/** Identifies documents */
+export type TopicListEntryManyWhereInput = {
+  /** Logical AND on all given filters. */
+  AND?: InputMaybe<Array<TopicListEntryWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: InputMaybe<Array<TopicListEntryWhereInput>>;
+  /** Logical OR on all given filters. */
+  OR?: InputMaybe<Array<TopicListEntryWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  _search?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  /** All values containing the given string. */
+  id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  id_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values that are not equal to given value. */
+  id_not?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are not contained in given list. */
+  id_not_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values not starting with the given string. */
+  id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  id_starts_with?: InputMaybe<Scalars['ID']>;
+  identifier?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  identifier_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  identifier_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  identifier_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  identifier_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  identifier_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  identifier_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  identifier_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  identifier_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  identifier_starts_with?: InputMaybe<Scalars['String']>;
+};
+
+export enum TopicListEntryOrderByInput {
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  IdentifierAsc = 'identifier_ASC',
+  IdentifierDesc = 'identifier_DESC',
+  SubDescriptionAsc = 'subDescription_ASC',
+  SubDescriptionDesc = 'subDescription_DESC',
+  SubtitleAsc = 'subtitle_ASC',
+  SubtitleDesc = 'subtitle_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC'
+}
+
+export type TopicListEntryParent = TopicList;
+
+export type TopicListEntryParentConnectInput = {
+  TopicList?: InputMaybe<TopicListConnectInput>;
+};
+
+export type TopicListEntryParentCreateInput = {
+  TopicList?: InputMaybe<TopicListCreateInput>;
+};
+
+export type TopicListEntryParentCreateManyInlineInput = {
+  /** Create and connect multiple existing TopicListEntryParent documents */
+  create?: InputMaybe<Array<TopicListEntryParentCreateInput>>;
+};
+
+export type TopicListEntryParentCreateOneInlineInput = {
+  /** Create and connect one TopicListEntryParent document */
+  create?: InputMaybe<TopicListEntryParentCreateInput>;
+};
+
+export type TopicListEntryParentCreateWithPositionInput = {
+  TopicList?: InputMaybe<TopicListCreateWithPositionInput>;
+};
+
+export type TopicListEntryParentUpdateInput = {
+  TopicList?: InputMaybe<TopicListUpdateInput>;
+};
+
+export type TopicListEntryParentUpdateManyInlineInput = {
+  /** Create and connect multiple TopicListEntryParent component instances */
+  create?: InputMaybe<Array<TopicListEntryParentCreateWithPositionInput>>;
+  /** Delete multiple TopicListEntryParent documents */
+  delete?: InputMaybe<Array<TopicListEntryParentWhereUniqueInput>>;
+  /** Update multiple TopicListEntryParent component instances */
+  update?: InputMaybe<Array<TopicListEntryParentUpdateWithNestedWhereUniqueAndPositionInput>>;
+  /** Upsert multiple TopicListEntryParent component instances */
+  upsert?: InputMaybe<Array<TopicListEntryParentUpsertWithNestedWhereUniqueAndPositionInput>>;
+};
+
+export type TopicListEntryParentUpdateManyWithNestedWhereInput = {
+  TopicList?: InputMaybe<TopicListUpdateManyWithNestedWhereInput>;
+};
+
+export type TopicListEntryParentUpdateOneInlineInput = {
+  /** Create and connect one TopicListEntryParent document */
+  create?: InputMaybe<TopicListEntryParentCreateInput>;
+  /** Delete currently connected TopicListEntryParent document */
+  delete?: InputMaybe<Scalars['Boolean']>;
+  /** Update single TopicListEntryParent document */
+  update?: InputMaybe<TopicListEntryParentUpdateWithNestedWhereUniqueInput>;
+  /** Upsert single TopicListEntryParent document */
+  upsert?: InputMaybe<TopicListEntryParentUpsertWithNestedWhereUniqueInput>;
+};
+
+export type TopicListEntryParentUpdateWithNestedWhereUniqueAndPositionInput = {
+  TopicList?: InputMaybe<TopicListUpdateWithNestedWhereUniqueAndPositionInput>;
+};
+
+export type TopicListEntryParentUpdateWithNestedWhereUniqueInput = {
+  TopicList?: InputMaybe<TopicListUpdateWithNestedWhereUniqueInput>;
+};
+
+export type TopicListEntryParentUpsertWithNestedWhereUniqueAndPositionInput = {
+  TopicList?: InputMaybe<TopicListUpsertWithNestedWhereUniqueAndPositionInput>;
+};
+
+export type TopicListEntryParentUpsertWithNestedWhereUniqueInput = {
+  TopicList?: InputMaybe<TopicListUpsertWithNestedWhereUniqueInput>;
+};
+
+export type TopicListEntryParentWhereInput = {
+  TopicList?: InputMaybe<TopicListWhereInput>;
+};
+
+export type TopicListEntryParentWhereUniqueInput = {
+  TopicList?: InputMaybe<TopicListWhereUniqueInput>;
+};
+
+export type TopicListEntryUpdateInput = {
+  /** description input for default locale (en) */
+  description?: InputMaybe<Scalars['String']>;
+  identifier?: InputMaybe<Scalars['String']>;
+  /** Manage document localizations */
+  localizations?: InputMaybe<TopicListEntryUpdateLocalizationsInput>;
+  /** subDescription input for default locale (en) */
+  subDescription?: InputMaybe<Scalars['String']>;
+  /** subtitle input for default locale (en) */
+  subtitle?: InputMaybe<Scalars['String']>;
+  /** title input for default locale (en) */
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type TopicListEntryUpdateLocalizationDataInput = {
+  description?: InputMaybe<Scalars['String']>;
+  subDescription?: InputMaybe<Scalars['String']>;
+  subtitle?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type TopicListEntryUpdateLocalizationInput = {
+  data: TopicListEntryUpdateLocalizationDataInput;
+  locale: Locale;
+};
+
+export type TopicListEntryUpdateLocalizationsInput = {
+  /** Localizations to create */
+  create?: InputMaybe<Array<TopicListEntryCreateLocalizationInput>>;
+  /** Localizations to delete */
+  delete?: InputMaybe<Array<Locale>>;
+  /** Localizations to update */
+  update?: InputMaybe<Array<TopicListEntryUpdateLocalizationInput>>;
+  upsert?: InputMaybe<Array<TopicListEntryUpsertLocalizationInput>>;
+};
+
+export type TopicListEntryUpdateManyInlineInput = {
+  /** Create and connect multiple TopicListEntry component instances */
+  create?: InputMaybe<Array<TopicListEntryCreateWithPositionInput>>;
+  /** Delete multiple TopicListEntry documents */
+  delete?: InputMaybe<Array<TopicListEntryWhereUniqueInput>>;
+  /** Update multiple TopicListEntry component instances */
+  update?: InputMaybe<Array<TopicListEntryUpdateWithNestedWhereUniqueAndPositionInput>>;
+  /** Upsert multiple TopicListEntry component instances */
+  upsert?: InputMaybe<Array<TopicListEntryUpsertWithNestedWhereUniqueAndPositionInput>>;
+};
+
+export type TopicListEntryUpdateManyInput = {
+  /** description input for default locale (en) */
+  description?: InputMaybe<Scalars['String']>;
+  /** Optional updates to localizations */
+  localizations?: InputMaybe<TopicListEntryUpdateManyLocalizationsInput>;
+  /** subDescription input for default locale (en) */
+  subDescription?: InputMaybe<Scalars['String']>;
+  /** subtitle input for default locale (en) */
+  subtitle?: InputMaybe<Scalars['String']>;
+  /** title input for default locale (en) */
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type TopicListEntryUpdateManyLocalizationDataInput = {
+  description?: InputMaybe<Scalars['String']>;
+  subDescription?: InputMaybe<Scalars['String']>;
+  subtitle?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type TopicListEntryUpdateManyLocalizationInput = {
+  data: TopicListEntryUpdateManyLocalizationDataInput;
+  locale: Locale;
+};
+
+export type TopicListEntryUpdateManyLocalizationsInput = {
+  /** Localizations to update */
+  update?: InputMaybe<Array<TopicListEntryUpdateManyLocalizationInput>>;
+};
+
+export type TopicListEntryUpdateManyWithNestedWhereInput = {
+  /** Update many input */
+  data: TopicListEntryUpdateManyInput;
+  /** Document search */
+  where: TopicListEntryWhereInput;
+};
+
+export type TopicListEntryUpdateOneInlineInput = {
+  /** Create and connect one TopicListEntry document */
+  create?: InputMaybe<TopicListEntryCreateInput>;
+  /** Delete currently connected TopicListEntry document */
+  delete?: InputMaybe<Scalars['Boolean']>;
+  /** Update single TopicListEntry document */
+  update?: InputMaybe<TopicListEntryUpdateWithNestedWhereUniqueInput>;
+  /** Upsert single TopicListEntry document */
+  upsert?: InputMaybe<TopicListEntryUpsertWithNestedWhereUniqueInput>;
+};
+
+export type TopicListEntryUpdateWithNestedWhereUniqueAndPositionInput = {
+  /** Document to update */
+  data?: InputMaybe<TopicListEntryUpdateInput>;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+  /** Unique component instance search */
+  where: TopicListEntryWhereUniqueInput;
+};
+
+export type TopicListEntryUpdateWithNestedWhereUniqueInput = {
+  /** Document to update */
+  data: TopicListEntryUpdateInput;
+  /** Unique document search */
+  where: TopicListEntryWhereUniqueInput;
+};
+
+export type TopicListEntryUpsertInput = {
+  /** Create document if it didn't exist */
+  create: TopicListEntryCreateInput;
+  /** Update document if it exists */
+  update: TopicListEntryUpdateInput;
+};
+
+export type TopicListEntryUpsertLocalizationInput = {
+  create: TopicListEntryCreateLocalizationDataInput;
+  locale: Locale;
+  update: TopicListEntryUpdateLocalizationDataInput;
+};
+
+export type TopicListEntryUpsertWithNestedWhereUniqueAndPositionInput = {
+  /** Document to upsert */
+  data?: InputMaybe<TopicListEntryUpsertInput>;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+  /** Unique component instance search */
+  where: TopicListEntryWhereUniqueInput;
+};
+
+export type TopicListEntryUpsertWithNestedWhereUniqueInput = {
+  /** Upsert data */
+  data: TopicListEntryUpsertInput;
+  /** Unique document search */
+  where: TopicListEntryWhereUniqueInput;
+};
+
+/** Identifies documents */
+export type TopicListEntryWhereInput = {
+  /** Logical AND on all given filters. */
+  AND?: InputMaybe<Array<TopicListEntryWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: InputMaybe<Array<TopicListEntryWhereInput>>;
+  /** Logical OR on all given filters. */
+  OR?: InputMaybe<Array<TopicListEntryWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  _search?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  description_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  description_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  description_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  description_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  description_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  description_starts_with?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  /** All values containing the given string. */
+  id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  id_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values that are not equal to given value. */
+  id_not?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are not contained in given list. */
+  id_not_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values not starting with the given string. */
+  id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  id_starts_with?: InputMaybe<Scalars['ID']>;
+  identifier?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  identifier_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  identifier_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  identifier_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  identifier_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  identifier_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  identifier_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  identifier_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  identifier_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  identifier_starts_with?: InputMaybe<Scalars['String']>;
+  subDescription?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  subDescription_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  subDescription_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  subDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  subDescription_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  subDescription_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  subDescription_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  subDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  subDescription_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  subDescription_starts_with?: InputMaybe<Scalars['String']>;
+  subtitle?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  subtitle_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  subtitle_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  subtitle_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  subtitle_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  subtitle_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  subtitle_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  subtitle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  subtitle_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  subtitle_starts_with?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  title_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  title_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  title_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  title_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  title_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  title_starts_with?: InputMaybe<Scalars['String']>;
+};
+
+/** References TopicListEntry record uniquely */
+export type TopicListEntryWhereUniqueInput = {
+  id?: InputMaybe<Scalars['ID']>;
+  identifier?: InputMaybe<Scalars['String']>;
+};
+
+/** Identifies documents */
+export type TopicListManyWhereInput = {
+  /** Logical AND on all given filters. */
+  AND?: InputMaybe<Array<TopicListWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: InputMaybe<Array<TopicListWhereInput>>;
+  /** Logical OR on all given filters. */
+  OR?: InputMaybe<Array<TopicListWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  _search?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  /** All values containing the given string. */
+  id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  id_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values that are not equal to given value. */
+  id_not?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are not contained in given list. */
+  id_not_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values not starting with the given string. */
+  id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  id_starts_with?: InputMaybe<Scalars['ID']>;
+  identifier?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  identifier_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  identifier_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  identifier_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  identifier_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  identifier_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  identifier_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  identifier_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  identifier_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  identifier_starts_with?: InputMaybe<Scalars['String']>;
+  topicListEntry_every?: InputMaybe<TopicListEntryWhereInput>;
+  topicListEntry_none?: InputMaybe<TopicListEntryWhereInput>;
+  topicListEntry_some?: InputMaybe<TopicListEntryWhereInput>;
+};
+
+export enum TopicListOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  IdentifierAsc = 'identifier_ASC',
+  IdentifierDesc = 'identifier_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC'
+}
+
+export type TopicListParent = CvPage;
+
+export type TopicListParentConnectInput = {
+  CvPage?: InputMaybe<CvPageConnectInput>;
+};
+
+export type TopicListParentCreateInput = {
+  CvPage?: InputMaybe<CvPageCreateInput>;
+};
+
+export type TopicListParentCreateManyInlineInput = {
+  /** Connect multiple existing TopicListParent documents */
+  connect?: InputMaybe<Array<TopicListParentWhereUniqueInput>>;
+  /** Create and connect multiple existing TopicListParent documents */
+  create?: InputMaybe<Array<TopicListParentCreateInput>>;
+};
+
+export type TopicListParentCreateOneInlineInput = {
+  /** Connect one existing TopicListParent document */
+  connect?: InputMaybe<TopicListParentWhereUniqueInput>;
+  /** Create and connect one TopicListParent document */
+  create?: InputMaybe<TopicListParentCreateInput>;
+};
+
+export type TopicListParentUpdateInput = {
+  CvPage?: InputMaybe<CvPageUpdateInput>;
+};
+
+export type TopicListParentUpdateManyInlineInput = {
+  /** Connect multiple existing TopicListParent documents */
+  connect?: InputMaybe<Array<TopicListParentConnectInput>>;
+  /** Create and connect multiple TopicListParent documents */
+  create?: InputMaybe<Array<TopicListParentCreateInput>>;
+  /** Delete multiple TopicListParent documents */
+  delete?: InputMaybe<Array<TopicListParentWhereUniqueInput>>;
+  /** Disconnect multiple TopicListParent documents */
+  disconnect?: InputMaybe<Array<TopicListParentWhereUniqueInput>>;
+  /** Override currently-connected documents with multiple existing TopicListParent documents */
+  set?: InputMaybe<Array<TopicListParentWhereUniqueInput>>;
+  /** Update multiple TopicListParent documents */
+  update?: InputMaybe<Array<TopicListParentUpdateWithNestedWhereUniqueInput>>;
+  /** Upsert multiple TopicListParent documents */
+  upsert?: InputMaybe<Array<TopicListParentUpsertWithNestedWhereUniqueInput>>;
+};
+
+export type TopicListParentUpdateManyWithNestedWhereInput = {
+  CvPage?: InputMaybe<CvPageUpdateManyWithNestedWhereInput>;
+};
+
+export type TopicListParentUpdateOneInlineInput = {
+  /** Connect existing TopicListParent document */
+  connect?: InputMaybe<TopicListParentWhereUniqueInput>;
+  /** Create and connect one TopicListParent document */
+  create?: InputMaybe<TopicListParentCreateInput>;
+  /** Delete currently connected TopicListParent document */
+  delete?: InputMaybe<Scalars['Boolean']>;
+  /** Disconnect currently connected TopicListParent document */
+  disconnect?: InputMaybe<Scalars['Boolean']>;
+  /** Update single TopicListParent document */
+  update?: InputMaybe<TopicListParentUpdateWithNestedWhereUniqueInput>;
+  /** Upsert single TopicListParent document */
+  upsert?: InputMaybe<TopicListParentUpsertWithNestedWhereUniqueInput>;
+};
+
+export type TopicListParentUpdateWithNestedWhereUniqueInput = {
+  CvPage?: InputMaybe<CvPageUpdateWithNestedWhereUniqueInput>;
+};
+
+export type TopicListParentUpsertWithNestedWhereUniqueInput = {
+  CvPage?: InputMaybe<CvPageUpsertWithNestedWhereUniqueInput>;
+};
+
+export type TopicListParentWhereInput = {
+  CvPage?: InputMaybe<CvPageWhereInput>;
+};
+
+export type TopicListParentWhereUniqueInput = {
+  CvPage?: InputMaybe<CvPageWhereUniqueInput>;
+};
+
+export type TopicListUpdateInput = {
+  identifier?: InputMaybe<Scalars['String']>;
+  /** Manage document localizations */
+  localizations?: InputMaybe<TopicListUpdateLocalizationsInput>;
+  /** title input for default locale (en) */
+  title?: InputMaybe<Scalars['String']>;
+  topicListEntry?: InputMaybe<TopicListEntryUpdateManyInlineInput>;
+};
+
+export type TopicListUpdateLocalizationDataInput = {
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type TopicListUpdateLocalizationInput = {
+  data: TopicListUpdateLocalizationDataInput;
+  locale: Locale;
+};
+
+export type TopicListUpdateLocalizationsInput = {
+  /** Localizations to create */
+  create?: InputMaybe<Array<TopicListCreateLocalizationInput>>;
+  /** Localizations to delete */
+  delete?: InputMaybe<Array<Locale>>;
+  /** Localizations to update */
+  update?: InputMaybe<Array<TopicListUpdateLocalizationInput>>;
+  upsert?: InputMaybe<Array<TopicListUpsertLocalizationInput>>;
+};
+
+export type TopicListUpdateManyInlineInput = {
+  /** Create and connect multiple TopicList component instances */
+  create?: InputMaybe<Array<TopicListCreateWithPositionInput>>;
+  /** Delete multiple TopicList documents */
+  delete?: InputMaybe<Array<TopicListWhereUniqueInput>>;
+  /** Update multiple TopicList component instances */
+  update?: InputMaybe<Array<TopicListUpdateWithNestedWhereUniqueAndPositionInput>>;
+  /** Upsert multiple TopicList component instances */
+  upsert?: InputMaybe<Array<TopicListUpsertWithNestedWhereUniqueAndPositionInput>>;
+};
+
+export type TopicListUpdateManyInput = {
+  identifier?: InputMaybe<Scalars['String']>;
+  /** Optional updates to localizations */
+  localizations?: InputMaybe<TopicListUpdateManyLocalizationsInput>;
+  /** title input for default locale (en) */
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type TopicListUpdateManyLocalizationDataInput = {
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type TopicListUpdateManyLocalizationInput = {
+  data: TopicListUpdateManyLocalizationDataInput;
+  locale: Locale;
+};
+
+export type TopicListUpdateManyLocalizationsInput = {
+  /** Localizations to update */
+  update?: InputMaybe<Array<TopicListUpdateManyLocalizationInput>>;
+};
+
+export type TopicListUpdateManyWithNestedWhereInput = {
+  /** Update many input */
+  data: TopicListUpdateManyInput;
+  /** Document search */
+  where: TopicListWhereInput;
+};
+
+export type TopicListUpdateOneInlineInput = {
+  /** Create and connect one TopicList document */
+  create?: InputMaybe<TopicListCreateInput>;
+  /** Delete currently connected TopicList document */
+  delete?: InputMaybe<Scalars['Boolean']>;
+  /** Update single TopicList document */
+  update?: InputMaybe<TopicListUpdateWithNestedWhereUniqueInput>;
+  /** Upsert single TopicList document */
+  upsert?: InputMaybe<TopicListUpsertWithNestedWhereUniqueInput>;
+};
+
+export type TopicListUpdateWithNestedWhereUniqueAndPositionInput = {
+  /** Document to update */
+  data?: InputMaybe<TopicListUpdateInput>;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+  /** Unique component instance search */
+  where: TopicListWhereUniqueInput;
+};
+
+export type TopicListUpdateWithNestedWhereUniqueInput = {
+  /** Document to update */
+  data: TopicListUpdateInput;
+  /** Unique document search */
+  where: TopicListWhereUniqueInput;
+};
+
+export type TopicListUpsertInput = {
+  /** Create document if it didn't exist */
+  create: TopicListCreateInput;
+  /** Update document if it exists */
+  update: TopicListUpdateInput;
+};
+
+export type TopicListUpsertLocalizationInput = {
+  create: TopicListCreateLocalizationDataInput;
+  locale: Locale;
+  update: TopicListUpdateLocalizationDataInput;
+};
+
+export type TopicListUpsertWithNestedWhereUniqueAndPositionInput = {
+  /** Document to upsert */
+  data?: InputMaybe<TopicListUpsertInput>;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+  /** Unique component instance search */
+  where: TopicListWhereUniqueInput;
+};
+
+export type TopicListUpsertWithNestedWhereUniqueInput = {
+  /** Upsert data */
+  data: TopicListUpsertInput;
+  /** Unique document search */
+  where: TopicListWhereUniqueInput;
+};
+
+/** Identifies documents */
+export type TopicListWhereInput = {
+  /** Logical AND on all given filters. */
+  AND?: InputMaybe<Array<TopicListWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: InputMaybe<Array<TopicListWhereInput>>;
+  /** Logical OR on all given filters. */
+  OR?: InputMaybe<Array<TopicListWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  _search?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  /** All values containing the given string. */
+  id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  id_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values that are not equal to given value. */
+  id_not?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are not contained in given list. */
+  id_not_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values not starting with the given string. */
+  id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  id_starts_with?: InputMaybe<Scalars['ID']>;
+  identifier?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  identifier_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  identifier_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  identifier_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  identifier_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  identifier_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  identifier_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  identifier_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  identifier_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  identifier_starts_with?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  title_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  title_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  title_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  title_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  title_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  title_starts_with?: InputMaybe<Scalars['String']>;
+  topicListEntry_every?: InputMaybe<TopicListEntryWhereInput>;
+  topicListEntry_none?: InputMaybe<TopicListEntryWhereInput>;
+  topicListEntry_some?: InputMaybe<TopicListEntryWhereInput>;
+};
+
+/** References TopicList record uniquely */
+export type TopicListWhereUniqueInput = {
+  id?: InputMaybe<Scalars['ID']>;
+};
 
 export type UnpublishLocaleInput = {
   /** Locales to unpublish */

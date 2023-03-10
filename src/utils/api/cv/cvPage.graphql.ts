@@ -4,7 +4,8 @@ export const cvPageQuery = gql`
   query cvPageQuery($local: Locale!, $slug: String) {
     cvPage(where: { slug: $slug }, locales: [$local]) {
       slug
-      titleBlock {
+      pageTitleBlock {
+        identifier
         title
         subtitle
         subSubtitle
@@ -19,19 +20,40 @@ export const cvPageQuery = gql`
           identifier
         }
       }
-      skillsList {
-        title
-        listEntry {
-          identifier
-          title
-        }
-      }
       privateImageBlock {
         imageEntry {
           image {
             url
           }
           altText
+          identifier
+        }
+      }
+      skillsList {
+        identifier
+        title
+        listEntry {
+          identifier
+          title
+        }
+      }
+      educationList {
+        identifier
+        title
+        listEntry {
+          identifier
+          title
+          description
+        }
+      }
+      experienceList {
+        identifier
+        title
+        topicListEntry {
+          title
+          subtitle
+          subDescription
+          description
           identifier
         }
       }
