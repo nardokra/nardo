@@ -10,13 +10,17 @@ import cx from "classnames";
 import Image from "next/image";
 import { SizeVariant } from "@/constants/sizeConstants";
 
+type ImageBrickType = {
+  imageBlock?: Maybe<ImageBlock>;
+  size?: SizeVariant;
+  priority?: boolean;
+};
+
 export const ImageBrick = ({
   imageBlock,
   size = SizeVariant.Small,
-}: {
-  imageBlock?: Maybe<ImageBlock>;
-  size?: SizeVariant;
-}) => {
+  priority = false,
+}: ImageBrickType) => {
   const [visibleImage, setVisibleImage] = useState(0);
 
   const updateVisibleImage = () => {
@@ -52,6 +56,8 @@ export const ImageBrick = ({
             alt={altText}
             fill
             style={{ objectFit: "cover" }}
+            sizes="(max-width: 768px) 100vw,(max-width: 1200px) 50vw, 33vw"
+            priority={priority}
           />
         </div>
       ))}
