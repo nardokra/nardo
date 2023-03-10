@@ -1,0 +1,72 @@
+@layer utilities {
+  .writing-vertical-rl {
+    writing-mode: vertical-rl;
+  }
+
+  .writing-vertical-lr {
+    writing-mode: vertical-lr;
+  }
+
+  .writing-horizontal-tb {
+    writing-mode: horizontal-tb;
+  }
+
+  .text-sideways {
+    text-orientation: sideways;
+  }
+
+  .text-upright {
+    text-orientation: upright;
+  }
+
+  .text-mixed {
+    text-orientation: mixed;
+  }
+
+  .text-sideways-right {
+    text-orientation: sideways-right;
+  }
+
+  .text-glyph {
+    text-orientation: use-glyph-orientation;
+  }
+
+  .animate-bounce {
+    animation: bounce 0.7s;
+
+    @keyframes bounce {
+      0%,
+      100% {
+        transform: translateY(0%);
+        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+      }
+
+      33% {
+        transform: translateY(-2%);
+        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      }
+
+      66% {
+        transform: translateY(2%);
+        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+      }
+    }
+  }
+
+  .animate-ping {
+    animation: ping 0.7s cubic-bezier(0, 0, 0.2, 1);
+
+    @keyframes ping {
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+  }
+}
