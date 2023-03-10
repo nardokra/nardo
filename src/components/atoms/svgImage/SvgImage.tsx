@@ -16,7 +16,7 @@ import {
   NodeLogo,
   ReactLogo,
   StoryBookLogo,
-  TailwindCss,
+  TailwindCssLogo,
   Typescript,
   VueLogo,
 } from "./svgVariants";
@@ -56,7 +56,7 @@ const SvgElement = {
   node: NodeLogo,
   react: ReactLogo,
   storybook: StoryBookLogo,
-  tailwindcss: TailwindCss,
+  tailwindcss: TailwindCssLogo,
   typescript: Typescript,
   vue: VueLogo,
 };

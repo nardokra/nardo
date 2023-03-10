@@ -2,7 +2,7 @@ export { ReactLogo } from "./ReactLogo";
 export { Typescript } from "./Typescript";
 export { NextLogo } from "./NextLogo";
 export { Css3 } from "./Css3";
-export { TailwindCss } from "./TailwindCss";
+export { TailwindCssLogo } from "./TailwindCssLogo";
 export { Git } from "./Git";
 export { NodeLogo } from "./NodeLogo";
 export { JestLogo } from "./JestLogo";
