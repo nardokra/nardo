@@ -9,7 +9,7 @@ import cx from "classnames";
 type HoverListType = {
   list?: Maybe<List>;
   item?: SvgImageVariants;
-  setItem: Dispatch<SetStateAction<SvgImageVariants | undefined>>;
+  setItem?: Dispatch<SetStateAction<SvgImageVariants | undefined>>;
 };
 
 export const HoverList = ({ list, item, setItem }: HoverListType) => {
@@ -17,10 +17,10 @@ export const HoverList = ({ list, item, setItem }: HoverListType) => {
 
   const updateSelectedItem = (event: SyntheticEvent) => {
     const target = event.target as HTMLElement;
-    setItem(target.id as SvgImageVariants);
+    setItem?.(target.id as SvgImageVariants);
   };
 
-  const resetItems = () => setItem(undefined);
+  const resetItems = () => setItem?.(undefined);
 
   return (
     <ol
@@ -44,7 +44,7 @@ export const HoverList = ({ list, item, setItem }: HoverListType) => {
           <div
             className={cx(
               entry.identifier === item &&
-                "h-3 w-3 bg-white rounded-lg animate-bounce"
+                "h-3 w-3 bg-white rounded-lg animate-ping"
             )}
           />
         </li>
