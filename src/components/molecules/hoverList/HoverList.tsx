@@ -1,26 +1,31 @@
 // Types
 import type { Dispatch, SetStateAction, SyntheticEvent } from "react";
 import { Maybe, List } from "@/cmsTypes/hygraph";
-import { SvgImageVariants } from "@/components/atoms/svgImage";
 
 // Utils
 import cx from "classnames";
 
-type HoverListType = {
+type HoverListType<T> = {
+  itemDefault?: T;
   list?: Maybe<List>;
-  item?: SvgImageVariants;
-  setItem?: Dispatch<SetStateAction<SvgImageVariants | undefined>>;
+  item?: T;
+  setItem?: Dispatch<SetStateAction<T | undefined>>;
 };
 
-export const HoverList = ({ list, item, setItem }: HoverListType) => {
+export const HoverList = <T,>({
+  itemDefault,
+  list,
+  item,
+  setItem,
+}: HoverListType<T>) => {
   const { title, listEntry } = list || {};
 
   const updateSelectedItem = (event: SyntheticEvent) => {
     const target = event.target as HTMLElement;
-    setItem?.(target.id as SvgImageVariants);
+    setItem?.(target.id as T);
   };
 
-  const resetItems = () => setItem?.(undefined);
+  const resetItems = () => setItem?.(itemDefault);
 
   return (
     <ol
@@ -38,7 +43,7 @@ export const HoverList = ({ list, item, setItem }: HoverListType) => {
           className="flex items-center justify-between w-full pb-4"
           id={entry.identifier}
           key={entry.identifier}
-          onMouseEnter={updateSelectedItem}
+          onMouseEnter={setItem ? updateSelectedItem : undefined}
         >
           {entry.title}
           <div
