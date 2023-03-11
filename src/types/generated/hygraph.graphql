@@ -928,6 +928,28 @@ input ConnectPositionInput {
 }
 
 type CvPage implements Node {
+  contactList(
+    """
+    Sets the locale of the parent document as the first locale in the fallback locales in the query's subtree.
+    
+    Note that `contactList` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+    """
+    forceParentLocale: Boolean
+
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `contactList` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): List
+
   """The time the document was created"""
   createdAt: DateTime!
 
@@ -1215,6 +1237,7 @@ type CvPageConnection {
 }
 
 input CvPageCreateInput {
+  contactList: ListCreateOneInlineInput
   createdAt: DateTime
   educationList: ListCreateOneInlineInput
   experienceList: TopicListCreateOneInlineInput
@@ -1285,6 +1308,7 @@ input CvPageManyWhereInput {
 
   """Contains search across all appropriate fields."""
   _search: String
+  contactList: ListWhereInput
   createdAt: DateTime
 
   """All values greater than the given value."""
@@ -1438,6 +1462,7 @@ enum CvPageOrderByInput {
 }
 
 input CvPageUpdateInput {
+  contactList: ListUpdateOneInlineInput
   educationList: ListUpdateOneInlineInput
   experienceList: TopicListUpdateOneInlineInput
 
@@ -1563,6 +1588,7 @@ input CvPageWhereInput {
 
   """Contains search across all appropriate fields."""
   _search: String
+  contactList: ListWhereInput
   createdAt: DateTime
 
   """All values greater than the given value."""
@@ -1804,6 +1830,365 @@ type DocumentVersion {
 }
 
 scalar Hex
+
+type Href {
+  href: String!
+
+  """The unique identifier"""
+  id: ID!
+
+  """System stage field"""
+  stage: Stage!
+  target: HrefTarget
+  title: String
+}
+
+"""A connection to a list of items."""
+type HrefConnection {
+  aggregate: Aggregate!
+
+  """A list of edges."""
+  edges: [HrefEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+}
+
+input HrefCreateInput {
+  href: String!
+  target: HrefTarget
+  title: String
+}
+
+input HrefCreateWithPositionInput {
+  """Document to create"""
+  data: HrefCreateInput!
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+}
+
+"""An edge in a connection."""
+type HrefEdge {
+  """A cursor for use in pagination."""
+  cursor: String!
+
+  """The item at the end of the edge."""
+  node: Href!
+}
+
+"""Identifies documents"""
+input HrefManyWhereInput {
+  """Logical AND on all given filters."""
+  AND: [HrefWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [HrefWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [HrefWhereInput!]
+
+  """Contains search across all appropriate fields."""
+  _search: String
+  href: String
+
+  """All values containing the given string."""
+  href_contains: String
+
+  """All values ending with the given string."""
+  href_ends_with: String
+
+  """All values that are contained in given list."""
+  href_in: [String]
+
+  """All values that are not equal to given value."""
+  href_not: String
+
+  """All values not containing the given string."""
+  href_not_contains: String
+
+  """All values not ending with the given string"""
+  href_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  href_not_in: [String]
+
+  """All values not starting with the given string."""
+  href_not_starts_with: String
+
+  """All values starting with the given string."""
+  href_starts_with: String
+  id: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID]
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID]
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+  target: HrefTarget
+
+  """All values that are contained in given list."""
+  target_in: [HrefTarget]
+
+  """All values that are not equal to given value."""
+  target_not: HrefTarget
+
+  """All values that are not contained in given list."""
+  target_not_in: [HrefTarget]
+  title: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values that are contained in given list."""
+  title_in: [String]
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values not ending with the given string"""
+  title_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  title_not_in: [String]
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+}
+
+enum HrefOrderByInput {
+  href_ASC
+  href_DESC
+  id_ASC
+  id_DESC
+  target_ASC
+  target_DESC
+  title_ASC
+  title_DESC
+}
+
+enum HrefTarget {
+  blank
+  parent
+  self
+  top
+}
+
+input HrefUpdateInput {
+  href: String
+  target: HrefTarget
+  title: String
+}
+
+input HrefUpdateManyInput {
+  href: String
+  target: HrefTarget
+  title: String
+}
+
+input HrefUpdateManyWithNestedWhereInput {
+  """Update many input"""
+  data: HrefUpdateManyInput!
+
+  """Document search"""
+  where: HrefWhereInput!
+}
+
+input HrefUpdateWithNestedWhereUniqueAndPositionInput {
+  """Document to update"""
+  data: HrefUpdateInput
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+
+  """Unique component instance search"""
+  where: HrefWhereUniqueInput!
+}
+
+input HrefUpdateWithNestedWhereUniqueInput {
+  """Document to update"""
+  data: HrefUpdateInput!
+
+  """Unique document search"""
+  where: HrefWhereUniqueInput!
+}
+
+input HrefUpsertInput {
+  """Create document if it didn't exist"""
+  create: HrefCreateInput!
+
+  """Update document if it exists"""
+  update: HrefUpdateInput!
+}
+
+input HrefUpsertWithNestedWhereUniqueAndPositionInput {
+  """Document to upsert"""
+  data: HrefUpsertInput
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+
+  """Unique component instance search"""
+  where: HrefWhereUniqueInput!
+}
+
+input HrefUpsertWithNestedWhereUniqueInput {
+  """Upsert data"""
+  data: HrefUpsertInput!
+
+  """Unique document search"""
+  where: HrefWhereUniqueInput!
+}
+
+"""Identifies documents"""
+input HrefWhereInput {
+  """Logical AND on all given filters."""
+  AND: [HrefWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [HrefWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [HrefWhereInput!]
+
+  """Contains search across all appropriate fields."""
+  _search: String
+  href: String
+
+  """All values containing the given string."""
+  href_contains: String
+
+  """All values ending with the given string."""
+  href_ends_with: String
+
+  """All values that are contained in given list."""
+  href_in: [String]
+
+  """All values that are not equal to given value."""
+  href_not: String
+
+  """All values not containing the given string."""
+  href_not_contains: String
+
+  """All values not ending with the given string"""
+  href_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  href_not_in: [String]
+
+  """All values not starting with the given string."""
+  href_not_starts_with: String
+
+  """All values starting with the given string."""
+  href_starts_with: String
+  id: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID]
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID]
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+  target: HrefTarget
+
+  """All values that are contained in given list."""
+  target_in: [HrefTarget]
+
+  """All values that are not equal to given value."""
+  target_not: HrefTarget
+
+  """All values that are not contained in given list."""
+  target_not_in: [HrefTarget]
+  title: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values that are contained in given list."""
+  title_in: [String]
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values not ending with the given string"""
+  title_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  title_not_in: [String]
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+}
+
+"""References Href record uniquely"""
+input HrefWhereUniqueInput {
+  id: ID
+}
 
 type ImageBlock {
   """The unique identifier"""
@@ -2890,6 +3275,396 @@ input ImageTransformationInput {
 
 """Raw JSON value"""
 scalar Json
+
+type Link {
+  href: String!
+
+  """The unique identifier"""
+  id: ID!
+
+  """System Locale field"""
+  locale: Locale!
+
+  """Get the other localizations for this document"""
+  localizations(
+    """Decides if the current locale should be included or not"""
+    includeCurrent: Boolean! = false
+
+    """
+    Potential locales that should be returned. 
+    
+    The order of locales will also override locale fall-backing behaviour in the query's subtree.
+    
+    Note any related model with localized fields in the query's subtree will be affected.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    
+    Consider using this in conjunction with forceParentLocale on the children relation fields.
+    """
+    locales: [Locale!]! = [en, nl]
+  ): [Link!]!
+
+  """System stage field"""
+  stage: Stage!
+  title: String
+}
+
+"""A connection to a list of items."""
+type LinkConnection {
+  aggregate: Aggregate!
+
+  """A list of edges."""
+  edges: [LinkEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+}
+
+input LinkCreateInput {
+  """href input for default locale (en)"""
+  href: String!
+
+  """
+  Inline mutations for managing document localizations excluding the default locale
+  """
+  localizations: LinkCreateLocalizationsInput
+  title: String
+}
+
+input LinkCreateLocalizationDataInput {
+  href: String!
+}
+
+input LinkCreateLocalizationInput {
+  """Localization input"""
+  data: LinkCreateLocalizationDataInput!
+  locale: Locale!
+}
+
+input LinkCreateLocalizationsInput {
+  """Create localizations for the newly-created document"""
+  create: [LinkCreateLocalizationInput!]
+}
+
+input LinkCreateWithPositionInput {
+  """Document to create"""
+  data: LinkCreateInput!
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+}
+
+"""An edge in a connection."""
+type LinkEdge {
+  """A cursor for use in pagination."""
+  cursor: String!
+
+  """The item at the end of the edge."""
+  node: Link!
+}
+
+"""Identifies documents"""
+input LinkManyWhereInput {
+  """Logical AND on all given filters."""
+  AND: [LinkWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [LinkWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [LinkWhereInput!]
+
+  """Contains search across all appropriate fields."""
+  _search: String
+  id: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID]
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID]
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+  title: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values that are contained in given list."""
+  title_in: [String]
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values not ending with the given string"""
+  title_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  title_not_in: [String]
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+}
+
+enum LinkOrderByInput {
+  href_ASC
+  href_DESC
+  id_ASC
+  id_DESC
+  title_ASC
+  title_DESC
+}
+
+input LinkUpdateInput {
+  """href input for default locale (en)"""
+  href: String
+
+  """Manage document localizations"""
+  localizations: LinkUpdateLocalizationsInput
+  title: String
+}
+
+input LinkUpdateLocalizationDataInput {
+  href: String
+}
+
+input LinkUpdateLocalizationInput {
+  data: LinkUpdateLocalizationDataInput!
+  locale: Locale!
+}
+
+input LinkUpdateLocalizationsInput {
+  """Localizations to create"""
+  create: [LinkCreateLocalizationInput!]
+
+  """Localizations to delete"""
+  delete: [Locale!]
+
+  """Localizations to update"""
+  update: [LinkUpdateLocalizationInput!]
+  upsert: [LinkUpsertLocalizationInput!]
+}
+
+input LinkUpdateManyInput {
+  """href input for default locale (en)"""
+  href: String
+
+  """Optional updates to localizations"""
+  localizations: LinkUpdateManyLocalizationsInput
+  title: String
+}
+
+input LinkUpdateManyLocalizationDataInput {
+  href: String
+}
+
+input LinkUpdateManyLocalizationInput {
+  data: LinkUpdateManyLocalizationDataInput!
+  locale: Locale!
+}
+
+input LinkUpdateManyLocalizationsInput {
+  """Localizations to update"""
+  update: [LinkUpdateManyLocalizationInput!]
+}
+
+input LinkUpdateManyWithNestedWhereInput {
+  """Update many input"""
+  data: LinkUpdateManyInput!
+
+  """Document search"""
+  where: LinkWhereInput!
+}
+
+input LinkUpdateWithNestedWhereUniqueAndPositionInput {
+  """Document to update"""
+  data: LinkUpdateInput
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+
+  """Unique component instance search"""
+  where: LinkWhereUniqueInput!
+}
+
+input LinkUpdateWithNestedWhereUniqueInput {
+  """Document to update"""
+  data: LinkUpdateInput!
+
+  """Unique document search"""
+  where: LinkWhereUniqueInput!
+}
+
+input LinkUpsertInput {
+  """Create document if it didn't exist"""
+  create: LinkCreateInput!
+
+  """Update document if it exists"""
+  update: LinkUpdateInput!
+}
+
+input LinkUpsertLocalizationInput {
+  create: LinkCreateLocalizationDataInput!
+  locale: Locale!
+  update: LinkUpdateLocalizationDataInput!
+}
+
+input LinkUpsertWithNestedWhereUniqueAndPositionInput {
+  """Document to upsert"""
+  data: LinkUpsertInput
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+
+  """Unique component instance search"""
+  where: LinkWhereUniqueInput!
+}
+
+input LinkUpsertWithNestedWhereUniqueInput {
+  """Upsert data"""
+  data: LinkUpsertInput!
+
+  """Unique document search"""
+  where: LinkWhereUniqueInput!
+}
+
+"""Identifies documents"""
+input LinkWhereInput {
+  """Logical AND on all given filters."""
+  AND: [LinkWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [LinkWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [LinkWhereInput!]
+
+  """Contains search across all appropriate fields."""
+  _search: String
+  href: String
+
+  """All values containing the given string."""
+  href_contains: String
+
+  """All values ending with the given string."""
+  href_ends_with: String
+
+  """All values that are contained in given list."""
+  href_in: [String]
+
+  """All values that are not equal to given value."""
+  href_not: String
+
+  """All values not containing the given string."""
+  href_not_contains: String
+
+  """All values not ending with the given string"""
+  href_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  href_not_in: [String]
+
+  """All values not starting with the given string."""
+  href_not_starts_with: String
+
+  """All values starting with the given string."""
+  href_starts_with: String
+  id: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID]
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID]
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+  title: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values that are contained in given list."""
+  title_in: [String]
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values not ending with the given string"""
+  title_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  title_not_in: [String]
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+}
+
+"""References Link record uniquely"""
+input LinkWhereUniqueInput {
+  id: ID
+}
 
 type List {
   """The unique identifier"""

@@ -20,6 +20,15 @@ export const cvPageQuery = gql`
           identifier
         }
       }
+      contactList {
+        identifier
+        title
+        listEntry {
+          identifier
+          title
+          description
+        }
+      }
       privateImageBlock {
         imageEntry {
           image {

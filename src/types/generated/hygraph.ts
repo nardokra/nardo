@@ -717,6 +717,7 @@ export type ConnectPositionInput = {
 
 export type CvPage = Node & {
   __typename?: 'CvPage';
+  contactList?: Maybe<List>;
   /** The time the document was created */
   createdAt: Scalars['DateTime'];
   /** User that created this document */
@@ -745,6 +746,12 @@ export type CvPage = Node & {
   updatedAt: Scalars['DateTime'];
   /** User that last updated this document */
   updatedBy?: Maybe<User>;
+};
+
+
+export type CvPageContactListArgs = {
+  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
+  locales?: InputMaybe<Array<Locale>>;
 };
 
 
@@ -845,6 +852,7 @@ export type CvPageConnection = {
 };
 
 export type CvPageCreateInput = {
+  contactList?: InputMaybe<ListCreateOneInlineInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   educationList?: InputMaybe<ListCreateOneInlineInput>;
   experienceList?: InputMaybe<TopicListCreateOneInlineInput>;
@@ -907,6 +915,7 @@ export type CvPageManyWhereInput = {
   OR?: InputMaybe<Array<CvPageWhereInput>>;
   /** Contains search across all appropriate fields. */
   _search?: InputMaybe<Scalars['String']>;
+  contactList?: InputMaybe<ListWhereInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   createdAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -1021,6 +1030,7 @@ export enum CvPageOrderByInput {
 }
 
 export type CvPageUpdateInput = {
+  contactList?: InputMaybe<ListUpdateOneInlineInput>;
   educationList?: InputMaybe<ListUpdateOneInlineInput>;
   experienceList?: InputMaybe<TopicListUpdateOneInlineInput>;
   /** Manage document localizations */
@@ -1120,6 +1130,7 @@ export type CvPageWhereInput = {
   OR?: InputMaybe<Array<CvPageWhereInput>>;
   /** Contains search across all appropriate fields. */
   _search?: InputMaybe<Scalars['String']>;
+  contactList?: InputMaybe<ListWhereInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   createdAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -1302,6 +1313,282 @@ export type DocumentVersion = {
   id: Scalars['ID'];
   revision: Scalars['Int'];
   stage: Stage;
+};
+
+export type Href = {
+  __typename?: 'Href';
+  href: Scalars['String'];
+  /** The unique identifier */
+  id: Scalars['ID'];
+  /** System stage field */
+  stage: Stage;
+  target?: Maybe<HrefTarget>;
+  title?: Maybe<Scalars['String']>;
+};
+
+/** A connection to a list of items. */
+export type HrefConnection = {
+  __typename?: 'HrefConnection';
+  aggregate: Aggregate;
+  /** A list of edges. */
+  edges: Array<HrefEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+export type HrefCreateInput = {
+  href: Scalars['String'];
+  target?: InputMaybe<HrefTarget>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type HrefCreateWithPositionInput = {
+  /** Document to create */
+  data: HrefCreateInput;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+};
+
+/** An edge in a connection. */
+export type HrefEdge = {
+  __typename?: 'HrefEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String'];
+  /** The item at the end of the edge. */
+  node: Href;
+};
+
+/** Identifies documents */
+export type HrefManyWhereInput = {
+  /** Logical AND on all given filters. */
+  AND?: InputMaybe<Array<HrefWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: InputMaybe<Array<HrefWhereInput>>;
+  /** Logical OR on all given filters. */
+  OR?: InputMaybe<Array<HrefWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  _search?: InputMaybe<Scalars['String']>;
+  href?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  href_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  href_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  href_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  href_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  href_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  href_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  href_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  href_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  href_starts_with?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  /** All values containing the given string. */
+  id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  id_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values that are not equal to given value. */
+  id_not?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are not contained in given list. */
+  id_not_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values not starting with the given string. */
+  id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  id_starts_with?: InputMaybe<Scalars['ID']>;
+  target?: InputMaybe<HrefTarget>;
+  /** All values that are contained in given list. */
+  target_in?: InputMaybe<Array<InputMaybe<HrefTarget>>>;
+  /** All values that are not equal to given value. */
+  target_not?: InputMaybe<HrefTarget>;
+  /** All values that are not contained in given list. */
+  target_not_in?: InputMaybe<Array<InputMaybe<HrefTarget>>>;
+  title?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  title_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  title_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  title_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  title_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  title_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  title_starts_with?: InputMaybe<Scalars['String']>;
+};
+
+export enum HrefOrderByInput {
+  HrefAsc = 'href_ASC',
+  HrefDesc = 'href_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  TargetAsc = 'target_ASC',
+  TargetDesc = 'target_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC'
+}
+
+export enum HrefTarget {
+  Blank = 'blank',
+  Parent = 'parent',
+  Self = 'self',
+  Top = 'top'
+}
+
+export type HrefUpdateInput = {
+  href?: InputMaybe<Scalars['String']>;
+  target?: InputMaybe<HrefTarget>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type HrefUpdateManyInput = {
+  href?: InputMaybe<Scalars['String']>;
+  target?: InputMaybe<HrefTarget>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type HrefUpdateManyWithNestedWhereInput = {
+  /** Update many input */
+  data: HrefUpdateManyInput;
+  /** Document search */
+  where: HrefWhereInput;
+};
+
+export type HrefUpdateWithNestedWhereUniqueAndPositionInput = {
+  /** Document to update */
+  data?: InputMaybe<HrefUpdateInput>;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+  /** Unique component instance search */
+  where: HrefWhereUniqueInput;
+};
+
+export type HrefUpdateWithNestedWhereUniqueInput = {
+  /** Document to update */
+  data: HrefUpdateInput;
+  /** Unique document search */
+  where: HrefWhereUniqueInput;
+};
+
+export type HrefUpsertInput = {
+  /** Create document if it didn't exist */
+  create: HrefCreateInput;
+  /** Update document if it exists */
+  update: HrefUpdateInput;
+};
+
+export type HrefUpsertWithNestedWhereUniqueAndPositionInput = {
+  /** Document to upsert */
+  data?: InputMaybe<HrefUpsertInput>;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+  /** Unique component instance search */
+  where: HrefWhereUniqueInput;
+};
+
+export type HrefUpsertWithNestedWhereUniqueInput = {
+  /** Upsert data */
+  data: HrefUpsertInput;
+  /** Unique document search */
+  where: HrefWhereUniqueInput;
+};
+
+/** Identifies documents */
+export type HrefWhereInput = {
+  /** Logical AND on all given filters. */
+  AND?: InputMaybe<Array<HrefWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: InputMaybe<Array<HrefWhereInput>>;
+  /** Logical OR on all given filters. */
+  OR?: InputMaybe<Array<HrefWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  _search?: InputMaybe<Scalars['String']>;
+  href?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  href_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  href_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  href_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  href_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  href_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  href_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  href_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  href_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  href_starts_with?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  /** All values containing the given string. */
+  id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  id_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values that are not equal to given value. */
+  id_not?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are not contained in given list. */
+  id_not_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values not starting with the given string. */
+  id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  id_starts_with?: InputMaybe<Scalars['ID']>;
+  target?: InputMaybe<HrefTarget>;
+  /** All values that are contained in given list. */
+  target_in?: InputMaybe<Array<InputMaybe<HrefTarget>>>;
+  /** All values that are not equal to given value. */
+  target_not?: InputMaybe<HrefTarget>;
+  /** All values that are not contained in given list. */
+  target_not_in?: InputMaybe<Array<InputMaybe<HrefTarget>>>;
+  title?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  title_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  title_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  title_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  title_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  title_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  title_starts_with?: InputMaybe<Scalars['String']>;
+};
+
+/** References Href record uniquely */
+export type HrefWhereUniqueInput = {
+  id?: InputMaybe<Scalars['ID']>;
 };
 
 export type ImageBlock = {
@@ -2146,6 +2433,309 @@ export type ImageResizeInput = {
 export type ImageTransformationInput = {
   /** Resizes the image */
   resize?: InputMaybe<ImageResizeInput>;
+};
+
+export type Link = {
+  __typename?: 'Link';
+  href: Scalars['String'];
+  /** The unique identifier */
+  id: Scalars['ID'];
+  /** System Locale field */
+  locale: Locale;
+  /** Get the other localizations for this document */
+  localizations: Array<Link>;
+  /** System stage field */
+  stage: Stage;
+  title?: Maybe<Scalars['String']>;
+};
+
+
+export type LinkLocalizationsArgs = {
+  includeCurrent?: Scalars['Boolean'];
+  locales?: Array<Locale>;
+};
+
+/** A connection to a list of items. */
+export type LinkConnection = {
+  __typename?: 'LinkConnection';
+  aggregate: Aggregate;
+  /** A list of edges. */
+  edges: Array<LinkEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+export type LinkCreateInput = {
+  /** href input for default locale (en) */
+  href: Scalars['String'];
+  /** Inline mutations for managing document localizations excluding the default locale */
+  localizations?: InputMaybe<LinkCreateLocalizationsInput>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type LinkCreateLocalizationDataInput = {
+  href: Scalars['String'];
+};
+
+export type LinkCreateLocalizationInput = {
+  /** Localization input */
+  data: LinkCreateLocalizationDataInput;
+  locale: Locale;
+};
+
+export type LinkCreateLocalizationsInput = {
+  /** Create localizations for the newly-created document */
+  create?: InputMaybe<Array<LinkCreateLocalizationInput>>;
+};
+
+export type LinkCreateWithPositionInput = {
+  /** Document to create */
+  data: LinkCreateInput;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+};
+
+/** An edge in a connection. */
+export type LinkEdge = {
+  __typename?: 'LinkEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String'];
+  /** The item at the end of the edge. */
+  node: Link;
+};
+
+/** Identifies documents */
+export type LinkManyWhereInput = {
+  /** Logical AND on all given filters. */
+  AND?: InputMaybe<Array<LinkWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: InputMaybe<Array<LinkWhereInput>>;
+  /** Logical OR on all given filters. */
+  OR?: InputMaybe<Array<LinkWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  _search?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  /** All values containing the given string. */
+  id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  id_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values that are not equal to given value. */
+  id_not?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are not contained in given list. */
+  id_not_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values not starting with the given string. */
+  id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  id_starts_with?: InputMaybe<Scalars['ID']>;
+  title?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  title_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  title_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  title_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  title_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  title_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  title_starts_with?: InputMaybe<Scalars['String']>;
+};
+
+export enum LinkOrderByInput {
+  HrefAsc = 'href_ASC',
+  HrefDesc = 'href_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC'
+}
+
+export type LinkUpdateInput = {
+  /** href input for default locale (en) */
+  href?: InputMaybe<Scalars['String']>;
+  /** Manage document localizations */
+  localizations?: InputMaybe<LinkUpdateLocalizationsInput>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type LinkUpdateLocalizationDataInput = {
+  href?: InputMaybe<Scalars['String']>;
+};
+
+export type LinkUpdateLocalizationInput = {
+  data: LinkUpdateLocalizationDataInput;
+  locale: Locale;
+};
+
+export type LinkUpdateLocalizationsInput = {
+  /** Localizations to create */
+  create?: InputMaybe<Array<LinkCreateLocalizationInput>>;
+  /** Localizations to delete */
+  delete?: InputMaybe<Array<Locale>>;
+  /** Localizations to update */
+  update?: InputMaybe<Array<LinkUpdateLocalizationInput>>;
+  upsert?: InputMaybe<Array<LinkUpsertLocalizationInput>>;
+};
+
+export type LinkUpdateManyInput = {
+  /** href input for default locale (en) */
+  href?: InputMaybe<Scalars['String']>;
+  /** Optional updates to localizations */
+  localizations?: InputMaybe<LinkUpdateManyLocalizationsInput>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type LinkUpdateManyLocalizationDataInput = {
+  href?: InputMaybe<Scalars['String']>;
+};
+
+export type LinkUpdateManyLocalizationInput = {
+  data: LinkUpdateManyLocalizationDataInput;
+  locale: Locale;
+};
+
+export type LinkUpdateManyLocalizationsInput = {
+  /** Localizations to update */
+  update?: InputMaybe<Array<LinkUpdateManyLocalizationInput>>;
+};
+
+export type LinkUpdateManyWithNestedWhereInput = {
+  /** Update many input */
+  data: LinkUpdateManyInput;
+  /** Document search */
+  where: LinkWhereInput;
+};
+
+export type LinkUpdateWithNestedWhereUniqueAndPositionInput = {
+  /** Document to update */
+  data?: InputMaybe<LinkUpdateInput>;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+  /** Unique component instance search */
+  where: LinkWhereUniqueInput;
+};
+
+export type LinkUpdateWithNestedWhereUniqueInput = {
+  /** Document to update */
+  data: LinkUpdateInput;
+  /** Unique document search */
+  where: LinkWhereUniqueInput;
+};
+
+export type LinkUpsertInput = {
+  /** Create document if it didn't exist */
+  create: LinkCreateInput;
+  /** Update document if it exists */
+  update: LinkUpdateInput;
+};
+
+export type LinkUpsertLocalizationInput = {
+  create: LinkCreateLocalizationDataInput;
+  locale: Locale;
+  update: LinkUpdateLocalizationDataInput;
+};
+
+export type LinkUpsertWithNestedWhereUniqueAndPositionInput = {
+  /** Document to upsert */
+  data?: InputMaybe<LinkUpsertInput>;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+  /** Unique component instance search */
+  where: LinkWhereUniqueInput;
+};
+
+export type LinkUpsertWithNestedWhereUniqueInput = {
+  /** Upsert data */
+  data: LinkUpsertInput;
+  /** Unique document search */
+  where: LinkWhereUniqueInput;
+};
+
+/** Identifies documents */
+export type LinkWhereInput = {
+  /** Logical AND on all given filters. */
+  AND?: InputMaybe<Array<LinkWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: InputMaybe<Array<LinkWhereInput>>;
+  /** Logical OR on all given filters. */
+  OR?: InputMaybe<Array<LinkWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  _search?: InputMaybe<Scalars['String']>;
+  href?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  href_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  href_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  href_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  href_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  href_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  href_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  href_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  href_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  href_starts_with?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  /** All values containing the given string. */
+  id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  id_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values that are not equal to given value. */
+  id_not?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are not contained in given list. */
+  id_not_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values not starting with the given string. */
+  id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  id_starts_with?: InputMaybe<Scalars['ID']>;
+  title?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  title_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  title_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  title_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  title_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  title_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  title_starts_with?: InputMaybe<Scalars['String']>;
+};
+
+/** References Link record uniquely */
+export type LinkWhereUniqueInput = {
+  id?: InputMaybe<Scalars['ID']>;
 };
 
 export type List = {
