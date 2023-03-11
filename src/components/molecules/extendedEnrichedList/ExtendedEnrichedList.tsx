@@ -17,7 +17,11 @@ export const ExtendedEnrichedList = ({ list }: ExtendedEnrichedListType) => {
     <div className={mainClasses}>
       <div className="rounded-lg mb-4">
         {title && (
-          <h3 className={cx("font-bold uppercase text-2xl")}>{title}</h3>
+          <h3
+            className={cx("font-bold uppercase text-2xl text-justify w-full")}
+          >
+            {title}
+          </h3>
         )}
       </div>
       <div className="flex-col">
