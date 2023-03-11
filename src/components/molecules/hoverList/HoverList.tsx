@@ -5,11 +5,14 @@ import { Maybe, List } from "@/cmsTypes/hygraph";
 // Utils
 import cx from "classnames";
 
+// Components
+import { SvgElement } from "@/components/atoms/svgImage";
+
 type HoverListType<T> = {
-  itemDefault?: T;
+  itemDefault?: keyof T;
   list?: Maybe<List>;
-  item?: T;
-  setItem?: Dispatch<SetStateAction<T | undefined>>;
+  item?: keyof T;
+  setItem?: Dispatch<SetStateAction<keyof T | undefined>>;
 };
 
 export const HoverList = <T,>({
@@ -22,10 +25,10 @@ export const HoverList = <T,>({
 
   const updateSelectedItem = (event: SyntheticEvent) => {
     const target = event.target as HTMLElement;
-    setItem?.(target.id as T);
+    setItem?.(target.id as keyof T);
   };
 
-  const resetItems = () => setItem?.(itemDefault);
+  const resetItems = () => itemDefault && setItem?.(itemDefault);
 
   return (
     <ol
@@ -48,7 +51,7 @@ export const HoverList = <T,>({
           {entry.title}
           <div
             className={cx(
-              entry.identifier === item &&
+              (entry.identifier as keyof typeof SvgElement) === item &&
                 "h-3 w-3 bg-white rounded-lg animate-ping"
             )}
           />

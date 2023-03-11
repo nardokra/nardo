@@ -1,1 +1,1 @@
-export { SvgImage, SvgImageVariants } from "./SvgImage";
+export { SvgImage, SvgElement, SvgImageVariants } from "./SvgImage";

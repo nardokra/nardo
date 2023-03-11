@@ -42,13 +42,16 @@ export enum SvgImageVariants {
   VUE = "vue",
 }
 
-type svgImageType = {
-  className?: string;
-  hexColorCode?: string;
-  variant?: SvgImageVariants;
-};
-
-const SvgElement = {
+export const SvgElement: Record<
+  SvgImageVariants,
+  ({
+    className,
+    hexColorCode,
+  }: {
+    className?: string | undefined;
+    hexColorCode?: string | undefined;
+  }) => JSX.Element
+> = {
   css3: Css3,
   express: Express,
   github: Github,
@@ -65,6 +68,12 @@ const SvgElement = {
   tailwindcss: TailwindCssLogo,
   typescript: Typescript,
   vue: VueLogo,
+};
+
+type svgImageType = {
+  className?: string;
+  hexColorCode?: string;
+  variant?: keyof typeof SvgElement;
 };
 
 export const SvgImage = ({

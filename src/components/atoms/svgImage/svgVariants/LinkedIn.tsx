@@ -1,7 +1,13 @@
-export const LinkedIn = ({ className }: { className?: string }) => (
+export const LinkedIn = ({
+  className,
+  hexColorCode,
+}: {
+  className?: string;
+  hexColorCode?: string;
+}) => (
   <svg className={className} viewBox="0 0 128 128">
     <path
-      fill="#0076b2"
+      fill={hexColorCode || "#3B82F6"}
       d="M116 3H12a8.91 8.91 0 00-9 8.8v104.42a8.91 8.91 0 009 8.78h104a8.93 8.93 0 009-8.81V11.77A8.93 8.93 0 00116 3z"
     ></path>
     <path

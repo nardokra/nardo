@@ -13,5 +13,8 @@
     // Rules
     "no-console": ["error", { "allow": ["warn", "error"] }],
     "no-var": "error"
+  },
+  "globals": {
+    "JSX": true
   }
 }

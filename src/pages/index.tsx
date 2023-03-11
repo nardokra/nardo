@@ -2,7 +2,7 @@ import { useState } from "react";
 
 // Types & Constants
 import type { InferGetServerSidePropsType } from "next";
-import { SvgImageVariants } from "@/components/atoms/svgImage";
+import { SvgElement, SvgImageVariants } from "@/components/atoms/svgImage";
 
 // Utils
 import cx from "classnames";
@@ -19,21 +19,25 @@ import { LogoDisplay } from "@/components/molecules/logoDisplay";
 import { HoverList } from "@/components/molecules/hoverList";
 import { EnrichedList } from "@/components/molecules/enrichedList";
 import { ExtendedEnrichedList } from "@/components/molecules/extendedEnrichedList";
+import { EnrichedIconList } from "@/components/molecules/enrichedIconList";
+import { SizeVariant } from "@/constants/sizeConstants";
 
 const Home = ({
   cvPage,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const {
-    pageTitleBlock,
-    profileImageBlock,
-    skillsList,
-    privateImageBlock,
+    contactList,
     educationList,
     experienceList,
+    pageTitleBlock,
+    privateImageBlock,
+    profileImageBlock,
+    skillsList,
   } = cvPage;
 
-  const [item, setItem] =
-    useState<typeof SvgImageVariants[keyof typeof SvgImageVariants]>();
+  const [item, setItem] = useState<keyof typeof SvgElement | undefined>(
+    SvgImageVariants.NEXT
+  );
 
   return (
     <>
@@ -54,25 +58,36 @@ const Home = ({
         )}
       >
         <Layout>
-          <LayoutBlock smColumns={2}>
-            <LayoutBlock smColumns={2}>
+          <LayoutBlock smColumns2>
+            <LayoutBlock smColumns2>
               <ImageBrick imageBlock={profileImageBlock} priority />
               <TitleBrick titleBlock={pageTitleBlock} />
             </LayoutBlock>
             <LayoutBlock>
-              <LogoDisplay>{item && <SvgImage variant={item} />}</LogoDisplay>
+              <EnrichedIconList list={contactList} titleVerticalOriented />
             </LayoutBlock>
           </LayoutBlock>
 
-          <LayoutBlock smColumns={2}>
+          <LayoutBlock smColumns2>
             <LayoutBlock maxHeight>
               <ExtendedEnrichedList list={experienceList} />
             </LayoutBlock>
-            <LayoutBlock smColumns={2}>
-              <HoverList list={skillsList} item={item} setItem={setItem} />
+            <LayoutBlock smColumns2>
+              <HoverList<typeof SvgElement>
+                itemDefault={SvgImageVariants.NEXT}
+                item={item}
+                list={skillsList}
+                setItem={setItem}
+              />
               <LayoutBlock>
-                <LogoDisplay>{item && <SvgImage variant={item} />}</LogoDisplay>
-                <ImageBrick imageBlock={privateImageBlock} priority />
+                <LogoDisplay>
+                  <SvgImage variant={item} />
+                </LogoDisplay>
+                <ImageBrick
+                  imageBlock={privateImageBlock}
+                  size={SizeVariant.Medium}
+                  priority
+                />
               </LayoutBlock>
             </LayoutBlock>
           </LayoutBlock>

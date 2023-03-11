@@ -5,7 +5,7 @@ import { List, ListEntry, Maybe } from "@/cmsTypes/hygraph";
 import cx from "classnames";
 
 // Components
-import { SvgImage, SvgImageVariants } from "@/components/atoms/svgImage";
+import { SvgImage } from "@/components/atoms/svgImage";
 import { DynamicAnchor } from "../dynamicAnchor";
 
 type EnrichedListType = {
@@ -22,7 +22,7 @@ const listItemJSX = (entry: ListEntry) => (
         "md:min-h-[4rem] md:min-w-[4rem] md:mr-4"
       )}
     >
-      <SvgImage variant={entry.identifier as SvgImageVariants} />
+      <SvgImage variant={entry.identifier as keyof typeof SvgImage} />
     </div>
     <div className="flex flex-col">
       <span className="text-blue-500">{entry.title}</span>
