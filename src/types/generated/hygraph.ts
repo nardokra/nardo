@@ -1320,10 +1320,27 @@ export type Href = {
   href: Scalars['String'];
   /** The unique identifier */
   id: Scalars['ID'];
+  /** System Locale field */
+  locale: Locale;
+  /** Get the other localizations for this document */
+  localizations: Array<Href>;
   /** System stage field */
   stage: Stage;
   target?: Maybe<HrefTarget>;
   title?: Maybe<Scalars['String']>;
+};
+
+
+export type HrefLocalizationsArgs = {
+  includeCurrent?: Scalars['Boolean'];
+  locales?: Array<Locale>;
+};
+
+export type HrefConnectInput = {
+  /** Allow to specify document position in list of connected documents, will default to appending at end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+  /** Document to connect */
+  where: HrefWhereUniqueInput;
 };
 
 /** A connection to a list of items. */
@@ -1337,9 +1354,39 @@ export type HrefConnection = {
 };
 
 export type HrefCreateInput = {
+  /** href input for default locale (en) */
   href: Scalars['String'];
+  /** Inline mutations for managing document localizations excluding the default locale */
+  localizations?: InputMaybe<HrefCreateLocalizationsInput>;
   target?: InputMaybe<HrefTarget>;
+  /** title input for default locale (en) */
   title?: InputMaybe<Scalars['String']>;
+};
+
+export type HrefCreateLocalizationDataInput = {
+  href: Scalars['String'];
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type HrefCreateLocalizationInput = {
+  /** Localization input */
+  data: HrefCreateLocalizationDataInput;
+  locale: Locale;
+};
+
+export type HrefCreateLocalizationsInput = {
+  /** Create localizations for the newly-created document */
+  create?: InputMaybe<Array<HrefCreateLocalizationInput>>;
+};
+
+export type HrefCreateManyInlineInput = {
+  /** Create and connect multiple existing Href documents */
+  create?: InputMaybe<Array<HrefCreateInput>>;
+};
+
+export type HrefCreateOneInlineInput = {
+  /** Create and connect one Href document */
+  create?: InputMaybe<HrefCreateInput>;
 };
 
 export type HrefCreateWithPositionInput = {
@@ -1368,25 +1415,6 @@ export type HrefManyWhereInput = {
   OR?: InputMaybe<Array<HrefWhereInput>>;
   /** Contains search across all appropriate fields. */
   _search?: InputMaybe<Scalars['String']>;
-  href?: InputMaybe<Scalars['String']>;
-  /** All values containing the given string. */
-  href_contains?: InputMaybe<Scalars['String']>;
-  /** All values ending with the given string. */
-  href_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are contained in given list. */
-  href_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  /** All values that are not equal to given value. */
-  href_not?: InputMaybe<Scalars['String']>;
-  /** All values not containing the given string. */
-  href_not_contains?: InputMaybe<Scalars['String']>;
-  /** All values not ending with the given string */
-  href_not_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are not contained in given list. */
-  href_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  /** All values not starting with the given string. */
-  href_not_starts_with?: InputMaybe<Scalars['String']>;
-  /** All values starting with the given string. */
-  href_starts_with?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['ID']>;
   /** All values containing the given string. */
   id_contains?: InputMaybe<Scalars['ID']>;
@@ -1413,25 +1441,6 @@ export type HrefManyWhereInput = {
   target_not?: InputMaybe<HrefTarget>;
   /** All values that are not contained in given list. */
   target_not_in?: InputMaybe<Array<InputMaybe<HrefTarget>>>;
-  title?: InputMaybe<Scalars['String']>;
-  /** All values containing the given string. */
-  title_contains?: InputMaybe<Scalars['String']>;
-  /** All values ending with the given string. */
-  title_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are contained in given list. */
-  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  /** All values that are not equal to given value. */
-  title_not?: InputMaybe<Scalars['String']>;
-  /** All values not containing the given string. */
-  title_not_contains?: InputMaybe<Scalars['String']>;
-  /** All values not ending with the given string */
-  title_not_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are not contained in given list. */
-  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  /** All values not starting with the given string. */
-  title_not_starts_with?: InputMaybe<Scalars['String']>;
-  /** All values starting with the given string. */
-  title_starts_with?: InputMaybe<Scalars['String']>;
 };
 
 export enum HrefOrderByInput {
@@ -1445,6 +1454,84 @@ export enum HrefOrderByInput {
   TitleDesc = 'title_DESC'
 }
 
+export type HrefParent = ListEntry;
+
+export type HrefParentConnectInput = {
+  ListEntry?: InputMaybe<ListEntryConnectInput>;
+};
+
+export type HrefParentCreateInput = {
+  ListEntry?: InputMaybe<ListEntryCreateInput>;
+};
+
+export type HrefParentCreateManyInlineInput = {
+  /** Create and connect multiple existing HrefParent documents */
+  create?: InputMaybe<Array<HrefParentCreateInput>>;
+};
+
+export type HrefParentCreateOneInlineInput = {
+  /** Create and connect one HrefParent document */
+  create?: InputMaybe<HrefParentCreateInput>;
+};
+
+export type HrefParentCreateWithPositionInput = {
+  ListEntry?: InputMaybe<ListEntryCreateWithPositionInput>;
+};
+
+export type HrefParentUpdateInput = {
+  ListEntry?: InputMaybe<ListEntryUpdateInput>;
+};
+
+export type HrefParentUpdateManyInlineInput = {
+  /** Create and connect multiple HrefParent component instances */
+  create?: InputMaybe<Array<HrefParentCreateWithPositionInput>>;
+  /** Delete multiple HrefParent documents */
+  delete?: InputMaybe<Array<HrefParentWhereUniqueInput>>;
+  /** Update multiple HrefParent component instances */
+  update?: InputMaybe<Array<HrefParentUpdateWithNestedWhereUniqueAndPositionInput>>;
+  /** Upsert multiple HrefParent component instances */
+  upsert?: InputMaybe<Array<HrefParentUpsertWithNestedWhereUniqueAndPositionInput>>;
+};
+
+export type HrefParentUpdateManyWithNestedWhereInput = {
+  ListEntry?: InputMaybe<ListEntryUpdateManyWithNestedWhereInput>;
+};
+
+export type HrefParentUpdateOneInlineInput = {
+  /** Create and connect one HrefParent document */
+  create?: InputMaybe<HrefParentCreateInput>;
+  /** Delete currently connected HrefParent document */
+  delete?: InputMaybe<Scalars['Boolean']>;
+  /** Update single HrefParent document */
+  update?: InputMaybe<HrefParentUpdateWithNestedWhereUniqueInput>;
+  /** Upsert single HrefParent document */
+  upsert?: InputMaybe<HrefParentUpsertWithNestedWhereUniqueInput>;
+};
+
+export type HrefParentUpdateWithNestedWhereUniqueAndPositionInput = {
+  ListEntry?: InputMaybe<ListEntryUpdateWithNestedWhereUniqueAndPositionInput>;
+};
+
+export type HrefParentUpdateWithNestedWhereUniqueInput = {
+  ListEntry?: InputMaybe<ListEntryUpdateWithNestedWhereUniqueInput>;
+};
+
+export type HrefParentUpsertWithNestedWhereUniqueAndPositionInput = {
+  ListEntry?: InputMaybe<ListEntryUpsertWithNestedWhereUniqueAndPositionInput>;
+};
+
+export type HrefParentUpsertWithNestedWhereUniqueInput = {
+  ListEntry?: InputMaybe<ListEntryUpsertWithNestedWhereUniqueInput>;
+};
+
+export type HrefParentWhereInput = {
+  ListEntry?: InputMaybe<ListEntryWhereInput>;
+};
+
+export type HrefParentWhereUniqueInput = {
+  ListEntry?: InputMaybe<ListEntryWhereUniqueInput>;
+};
+
 export enum HrefTarget {
   Blank = 'blank',
   Parent = 'parent',
@@ -1453,15 +1540,69 @@ export enum HrefTarget {
 }
 
 export type HrefUpdateInput = {
+  /** href input for default locale (en) */
   href?: InputMaybe<Scalars['String']>;
+  /** Manage document localizations */
+  localizations?: InputMaybe<HrefUpdateLocalizationsInput>;
   target?: InputMaybe<HrefTarget>;
+  /** title input for default locale (en) */
   title?: InputMaybe<Scalars['String']>;
 };
 
-export type HrefUpdateManyInput = {
+export type HrefUpdateLocalizationDataInput = {
   href?: InputMaybe<Scalars['String']>;
-  target?: InputMaybe<HrefTarget>;
   title?: InputMaybe<Scalars['String']>;
+};
+
+export type HrefUpdateLocalizationInput = {
+  data: HrefUpdateLocalizationDataInput;
+  locale: Locale;
+};
+
+export type HrefUpdateLocalizationsInput = {
+  /** Localizations to create */
+  create?: InputMaybe<Array<HrefCreateLocalizationInput>>;
+  /** Localizations to delete */
+  delete?: InputMaybe<Array<Locale>>;
+  /** Localizations to update */
+  update?: InputMaybe<Array<HrefUpdateLocalizationInput>>;
+  upsert?: InputMaybe<Array<HrefUpsertLocalizationInput>>;
+};
+
+export type HrefUpdateManyInlineInput = {
+  /** Create and connect multiple Href component instances */
+  create?: InputMaybe<Array<HrefCreateWithPositionInput>>;
+  /** Delete multiple Href documents */
+  delete?: InputMaybe<Array<HrefWhereUniqueInput>>;
+  /** Update multiple Href component instances */
+  update?: InputMaybe<Array<HrefUpdateWithNestedWhereUniqueAndPositionInput>>;
+  /** Upsert multiple Href component instances */
+  upsert?: InputMaybe<Array<HrefUpsertWithNestedWhereUniqueAndPositionInput>>;
+};
+
+export type HrefUpdateManyInput = {
+  /** href input for default locale (en) */
+  href?: InputMaybe<Scalars['String']>;
+  /** Optional updates to localizations */
+  localizations?: InputMaybe<HrefUpdateManyLocalizationsInput>;
+  target?: InputMaybe<HrefTarget>;
+  /** title input for default locale (en) */
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type HrefUpdateManyLocalizationDataInput = {
+  href?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type HrefUpdateManyLocalizationInput = {
+  data: HrefUpdateManyLocalizationDataInput;
+  locale: Locale;
+};
+
+export type HrefUpdateManyLocalizationsInput = {
+  /** Localizations to update */
+  update?: InputMaybe<Array<HrefUpdateManyLocalizationInput>>;
 };
 
 export type HrefUpdateManyWithNestedWhereInput = {
@@ -1469,6 +1610,17 @@ export type HrefUpdateManyWithNestedWhereInput = {
   data: HrefUpdateManyInput;
   /** Document search */
   where: HrefWhereInput;
+};
+
+export type HrefUpdateOneInlineInput = {
+  /** Create and connect one Href document */
+  create?: InputMaybe<HrefCreateInput>;
+  /** Delete currently connected Href document */
+  delete?: InputMaybe<Scalars['Boolean']>;
+  /** Update single Href document */
+  update?: InputMaybe<HrefUpdateWithNestedWhereUniqueInput>;
+  /** Upsert single Href document */
+  upsert?: InputMaybe<HrefUpsertWithNestedWhereUniqueInput>;
 };
 
 export type HrefUpdateWithNestedWhereUniqueAndPositionInput = {
@@ -1492,6 +1644,12 @@ export type HrefUpsertInput = {
   create: HrefCreateInput;
   /** Update document if it exists */
   update: HrefUpdateInput;
+};
+
+export type HrefUpsertLocalizationInput = {
+  create: HrefCreateLocalizationDataInput;
+  locale: Locale;
+  update: HrefUpdateLocalizationDataInput;
 };
 
 export type HrefUpsertWithNestedWhereUniqueAndPositionInput = {
@@ -2740,6 +2898,7 @@ export type LinkWhereUniqueInput = {
 
 export type List = {
   __typename?: 'List';
+  anchorList?: Maybe<Scalars['Boolean']>;
   /** The unique identifier */
   id: Scalars['ID'];
   identifier: Scalars['String'];
@@ -2790,6 +2949,7 @@ export type ListConnection = {
 };
 
 export type ListCreateInput = {
+  anchorList?: InputMaybe<Scalars['Boolean']>;
   identifier: Scalars['String'];
   listEntry?: InputMaybe<ListEntryCreateManyInlineInput>;
   /** Inline mutations for managing document localizations excluding the default locale */
@@ -2842,6 +3002,7 @@ export type ListEdge = {
 export type ListEntry = {
   __typename?: 'ListEntry';
   description: Array<Scalars['String']>;
+  href?: Maybe<Href>;
   /** The unique identifier */
   id: Scalars['ID'];
   identifier: Scalars['String'];
@@ -2852,6 +3013,12 @@ export type ListEntry = {
   /** System stage field */
   stage: Stage;
   title: Scalars['String'];
+};
+
+
+export type ListEntryHrefArgs = {
+  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
+  locales?: InputMaybe<Array<Locale>>;
 };
 
 
@@ -2880,6 +3047,7 @@ export type ListEntryConnection = {
 export type ListEntryCreateInput = {
   /** description input for default locale (en) */
   description?: InputMaybe<Array<Scalars['String']>>;
+  href?: InputMaybe<HrefCreateOneInlineInput>;
   identifier: Scalars['String'];
   /** Inline mutations for managing document localizations excluding the default locale */
   localizations?: InputMaybe<ListEntryCreateLocalizationsInput>;
@@ -2939,6 +3107,7 @@ export type ListEntryManyWhereInput = {
   OR?: InputMaybe<Array<ListEntryWhereInput>>;
   /** Contains search across all appropriate fields. */
   _search?: InputMaybe<Scalars['String']>;
+  href?: InputMaybe<HrefWhereInput>;
   id?: InputMaybe<Scalars['ID']>;
   /** All values containing the given string. */
   id_contains?: InputMaybe<Scalars['ID']>;
@@ -3071,6 +3240,7 @@ export type ListEntryParentWhereUniqueInput = {
 export type ListEntryUpdateInput = {
   /** description input for default locale (en) */
   description?: InputMaybe<Array<Scalars['String']>>;
+  href?: InputMaybe<HrefUpdateOneInlineInput>;
   identifier?: InputMaybe<Scalars['String']>;
   /** Manage document localizations */
   localizations?: InputMaybe<ListEntryUpdateLocalizationsInput>;
@@ -3216,6 +3386,7 @@ export type ListEntryWhereInput = {
   description_contains_some?: InputMaybe<Array<Scalars['String']>>;
   /** Matches if the field array does not contains *all* items provided to the filter or order does not match */
   description_not?: InputMaybe<Array<Scalars['String']>>;
+  href?: InputMaybe<HrefWhereInput>;
   id?: InputMaybe<Scalars['ID']>;
   /** All values containing the given string. */
   id_contains?: InputMaybe<Scalars['ID']>;
@@ -3291,6 +3462,9 @@ export type ListManyWhereInput = {
   OR?: InputMaybe<Array<ListWhereInput>>;
   /** Contains search across all appropriate fields. */
   _search?: InputMaybe<Scalars['String']>;
+  anchorList?: InputMaybe<Scalars['Boolean']>;
+  /** All values that are not equal to given value. */
+  anchorList_not?: InputMaybe<Scalars['Boolean']>;
   id?: InputMaybe<Scalars['ID']>;
   /** All values containing the given string. */
   id_contains?: InputMaybe<Scalars['ID']>;
@@ -3335,6 +3509,8 @@ export type ListManyWhereInput = {
 };
 
 export enum ListOrderByInput {
+  AnchorListAsc = 'anchorList_ASC',
+  AnchorListDesc = 'anchorList_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
   IdentifierAsc = 'identifier_ASC',
@@ -3424,6 +3600,7 @@ export type ListParentWhereUniqueInput = {
 };
 
 export type ListUpdateInput = {
+  anchorList?: InputMaybe<Scalars['Boolean']>;
   identifier?: InputMaybe<Scalars['String']>;
   listEntry?: InputMaybe<ListEntryUpdateManyInlineInput>;
   /** Manage document localizations */
@@ -3463,6 +3640,7 @@ export type ListUpdateManyInlineInput = {
 };
 
 export type ListUpdateManyInput = {
+  anchorList?: InputMaybe<Scalars['Boolean']>;
   /** Optional updates to localizations */
   localizations?: InputMaybe<ListUpdateManyLocalizationsInput>;
   /** title input for default locale (en) */
@@ -3556,6 +3734,9 @@ export type ListWhereInput = {
   OR?: InputMaybe<Array<ListWhereInput>>;
   /** Contains search across all appropriate fields. */
   _search?: InputMaybe<Scalars['String']>;
+  anchorList?: InputMaybe<Scalars['Boolean']>;
+  /** All values that are not equal to given value. */
+  anchorList_not?: InputMaybe<Scalars['Boolean']>;
   id?: InputMaybe<Scalars['ID']>;
   /** All values containing the given string. */
   id_contains?: InputMaybe<Scalars['ID']>;

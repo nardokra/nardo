@@ -1837,10 +1837,42 @@ type Href {
   """The unique identifier"""
   id: ID!
 
+  """System Locale field"""
+  locale: Locale!
+
+  """Get the other localizations for this document"""
+  localizations(
+    """Decides if the current locale should be included or not"""
+    includeCurrent: Boolean! = false
+
+    """
+    Potential locales that should be returned. 
+    
+    The order of locales will also override locale fall-backing behaviour in the query's subtree.
+    
+    Note any related model with localized fields in the query's subtree will be affected.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    
+    Consider using this in conjunction with forceParentLocale on the children relation fields.
+    """
+    locales: [Locale!]! = [en, nl]
+  ): [Href!]!
+
   """System stage field"""
   stage: Stage!
   target: HrefTarget
   title: String
+}
+
+input HrefConnectInput {
+  """
+  Allow to specify document position in list of connected documents, will default to appending at end of list
+  """
+  position: ConnectPositionInput
+
+  """Document to connect"""
+  where: HrefWhereUniqueInput!
 }
 
 """A connection to a list of items."""
@@ -1855,9 +1887,43 @@ type HrefConnection {
 }
 
 input HrefCreateInput {
+  """href input for default locale (en)"""
   href: String!
+
+  """
+  Inline mutations for managing document localizations excluding the default locale
+  """
+  localizations: HrefCreateLocalizationsInput
   target: HrefTarget
+
+  """title input for default locale (en)"""
   title: String
+}
+
+input HrefCreateLocalizationDataInput {
+  href: String!
+  title: String
+}
+
+input HrefCreateLocalizationInput {
+  """Localization input"""
+  data: HrefCreateLocalizationDataInput!
+  locale: Locale!
+}
+
+input HrefCreateLocalizationsInput {
+  """Create localizations for the newly-created document"""
+  create: [HrefCreateLocalizationInput!]
+}
+
+input HrefCreateManyInlineInput {
+  """Create and connect multiple existing Href documents"""
+  create: [HrefCreateInput!]
+}
+
+input HrefCreateOneInlineInput {
+  """Create and connect one Href document"""
+  create: HrefCreateInput
 }
 
 input HrefCreateWithPositionInput {
@@ -1892,34 +1958,6 @@ input HrefManyWhereInput {
 
   """Contains search across all appropriate fields."""
   _search: String
-  href: String
-
-  """All values containing the given string."""
-  href_contains: String
-
-  """All values ending with the given string."""
-  href_ends_with: String
-
-  """All values that are contained in given list."""
-  href_in: [String]
-
-  """All values that are not equal to given value."""
-  href_not: String
-
-  """All values not containing the given string."""
-  href_not_contains: String
-
-  """All values not ending with the given string"""
-  href_not_ends_with: String
-
-  """All values that are not contained in given list."""
-  href_not_in: [String]
-
-  """All values not starting with the given string."""
-  href_not_starts_with: String
-
-  """All values starting with the given string."""
-  href_starts_with: String
   id: ID
 
   """All values containing the given string."""
@@ -1958,34 +1996,6 @@ input HrefManyWhereInput {
 
   """All values that are not contained in given list."""
   target_not_in: [HrefTarget]
-  title: String
-
-  """All values containing the given string."""
-  title_contains: String
-
-  """All values ending with the given string."""
-  title_ends_with: String
-
-  """All values that are contained in given list."""
-  title_in: [String]
-
-  """All values that are not equal to given value."""
-  title_not: String
-
-  """All values not containing the given string."""
-  title_not_contains: String
-
-  """All values not ending with the given string"""
-  title_not_ends_with: String
-
-  """All values that are not contained in given list."""
-  title_not_in: [String]
-
-  """All values not starting with the given string."""
-  title_not_starts_with: String
-
-  """All values starting with the given string."""
-  title_starts_with: String
 }
 
 enum HrefOrderByInput {
@@ -1999,6 +2009,90 @@ enum HrefOrderByInput {
   title_DESC
 }
 
+union HrefParent = ListEntry
+
+input HrefParentConnectInput {
+  ListEntry: ListEntryConnectInput
+}
+
+input HrefParentCreateInput {
+  ListEntry: ListEntryCreateInput
+}
+
+input HrefParentCreateManyInlineInput {
+  """Create and connect multiple existing HrefParent documents"""
+  create: [HrefParentCreateInput!]
+}
+
+input HrefParentCreateOneInlineInput {
+  """Create and connect one HrefParent document"""
+  create: HrefParentCreateInput
+}
+
+input HrefParentCreateWithPositionInput {
+  ListEntry: ListEntryCreateWithPositionInput
+}
+
+input HrefParentUpdateInput {
+  ListEntry: ListEntryUpdateInput
+}
+
+input HrefParentUpdateManyInlineInput {
+  """Create and connect multiple HrefParent component instances"""
+  create: [HrefParentCreateWithPositionInput!]
+
+  """Delete multiple HrefParent documents"""
+  delete: [HrefParentWhereUniqueInput!]
+
+  """Update multiple HrefParent component instances"""
+  update: [HrefParentUpdateWithNestedWhereUniqueAndPositionInput!]
+
+  """Upsert multiple HrefParent component instances"""
+  upsert: [HrefParentUpsertWithNestedWhereUniqueAndPositionInput!]
+}
+
+input HrefParentUpdateManyWithNestedWhereInput {
+  ListEntry: ListEntryUpdateManyWithNestedWhereInput
+}
+
+input HrefParentUpdateOneInlineInput {
+  """Create and connect one HrefParent document"""
+  create: HrefParentCreateInput
+
+  """Delete currently connected HrefParent document"""
+  delete: Boolean
+
+  """Update single HrefParent document"""
+  update: HrefParentUpdateWithNestedWhereUniqueInput
+
+  """Upsert single HrefParent document"""
+  upsert: HrefParentUpsertWithNestedWhereUniqueInput
+}
+
+input HrefParentUpdateWithNestedWhereUniqueAndPositionInput {
+  ListEntry: ListEntryUpdateWithNestedWhereUniqueAndPositionInput
+}
+
+input HrefParentUpdateWithNestedWhereUniqueInput {
+  ListEntry: ListEntryUpdateWithNestedWhereUniqueInput
+}
+
+input HrefParentUpsertWithNestedWhereUniqueAndPositionInput {
+  ListEntry: ListEntryUpsertWithNestedWhereUniqueAndPositionInput
+}
+
+input HrefParentUpsertWithNestedWhereUniqueInput {
+  ListEntry: ListEntryUpsertWithNestedWhereUniqueInput
+}
+
+input HrefParentWhereInput {
+  ListEntry: ListEntryWhereInput
+}
+
+input HrefParentWhereUniqueInput {
+  ListEntry: ListEntryWhereUniqueInput
+}
+
 enum HrefTarget {
   blank
   parent
@@ -2007,15 +2101,78 @@ enum HrefTarget {
 }
 
 input HrefUpdateInput {
+  """href input for default locale (en)"""
   href: String
+
+  """Manage document localizations"""
+  localizations: HrefUpdateLocalizationsInput
   target: HrefTarget
+
+  """title input for default locale (en)"""
   title: String
 }
 
-input HrefUpdateManyInput {
+input HrefUpdateLocalizationDataInput {
   href: String
-  target: HrefTarget
   title: String
+}
+
+input HrefUpdateLocalizationInput {
+  data: HrefUpdateLocalizationDataInput!
+  locale: Locale!
+}
+
+input HrefUpdateLocalizationsInput {
+  """Localizations to create"""
+  create: [HrefCreateLocalizationInput!]
+
+  """Localizations to delete"""
+  delete: [Locale!]
+
+  """Localizations to update"""
+  update: [HrefUpdateLocalizationInput!]
+  upsert: [HrefUpsertLocalizationInput!]
+}
+
+input HrefUpdateManyInlineInput {
+  """Create and connect multiple Href component instances"""
+  create: [HrefCreateWithPositionInput!]
+
+  """Delete multiple Href documents"""
+  delete: [HrefWhereUniqueInput!]
+
+  """Update multiple Href component instances"""
+  update: [HrefUpdateWithNestedWhereUniqueAndPositionInput!]
+
+  """Upsert multiple Href component instances"""
+  upsert: [HrefUpsertWithNestedWhereUniqueAndPositionInput!]
+}
+
+input HrefUpdateManyInput {
+  """href input for default locale (en)"""
+  href: String
+
+  """Optional updates to localizations"""
+  localizations: HrefUpdateManyLocalizationsInput
+  target: HrefTarget
+
+  """title input for default locale (en)"""
+  title: String
+}
+
+input HrefUpdateManyLocalizationDataInput {
+  href: String
+  title: String
+}
+
+input HrefUpdateManyLocalizationInput {
+  data: HrefUpdateManyLocalizationDataInput!
+  locale: Locale!
+}
+
+input HrefUpdateManyLocalizationsInput {
+  """Localizations to update"""
+  update: [HrefUpdateManyLocalizationInput!]
 }
 
 input HrefUpdateManyWithNestedWhereInput {
@@ -2024,6 +2181,20 @@ input HrefUpdateManyWithNestedWhereInput {
 
   """Document search"""
   where: HrefWhereInput!
+}
+
+input HrefUpdateOneInlineInput {
+  """Create and connect one Href document"""
+  create: HrefCreateInput
+
+  """Delete currently connected Href document"""
+  delete: Boolean
+
+  """Update single Href document"""
+  update: HrefUpdateWithNestedWhereUniqueInput
+
+  """Upsert single Href document"""
+  upsert: HrefUpsertWithNestedWhereUniqueInput
 }
 
 input HrefUpdateWithNestedWhereUniqueAndPositionInput {
@@ -2053,6 +2224,12 @@ input HrefUpsertInput {
 
   """Update document if it exists"""
   update: HrefUpdateInput!
+}
+
+input HrefUpsertLocalizationInput {
+  create: HrefCreateLocalizationDataInput!
+  locale: Locale!
+  update: HrefUpdateLocalizationDataInput!
 }
 
 input HrefUpsertWithNestedWhereUniqueAndPositionInput {
@@ -3667,6 +3844,8 @@ input LinkWhereUniqueInput {
 }
 
 type List {
+  anchorList: Boolean
+
   """The unique identifier"""
   id: ID!
   identifier: String!
@@ -3749,6 +3928,7 @@ type ListConnection {
 }
 
 input ListCreateInput {
+  anchorList: Boolean
   identifier: String!
   listEntry: ListEntryCreateManyInlineInput
 
@@ -3807,6 +3987,27 @@ type ListEdge {
 
 type ListEntry {
   description: [String!]!
+  href(
+    """
+    Sets the locale of the parent document as the first locale in the fallback locales in the query's subtree.
+    
+    Note that `href` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+    """
+    forceParentLocale: Boolean
+
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `href` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): Href
 
   """The unique identifier"""
   id: ID!
@@ -3863,6 +4064,7 @@ type ListEntryConnection {
 input ListEntryCreateInput {
   """description input for default locale (en)"""
   description: [String!]
+  href: HrefCreateOneInlineInput
   identifier: String!
 
   """
@@ -3932,6 +4134,7 @@ input ListEntryManyWhereInput {
 
   """Contains search across all appropriate fields."""
   _search: String
+  href: HrefWhereInput
   id: ID
 
   """All values containing the given string."""
@@ -4088,6 +4291,7 @@ input ListEntryParentWhereUniqueInput {
 input ListEntryUpdateInput {
   """description input for default locale (en)"""
   description: [String!]
+  href: HrefUpdateOneInlineInput
   identifier: String
 
   """Manage document localizations"""
@@ -4273,6 +4477,7 @@ input ListEntryWhereInput {
   Matches if the field array does not contains *all* items provided to the filter or order does not match
   """
   description_not: [String!]
+  href: HrefWhereInput
   id: ID
 
   """All values containing the given string."""
@@ -4378,6 +4583,10 @@ input ListManyWhereInput {
 
   """Contains search across all appropriate fields."""
   _search: String
+  anchorList: Boolean
+
+  """All values that are not equal to given value."""
+  anchorList_not: Boolean
   id: ID
 
   """All values containing the given string."""
@@ -4440,6 +4649,8 @@ input ListManyWhereInput {
 }
 
 enum ListOrderByInput {
+  anchorList_ASC
+  anchorList_DESC
   id_ASC
   id_DESC
   identifier_ASC
@@ -4544,6 +4755,7 @@ input ListParentWhereUniqueInput {
 }
 
 input ListUpdateInput {
+  anchorList: Boolean
   identifier: String
   listEntry: ListEntryUpdateManyInlineInput
 
@@ -4590,6 +4802,8 @@ input ListUpdateManyInlineInput {
 }
 
 input ListUpdateManyInput {
+  anchorList: Boolean
+
   """Optional updates to localizations"""
   localizations: ListUpdateManyLocalizationsInput
 
@@ -4702,6 +4916,10 @@ input ListWhereInput {
 
   """Contains search across all appropriate fields."""
   _search: String
+  anchorList: Boolean
+
+  """All values that are not equal to given value."""
+  anchorList_not: Boolean
   id: ID
 
   """All values containing the given string."""

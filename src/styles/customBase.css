@@ -4,10 +4,6 @@
     @apply p-0 m-0 font-mono;
   }
 
-  a {
-    @apply underline;
-  }
-
   * {
     @apply box-border;
   }

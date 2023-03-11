@@ -1,1 +1,0 @@
-export { EnrichedIconList } from "./EnrichedIconList";

@@ -1,7 +1,9 @@
 import { useState } from "react";
 
-// Types & Constants
+// Types
 import type { InferGetServerSidePropsType } from "next";
+
+// Constants
 import { SvgElement, SvgImageVariants } from "@/components/atoms/svgImage";
 
 // Utils
@@ -17,9 +19,9 @@ import { SvgImage } from "@/components/atoms/svgImage";
 import { LayoutBlock } from "@/components/templates/layoutBlock";
 import { LogoDisplay } from "@/components/molecules/logoDisplay";
 import { HoverList } from "@/components/molecules/hoverList";
-import { EnrichedList } from "@/components/molecules/enrichedList";
-import { ExtendedEnrichedList } from "@/components/molecules/extendedEnrichedList";
-import { EnrichedIconList } from "@/components/molecules/enrichedIconList";
+import { TopicDescriptionList } from "@/components/molecules/topicDescriptionList";
+import { TopicDoubleDescriptionList } from "@/components/molecules/topicDoubleDescriptionList";
+import { TopicMediaList } from "@/components/molecules/topicMediaList";
 import { SizeVariant } from "@/constants/sizeConstants";
 
 const Home = ({
@@ -64,13 +66,17 @@ const Home = ({
               <TitleBrick titleBlock={pageTitleBlock} />
             </LayoutBlock>
             <LayoutBlock>
-              <EnrichedIconList list={contactList} titleVerticalOriented />
+              <TopicMediaList
+                anchorList
+                list={contactList}
+                titleVerticalOriented
+              />
             </LayoutBlock>
           </LayoutBlock>
 
           <LayoutBlock smColumns2>
             <LayoutBlock maxHeight>
-              <ExtendedEnrichedList list={experienceList} />
+              <TopicDoubleDescriptionList list={experienceList} />
             </LayoutBlock>
             <LayoutBlock smColumns2>
               <HoverList<typeof SvgElement>
@@ -93,7 +99,7 @@ const Home = ({
           </LayoutBlock>
 
           <LayoutBlock>
-            <EnrichedList titleVerticalOriented list={educationList} />
+            <TopicDescriptionList titleVerticalOriented list={educationList} />
           </LayoutBlock>
         </Layout>
       </div>

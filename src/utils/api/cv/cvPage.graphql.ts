@@ -23,10 +23,15 @@ export const cvPageQuery = gql`
       contactList {
         identifier
         title
+        anchorList
         listEntry {
           identifier
           title
           description
+          href {
+            href
+            target
+          }
         }
       }
       privateImageBlock {

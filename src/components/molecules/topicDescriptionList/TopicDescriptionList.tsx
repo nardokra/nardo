@@ -6,15 +6,15 @@ import { List, Maybe } from "@/cmsTypes/hygraph";
 // Utils
 import cx from "classnames";
 
-type EnrichedListType = {
+type TopicDescriptionListType = {
   list?: Maybe<List>;
   titleVerticalOriented?: boolean;
 };
 
-export const EnrichedList = ({
+export const TopicDescriptionList = ({
   list,
   titleVerticalOriented,
-}: EnrichedListType) => {
+}: TopicDescriptionListType) => {
   const { title, listEntry } = list || {};
   const [isBouncing, setIsBouncing] = useState(false);
   const [hasShadow, setHasShadow] = useState(false);

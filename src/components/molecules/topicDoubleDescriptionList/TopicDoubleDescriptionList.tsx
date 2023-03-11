@@ -4,11 +4,13 @@ import { Maybe, TopicList } from "@/cmsTypes/hygraph";
 // Utils
 import cx from "classnames";
 
-type ExtendedEnrichedListType = {
+type TopicDoubleDescriptionListType = {
   list?: Maybe<TopicList>;
 };
 
-export const ExtendedEnrichedList = ({ list }: ExtendedEnrichedListType) => {
+export const TopicDoubleDescriptionList = ({
+  list,
+}: TopicDoubleDescriptionListType) => {
   const { title, topicListEntry } = list || {};
 
   const mainClasses = cx("bg-white rounded-lg text-black", "p-4 h-full");
