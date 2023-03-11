@@ -33,7 +33,7 @@ export const ImageBrick = ({
   };
 
   const mainClasses = cx(
-    "overflow-hidden rounded-lg",
+    "overflow-hidden rounded-lg max-w-full",
     size === SizeVariant.Small && "h-80 xs:h-[30rem] sm:h-56",
     size === SizeVariant.Medium && "h-[30rem] sm:h-80"
   );
@@ -56,7 +56,7 @@ export const ImageBrick = ({
             alt={altText}
             fill
             style={{ objectFit: "cover" }}
-            sizes="(max-width: 768px) 100vw,(max-width: 1200px) 50vw, 33vw"
+            sizes="(max-width: 768px) 100,(max-width: 1200px) 50, 33"
             priority={priority}
           />
         </div>
