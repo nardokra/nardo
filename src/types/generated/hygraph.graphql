@@ -1213,6 +1213,27 @@ type CvPage implements Node {
     """
     locales: [Locale!]
   ): User
+  websiteList(
+    """
+    Sets the locale of the parent document as the first locale in the fallback locales in the query's subtree.
+    
+    Note that `websiteList` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+    """
+    forceParentLocale: Boolean
+
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `websiteList` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): List
 }
 
 input CvPageConnectInput {
@@ -1252,6 +1273,7 @@ input CvPageCreateInput {
   skillsList: ListCreateOneInlineInput
   slug: String!
   updatedAt: DateTime
+  websiteList: ListCreateOneInlineInput
 }
 
 input CvPageCreateLocalizationDataInput {
@@ -1446,6 +1468,7 @@ input CvPageManyWhereInput {
   """All values that are not contained in given list."""
   updatedAt_not_in: [DateTime]
   updatedBy: UserWhereInput
+  websiteList: ListWhereInput
 }
 
 enum CvPageOrderByInput {
@@ -1473,6 +1496,7 @@ input CvPageUpdateInput {
   profileImageBlock: ImageBlockUpdateOneInlineInput
   skillsList: ListUpdateOneInlineInput
   slug: String
+  websiteList: ListUpdateOneInlineInput
 }
 
 input CvPageUpdateLocalizationsInput {
@@ -1726,6 +1750,7 @@ input CvPageWhereInput {
   """All values that are not contained in given list."""
   updatedAt_not_in: [DateTime]
   updatedBy: UserWhereInput
+  websiteList: ListWhereInput
 }
 
 """
@@ -4035,6 +4060,9 @@ type ListEntry {
     locales: [Locale!]! = [en, nl]
   ): [ListEntry!]!
 
+  """Only visible for authorized persons."""
+  private: Boolean
+
   """System stage field"""
   stage: Stage!
   title: String!
@@ -4071,6 +4099,7 @@ input ListEntryCreateInput {
   Inline mutations for managing document localizations excluding the default locale
   """
   localizations: ListEntryCreateLocalizationsInput
+  private: Boolean
 
   """title input for default locale (en)"""
   title: String!
@@ -4191,6 +4220,10 @@ input ListEntryManyWhereInput {
 
   """All values starting with the given string."""
   identifier_starts_with: String
+  private: Boolean
+
+  """All values that are not equal to given value."""
+  private_not: Boolean
 }
 
 enum ListEntryOrderByInput {
@@ -4200,6 +4233,8 @@ enum ListEntryOrderByInput {
   id_DESC
   identifier_ASC
   identifier_DESC
+  private_ASC
+  private_DESC
   title_ASC
   title_DESC
 }
@@ -4296,6 +4331,7 @@ input ListEntryUpdateInput {
 
   """Manage document localizations"""
   localizations: ListEntryUpdateLocalizationsInput
+  private: Boolean
 
   """title input for default locale (en)"""
   title: String
@@ -4340,9 +4376,11 @@ input ListEntryUpdateManyInlineInput {
 input ListEntryUpdateManyInput {
   """description input for default locale (en)"""
   description: [String!]
+  identifier: String
 
   """Optional updates to localizations"""
   localizations: ListEntryUpdateManyLocalizationsInput
+  private: Boolean
 
   """title input for default locale (en)"""
   title: String
@@ -4534,6 +4572,10 @@ input ListEntryWhereInput {
 
   """All values starting with the given string."""
   identifier_starts_with: String
+  private: Boolean
+
+  """All values that are not equal to given value."""
+  private_not: Boolean
   title: String
 
   """All values containing the given string."""
@@ -4567,7 +4609,6 @@ input ListEntryWhereInput {
 """References ListEntry record uniquely"""
 input ListEntryWhereUniqueInput {
   id: ID
-  identifier: String
 }
 
 """Identifies documents"""
@@ -8575,6 +8616,7 @@ input TopicListEntryUpdateManyInlineInput {
 input TopicListEntryUpdateManyInput {
   """description input for default locale (en)"""
   description: String
+  identifier: String
 
   """Optional updates to localizations"""
   localizations: TopicListEntryUpdateManyLocalizationsInput
@@ -8870,7 +8912,6 @@ input TopicListEntryWhereInput {
 """References TopicListEntry record uniquely"""
 input TopicListEntryWhereUniqueInput {
   id: ID
-  identifier: String
 }
 
 """Identifies documents"""

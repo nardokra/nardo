@@ -1,69 +1,85 @@
 import { gql } from "graphql-request";
 
 export const cvPageQuery = gql`
-  query cvPageQuery($local: Locale!, $slug: String) {
-    cvPage(where: { slug: $slug }, locales: [$local]) {
+  query cvPageQuery($slug: String) {
+    cvPage(where: { slug: $slug }, locales: [en, nl]) {
       slug
-      pageTitleBlock {
+      pageTitleBlock(locales: [en, nl]) {
         identifier
         title
         subtitle
         subSubtitle
         titleWeight
       }
-      profileImageBlock {
-        imageEntry {
-          image {
+      profileImageBlock(locales: [en, nl]) {
+        imageEntry(locales: [en, nl]) {
+          image(locales: [en, nl]) {
             url
           }
           altText
           identifier
         }
       }
-      contactList {
+      contactList(locales: [en, nl]) {
         identifier
         title
         anchorList
-        listEntry {
+        listEntry(locales: [en, nl]) {
           identifier
           title
           description
-          href {
+          href(locales: [en, nl]) {
             href
             target
           }
+          private
         }
       }
-      privateImageBlock {
-        imageEntry {
-          image {
+      websiteList(locales: [en, nl]) {
+        identifier
+        title
+        anchorList
+        listEntry(locales: [en, nl]) {
+          identifier
+          title
+          description
+          href(locales: [en, nl]) {
+            href
+            target
+          }
+          private
+        }
+      }
+      privateImageBlock(locales: [en, nl]) {
+        imageEntry(locales: [en, nl]) {
+          image(locales: [en, nl]) {
             url
           }
           altText
           identifier
         }
       }
-      skillsList {
+      skillsList(locales: [en, nl]) {
         identifier
         title
-        listEntry {
+        listEntry(locales: [en, nl]) {
           identifier
           title
         }
       }
-      educationList {
+      educationList(locales: [en, nl]) {
         identifier
         title
-        listEntry {
+        listEntry(locales: [en, nl]) {
           identifier
           title
           description
         }
       }
-      experienceList {
+      experienceList(locales: [en, nl]) {
         identifier
         title
-        topicListEntry {
+        topicListEntry(locales: [en, nl]) {
           title
           subtitle
           subDescription

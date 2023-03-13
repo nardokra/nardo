@@ -5,6 +5,7 @@ import type { InferGetServerSidePropsType } from "next";
 
 // Constants
 import { SvgElement, SvgImageVariants } from "@/components/atoms/svgImage";
+import { offlineMode } from "@/constants/conditionalConstants";
 
 // Utils
 import cx from "classnames";
@@ -35,10 +36,11 @@ const Home = ({
     privateImageBlock,
     profileImageBlock,
     skillsList,
+    websiteList,
   } = cvPage;
 
   const [item, setItem] = useState<keyof typeof SvgElement | undefined>(
-    SvgImageVariants.NEXT
+    !offlineMode ? SvgImageVariants.NEXT : undefined
   );
 
   return (
@@ -73,7 +75,6 @@ const Home = ({
               />
             </LayoutBlock>
           </LayoutBlock>
-
           <LayoutBlock smColumns2>
             <LayoutBlock maxHeight>
               <TopicDoubleDescriptionList list={experienceList} />
@@ -86,19 +87,25 @@ const Home = ({
                 setItem={setItem}
               />
               <LayoutBlock>
-                <LogoDisplay>
-                  <SvgImage variant={item} />
-                </LogoDisplay>
+                {!offlineMode && (
+                  <LogoDisplay>
+                    <SvgImage variant={item} />
+                  </LogoDisplay>
+                )}
                 <ImageBrick
-                  className={"bg-theme-primary"}
                   imageBlock={privateImageBlock}
-                  size={SizeVariant.Medium}
                   priority
+                  size={SizeVariant[!offlineMode ? "Small" : "Medium"]}
+                />
+                <TopicMediaList
+                  anchorList
+                  isHighlight
+                  list={websiteList}
+                  titleVerticalOriented
                 />
               </LayoutBlock>
             </LayoutBlock>
           </LayoutBlock>
-
           <LayoutBlock>
             <TopicDescriptionList titleVerticalOriented list={educationList} />
           </LayoutBlock>

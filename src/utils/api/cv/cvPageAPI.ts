@@ -10,11 +10,8 @@ type cvPage = {
   cvPage: CvPage;
 };
 
-export const getServerSideProps: GetServerSideProps<cvPage> = async ({
-  locale,
-}) => {
+export const getServerSideProps: GetServerSideProps<cvPage> = async () => {
   const props = await cmsClient<cvPage>(cvPageQuery, {
-    local: locale,
     slug: "cv",
   });
 

@@ -746,6 +746,7 @@ export type CvPage = Node & {
   updatedAt: Scalars['DateTime'];
   /** User that last updated this document */
   updatedBy?: Maybe<User>;
+  websiteList?: Maybe<List>;
 };
 
 
@@ -834,6 +835,12 @@ export type CvPageUpdatedByArgs = {
   locales?: InputMaybe<Array<Locale>>;
 };
 
+
+export type CvPageWebsiteListArgs = {
+  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
+  locales?: InputMaybe<Array<Locale>>;
+};
+
 export type CvPageConnectInput = {
   /** Allow to specify document position in list of connected documents, will default to appending at end of list */
   position?: InputMaybe<ConnectPositionInput>;
@@ -864,6 +871,7 @@ export type CvPageCreateInput = {
   skillsList?: InputMaybe<ListCreateOneInlineInput>;
   slug: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
+  websiteList?: InputMaybe<ListCreateOneInlineInput>;
 };
 
 export type CvPageCreateLocalizationDataInput = {
@@ -1014,6 +1022,7 @@ export type CvPageManyWhereInput = {
   /** All values that are not contained in given list. */
   updatedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   updatedBy?: InputMaybe<UserWhereInput>;
+  websiteList?: InputMaybe<ListWhereInput>;
 };
 
 export enum CvPageOrderByInput {
@@ -1040,6 +1049,7 @@ export type CvPageUpdateInput = {
   profileImageBlock?: InputMaybe<ImageBlockUpdateOneInlineInput>;
   skillsList?: InputMaybe<ListUpdateOneInlineInput>;
   slug?: InputMaybe<Scalars['String']>;
+  websiteList?: InputMaybe<ListUpdateOneInlineInput>;
 };
 
 export type CvPageUpdateLocalizationsInput = {
@@ -1229,6 +1239,7 @@ export type CvPageWhereInput = {
   /** All values that are not contained in given list. */
   updatedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   updatedBy?: InputMaybe<UserWhereInput>;
+  websiteList?: InputMaybe<ListWhereInput>;
 };
 
 /** The document in stages filter allows specifying a stage entry to cross compare the same document between different stages */
@@ -3010,6 +3021,8 @@ export type ListEntry = {
   locale: Locale;
   /** Get the other localizations for this document */
   localizations: Array<ListEntry>;
+  /** Only visible for authorized persons. */
+  private?: Maybe<Scalars['Boolean']>;
   /** System stage field */
   stage: Stage;
   title: Scalars['String'];
@@ -3051,6 +3064,7 @@ export type ListEntryCreateInput = {
   identifier: Scalars['String'];
   /** Inline mutations for managing document localizations excluding the default locale */
   localizations?: InputMaybe<ListEntryCreateLocalizationsInput>;
+  private?: InputMaybe<Scalars['Boolean']>;
   /** title input for default locale (en) */
   title: Scalars['String'];
 };
@@ -3146,6 +3160,9 @@ export type ListEntryManyWhereInput = {
   identifier_not_starts_with?: InputMaybe<Scalars['String']>;
   /** All values starting with the given string. */
   identifier_starts_with?: InputMaybe<Scalars['String']>;
+  private?: InputMaybe<Scalars['Boolean']>;
+  /** All values that are not equal to given value. */
+  private_not?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum ListEntryOrderByInput {
@@ -3155,6 +3172,8 @@ export enum ListEntryOrderByInput {
   IdDesc = 'id_DESC',
   IdentifierAsc = 'identifier_ASC',
   IdentifierDesc = 'identifier_DESC',
+  PrivateAsc = 'private_ASC',
+  PrivateDesc = 'private_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC'
 }
@@ -3244,6 +3263,7 @@ export type ListEntryUpdateInput = {
   identifier?: InputMaybe<Scalars['String']>;
   /** Manage document localizations */
   localizations?: InputMaybe<ListEntryUpdateLocalizationsInput>;
+  private?: InputMaybe<Scalars['Boolean']>;
   /** title input for default locale (en) */
   title?: InputMaybe<Scalars['String']>;
 };
@@ -3282,8 +3302,10 @@ export type ListEntryUpdateManyInlineInput = {
 export type ListEntryUpdateManyInput = {
   /** description input for default locale (en) */
   description?: InputMaybe<Array<Scalars['String']>>;
+  identifier?: InputMaybe<Scalars['String']>;
   /** Optional updates to localizations */
   localizations?: InputMaybe<ListEntryUpdateManyLocalizationsInput>;
+  private?: InputMaybe<Scalars['Boolean']>;
   /** title input for default locale (en) */
   title?: InputMaybe<Scalars['String']>;
 };
@@ -3425,6 +3447,9 @@ export type ListEntryWhereInput = {
   identifier_not_starts_with?: InputMaybe<Scalars['String']>;
   /** All values starting with the given string. */
   identifier_starts_with?: InputMaybe<Scalars['String']>;
+  private?: InputMaybe<Scalars['Boolean']>;
+  /** All values that are not equal to given value. */
+  private_not?: InputMaybe<Scalars['Boolean']>;
   title?: InputMaybe<Scalars['String']>;
   /** All values containing the given string. */
   title_contains?: InputMaybe<Scalars['String']>;
@@ -3449,7 +3474,6 @@ export type ListEntryWhereInput = {
 /** References ListEntry record uniquely */
 export type ListEntryWhereUniqueInput = {
   id?: InputMaybe<Scalars['ID']>;
-  identifier?: InputMaybe<Scalars['String']>;
 };
 
 /** Identifies documents */
@@ -6458,6 +6482,7 @@ export type TopicListEntryUpdateManyInlineInput = {
 export type TopicListEntryUpdateManyInput = {
   /** description input for default locale (en) */
   description?: InputMaybe<Scalars['String']>;
+  identifier?: InputMaybe<Scalars['String']>;
   /** Optional updates to localizations */
   localizations?: InputMaybe<TopicListEntryUpdateManyLocalizationsInput>;
   /** subDescription input for default locale (en) */
@@ -6677,7 +6702,6 @@ export type TopicListEntryWhereInput = {
 /** References TopicListEntry record uniquely */
 export type TopicListEntryWhereUniqueInput = {
   id?: InputMaybe<Scalars['ID']>;
-  identifier?: InputMaybe<Scalars['String']>;
 };
 
 /** Identifies documents */

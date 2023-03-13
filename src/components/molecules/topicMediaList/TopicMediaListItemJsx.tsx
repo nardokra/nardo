@@ -1,28 +1,64 @@
 // Types
 import { ListEntry } from "@/cmsTypes/hygraph";
 
+// Constants
+import { offlineMode } from "@/constants/conditionalConstants";
+
 // Utils
 import cx from "classnames";
 
 // Components
-import { SvgImage } from "@/components/atoms/svgImage";
+import { SvgImage, SvgElement } from "@/components/atoms/svgImage";
 
-export const TopicMediaListItemJSX = ({ entry }: { entry: ListEntry }) => (
-  <div key={entry.identifier} className="flex flex-col md:flex-row mb-4">
-    <div
-      className={cx(
-        "flex justify-center",
-        "mb-2 min-h-[2rem] h-[2rem] min-w-[2rem] w-[2rem]",
-        "md:min-h-[4rem] md:min-w-[4rem] md:mr-4"
+type TopicMediaListItemJSXType = {
+  isAnchor?: boolean;
+  entry: ListEntry;
+  textColorClass?: string;
+};
+
+export const TopicMediaListItemJSX = ({
+  entry,
+  isAnchor,
+  textColorClass,
+}: TopicMediaListItemJSXType) =>
+  !offlineMode && entry.private ? null : (
+    <div key={entry.identifier} className="flex flex-col md:flex-row mb-4">
+      {!!SvgElement[entry.identifier as keyof typeof SvgElement] && (
+        <div
+          className={cx(
+            "flex justify-center",
+            offlineMode
+              ? "mb-1 min-h-4 h-1 min-w-1 w-1 md:min-h-[2rem] min-w-[2rem] md:mr-2"
+              : "mb-2 min-h-8 h-8 min-w-8 w-8 md:min-h-[4rem] md:min-w-[4rem] md:mr-4"
+          )}
+        >
+          <SvgImage
+            variant={entry.identifier as keyof typeof SvgElement}
+            hexColorCode={textColorClass ? "#000" : undefined}
+          />
+        </div>
       )}
-    >
-      <SvgImage variant={entry.identifier as keyof typeof SvgImage} />
+      <div className="flex flex-col">
+        <span
+          className={cx(
+            textColorClass
+              ? `${textColorClass} font-bold`
+              : "text-theme-primary"
+          )}
+        >
+          {entry.title}
+        </span>
+        {entry.description.map((descr) => (
+          <span
+            key={descr.slice(0, 10)}
+            className={cx(
+              !!isAnchor && "underline",
+              textColorClass || "text-white"
+            )}
+          >
+            {descr}
+          </span>
+        ))}
+      </div>
     </div>
-    <div className="flex flex-col">
-      <span className="text-theme-primary">{entry.title}</span>
-      {entry.description.map((descr) => (
-        <span key={descr.slice(0, 10)}>{descr}</span>
-      ))}
-    </div>
-  </div>
-);
+  );
