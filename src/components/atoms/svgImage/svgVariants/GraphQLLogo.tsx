@@ -1,12 +1,9 @@
-export const GraphQLLogo = ({
-  className,
-  hexColorCode,
-}: {
-  className?: string;
-  hexColorCode?: string;
-}) => (
+import { colors } from "@/constants/colorConstants";
+import type { SvgImageType } from "../SvgImage";
+
+export const GraphQLLogo = ({ className, hexColorCode }: SvgImageType) => (
   <svg className={className} viewBox="0 0 128 128">
-    <g fill={`${hexColorCode || "#3B82F6"}`}>
+    <g fill={hexColorCode || colors.theme.primary}>
       <path d="M35.387 71.79L32.5 70.128l32.152-55.43 2.883 1.656zm0 0"></path>
       <path d="M31.84 65.7h64.3v3.32h-64.3zm0 0"></path>
       <path d="M65.273 86.05l-32.16-18.484 1.664-2.875 32.164 18.485zm0 0M93.215 37.871L61.05 19.387l1.668-2.871L94.879 35zm0 0"></path>

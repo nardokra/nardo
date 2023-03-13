@@ -90,7 +90,7 @@ const Home = ({
                   <SvgImage variant={item} />
                 </LogoDisplay>
                 <ImageBrick
-                  className="bg-vista-blue"
+                  className={"bg-theme-primary"}
                   imageBlock={privateImageBlock}
                   size={SizeVariant.Medium}
                   priority

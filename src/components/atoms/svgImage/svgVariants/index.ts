@@ -14,3 +14,5 @@ export { Html5 } from "./Html5";
 export { Express } from "./Express";
 export { LinkedIn } from "./LinkedIn";
 export { Github } from "./Github";
+export { Phone } from "./Phone";
+export { Email } from "./Email";

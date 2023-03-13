@@ -12,7 +12,8 @@
 
     // Rules
     "no-console": ["error", { "allow": ["warn", "error"] }],
-    "no-var": "error"
+    "no-var": "error",
+    "node/no-extraneous-require": "off"
   },
   "globals": {
     "JSX": true

@@ -46,7 +46,7 @@ export const TitleBrick = ({
       {!!titleBlock?.subtitle && (
         <span
           className={cx(
-            "text-blue-500 text-lg mt-2",
+            "text-theme-primary text-lg mt-2",
             verticleOrientationClasses
           )}
         >

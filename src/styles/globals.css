@@ -5,4 +5,5 @@
 @import "tailwindcss/utilities";
 @import "tailwindcss/screens";
 @import "./customBase.css";
+@import "./customComponents.css";
 @import "./customUtilities.css";

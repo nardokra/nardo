@@ -1,17 +1,14 @@
-export const Css3 = ({
-  className,
-  hexColorCode,
-}: {
-  className?: string;
-  hexColorCode?: string;
-}) => (
+import { colors } from "@/constants/colorConstants";
+import type { SvgImageType } from "../SvgImage";
+
+export const Css3 = ({ className, hexColorCode }: SvgImageType) => (
   <svg className={className} viewBox="0 0 128 128">
     <path
-      fill={`${hexColorCode || "#3B82F6"}`}
+      fill={hexColorCode || colors.theme.primary}
       d="M18.814 114.123L8.76 1.352h110.48l-10.064 112.754-45.243 12.543-45.119-12.526z"
     ></path>
     <path
-      fill="#3B82F6"
+      fill={hexColorCode || colors.theme.primary}
       d="M64.001 117.062l36.559-10.136 8.601-96.354h-45.16v106.49z"
     ></path>
     <path

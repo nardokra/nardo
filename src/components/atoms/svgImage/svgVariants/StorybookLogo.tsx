@@ -1,10 +1,7 @@
-export const StoryBookLogo = ({
-  className,
-  hexColorCode,
-}: {
-  className?: string;
-  hexColorCode?: string;
-}) => (
+import { colors } from "@/constants/colorConstants";
+import type { SvgImageType } from "../SvgImage";
+
+export const StoryBookLogo = ({ className, hexColorCode }: SvgImageType) => (
   <svg className={className} viewBox="0 0 128 128">
     <path
       fillRule="evenodd"
@@ -14,7 +11,7 @@ export const StoryBookLogo = ({
     ></path>
     <path
       d="M19.183 51.002l-1.421.09.11 2.954a.192.192 0 01-.31.157l-.952-.75-1.127.855a.192.192 0 01-.308-.16l.127-2.903-14.095.88A1.288 1.288 0 00.001 53.46l.793 21.133a1.287 1.287 0 001.229 1.238l17.182.772a1.289 1.289 0 001.345-1.286v-23.03a1.287 1.287 0 00-1.367-1.285zm-8.52 4.354c3.35 0 5.181 1.793 5.181 5.203-.453.352-3.826.592-3.826.092.07-1.911-.785-1.995-1.26-1.995-.452 0-1.212.136-1.212 1.16 0 2.525 6.512 2.389 6.512 7.485 0 2.866-2.33 4.45-5.3 4.45-3.066 0-5.745-1.24-5.443-5.541.12-.505 4.017-.385 4.017 0-.048 1.774.356 2.296 1.378 2.296.784 0 1.141-.432 1.141-1.16 0-2.594-6.417-2.684-6.417-7.44 0-2.73 1.878-4.55 5.229-4.55z"
-      fill={`${hexColorCode || "#3B82F6"}`}
+      fill={hexColorCode || colors.theme.primary}
     ></path>
   </svg>
 );

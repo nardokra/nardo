@@ -1,12 +1,9 @@
-export const Github = ({
-  className,
-  hexColorCode,
-}: {
-  className?: string;
-  hexColorCode?: string;
-}) => (
+import { colors } from "@/constants/colorConstants";
+import type { SvgImageType } from "../SvgImage";
+
+export const Github = ({ className, hexColorCode }: SvgImageType) => (
   <svg className={className} viewBox="0 0 128 128">
-    <g fill={hexColorCode || "#3B82F6"}>
+    <g fill={hexColorCode || colors.theme.primary}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"

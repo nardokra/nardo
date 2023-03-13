@@ -29,7 +29,9 @@ export const TopicDoubleDescriptionList = ({
       <div className="flex-col">
         {topicListEntry?.map((listEntry) => (
           <div className={"flex flex-col mb-4"} key={listEntry.identifier}>
-            <span className="font-bold text-blue-500">{listEntry.title}</span>
+            <span className="font-bold text-theme-primary">
+              {listEntry.title}
+            </span>
             <span>{listEntry.description}</span>
             <span className="font-bold mt-2">{listEntry.subtitle}</span>
             <span>{listEntry.subDescription}</span>

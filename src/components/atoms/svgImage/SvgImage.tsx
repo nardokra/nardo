@@ -6,6 +6,7 @@ import cx from "classnames";
 // Components
 import {
   Css3,
+  Email,
   Express,
   Github,
   Git,
@@ -16,6 +17,7 @@ import {
   MongoDBLogo,
   NextLogo,
   NodeLogo,
+  Phone,
   ReactLogo,
   StoryBookLogo,
   TailwindCssLogo,
@@ -25,6 +27,7 @@ import {
 
 export enum SvgImageVariants {
   CSS3 = "css3",
+  EMAIL = "email",
   EXPRESS = "express",
   GITHUB = "github",
   GIT = "git",
@@ -35,6 +38,7 @@ export enum SvgImageVariants {
   MONGODB = "mongodb",
   NEXT = "next",
   NODE = "node",
+  PHONE = "phone",
   REACT = "react",
   STORYBOOK = "storybook",
   TAILWIND = "tailwindcss",
@@ -53,6 +57,7 @@ export const SvgElement: Record<
   }) => JSX.Element
 > = {
   css3: Css3,
+  email: Email,
   express: Express,
   github: Github,
   git: Git,
@@ -63,6 +68,7 @@ export const SvgElement: Record<
   mongodb: MongoDBLogo,
   next: NextLogo,
   node: NodeLogo,
+  phone: Phone,
   react: ReactLogo,
   storybook: StoryBookLogo,
   tailwindcss: TailwindCssLogo,
@@ -70,7 +76,7 @@ export const SvgElement: Record<
   vue: VueLogo,
 };
 
-type svgImageType = {
+export type SvgImageType = {
   className?: string;
   hexColorCode?: string;
   variant?: keyof typeof SvgElement;
@@ -80,7 +86,7 @@ export const SvgImage = ({
   variant,
   hexColorCode,
   className,
-}: svgImageType) => {
+}: SvgImageType) => {
   const SelectedSvgImage = variant && SvgElement[variant];
 
   const classes = cx("max-h-full", className);

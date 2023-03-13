@@ -54,7 +54,7 @@ export const TopicDescriptionList = ({
       <div className="flex-col">
         {listEntry?.map((entry) => (
           <div className={cx("flex flex-col pb-3")} key={entry.identifier}>
-            <span className="text-blue-500">{entry.title}</span>
+            <span className="text-theme-primary">{entry.title}</span>
 
             {entry.description.map((descr) => (
               <span key={descr.slice(0, 10)}>{descr}</span>

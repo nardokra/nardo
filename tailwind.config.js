@@ -1,11 +1,13 @@
 const plugin = require("tailwindcss/plugin");
+const colors = require("./src/styles/colorConstants.ts");
 
 module.exports = {
   content: ["./src/pages/**/*.{ts,tsx}", "./src/components/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        "vista-blue": "#8ca0d7",
+        "theme-primary": colors.theme.primary,
+        "theme-secondary": colors.theme.secondary,
       },
     },
     fontSize: {

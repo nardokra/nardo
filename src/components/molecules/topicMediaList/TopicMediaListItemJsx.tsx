@@ -11,6 +11,7 @@ export const TopicMediaListItemJSX = ({ entry }: { entry: ListEntry }) => (
   <div key={entry.identifier} className="flex flex-col md:flex-row mb-4">
     <div
       className={cx(
+        "flex justify-center",
         "mb-2 min-h-[2rem] h-[2rem] min-w-[2rem] w-[2rem]",
         "md:min-h-[4rem] md:min-w-[4rem] md:mr-4"
       )}
@@ -18,7 +19,7 @@ export const TopicMediaListItemJSX = ({ entry }: { entry: ListEntry }) => (
       <SvgImage variant={entry.identifier as keyof typeof SvgImage} />
     </div>
     <div className="flex flex-col">
-      <span className="text-blue-500">{entry.title}</span>
+      <span className="text-theme-primary">{entry.title}</span>
       {entry.description.map((descr) => (
         <span key={descr.slice(0, 10)}>{descr}</span>
       ))}
