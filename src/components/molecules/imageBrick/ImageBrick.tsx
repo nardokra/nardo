@@ -55,7 +55,7 @@ export const ImageBrick = ({
         >
           <Image
             className="relative"
-            src={image.url}
+            src={image?.url}
             alt={altText}
             fill
             style={{ objectFit: "cover" }}
