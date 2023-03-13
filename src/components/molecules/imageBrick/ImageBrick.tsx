@@ -11,12 +11,14 @@ import Image from "next/image";
 import { SizeVariant } from "@/constants/sizeConstants";
 
 type ImageBrickType = {
+  className?: string;
   imageBlock?: Maybe<ImageBlock>;
   size?: SizeVariant;
   priority?: boolean;
 };
 
 export const ImageBrick = ({
+  className,
   imageBlock,
   size = SizeVariant.Small,
   priority = false,
@@ -33,6 +35,7 @@ export const ImageBrick = ({
   };
 
   const mainClasses = cx(
+    className,
     "overflow-hidden rounded-lg max-w-full",
     size === SizeVariant.Small && "h-80 xs:h-[30rem] sm:h-56",
     size === SizeVariant.Medium && "h-[30rem] sm:h-80"

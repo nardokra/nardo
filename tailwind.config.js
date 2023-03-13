@@ -3,7 +3,11 @@ const plugin = require("tailwindcss/plugin");
 module.exports = {
   content: ["./src/pages/**/*.{ts,tsx}", "./src/components/**/*.{ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        "vista-blue": "#8ca0d7",
+      },
+    },
     fontSize: {
       sm: "0.6rem",
       base: "0.8rem",
@@ -32,7 +36,7 @@ module.exports = {
     },
   },
   plugins: [
-    plugin(function ({ addBase, theme }) {
+    plugin(({ addBase, theme }) => {
       addBase({
         h1: { fontSize: theme("fontSize.2xl"), fontWeight: "semibold" },
         h2: { fontSize: theme("fontSize.xl"), fontWeight: "medium" },
