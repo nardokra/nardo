@@ -45,13 +45,13 @@ export const TopicDescriptionList = ({
           className={cx(
             "font-bold uppercase",
             titleVerticalOriented &&
-              "text-2xl text-upright writing-vertical-rl mr-4"
+              "text-xl text-upright writing-vertical-rl mr-4"
           )}
         >
           {title}
         </h3>
       )}
-      <div className="flex-col">
+      <div className="w-full grid sm:grid-cols-2">
         {listEntry?.map((entry) => (
           <div className={cx("flex flex-col pb-3")} key={entry.identifier}>
             <span className="text-theme-primary">{entry.title}</span>
