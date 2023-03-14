@@ -34,7 +34,7 @@ export const ImageBrick = ({
     setVisibleImage((currentState) => nextState(currentState));
   };
 
-  const mainClasses = cx(
+  const wrapperClasses = cx(
     className,
     "overflow-hidden rounded-lg max-w-full",
     size === SizeVariant.Small && "h-80 xs:h-[30rem] sm:h-56",
@@ -42,7 +42,7 @@ export const ImageBrick = ({
   );
 
   return (
-    <div className={mainClasses}>
+    <div className={wrapperClasses}>
       {imageBlock?.imageEntry.map(({ image, identifier, altText }, index) => (
         <div
           className={cx(

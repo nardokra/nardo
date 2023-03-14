@@ -5,7 +5,7 @@ import type { InferGetServerSidePropsType } from "next";
 
 // Constants
 import { SvgElement, SvgImageVariants } from "@/components/atoms/svgImage";
-import { offlineMode } from "@/constants/conditionalConstants";
+import { isInterActive } from "@/constants/conditionalConstants";
 
 // Utils
 import cx from "classnames";
@@ -40,7 +40,7 @@ const Home = ({
   } = cvPage;
 
   const [item, setItem] = useState<keyof typeof SvgElement | undefined>(
-    !offlineMode ? SvgImageVariants.NEXT : undefined
+    isInterActive ? SvgImageVariants.NEXT : undefined
   );
 
   return (
@@ -87,7 +87,7 @@ const Home = ({
                 setItem={setItem}
               />
               <LayoutBlock>
-                {!offlineMode && (
+                {isInterActive && (
                   <LogoDisplay>
                     <SvgImage variant={item} />
                   </LogoDisplay>
@@ -95,7 +95,7 @@ const Home = ({
                 <ImageBrick
                   imageBlock={privateImageBlock}
                   priority
-                  size={SizeVariant[!offlineMode ? "Small" : "Medium"]}
+                  size={SizeVariant[isInterActive ? "Small" : "Medium"]}
                 />
                 <TopicMediaList
                   anchorList

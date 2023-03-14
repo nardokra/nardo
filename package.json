@@ -26,6 +26,7 @@
     "@graphql-codegen/client-preset": "2.1.0",
     "@graphql-codegen/introspection": "3.0.1",
     "@types/classnames": "^2.3.1",
+    "@types/lodash": "^4.14.191",
     "@types/node": "16.11.10",
     "@types/react": "17.0.36",
     "@typescript-eslint/eslint-plugin": "^5.5.0",

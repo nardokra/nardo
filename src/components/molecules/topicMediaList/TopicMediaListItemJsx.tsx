@@ -2,7 +2,7 @@
 import { ListEntry } from "@/cmsTypes/hygraph";
 
 // Constants
-import { offlineMode } from "@/constants/conditionalConstants";
+import { isInterActive } from "@/constants/conditionalConstants";
 
 // Utils
 import cx from "classnames";
@@ -21,15 +21,15 @@ export const TopicMediaListItemJSX = ({
   isAnchor,
   textColorClass,
 }: TopicMediaListItemJSXType) =>
-  !offlineMode && entry.private ? null : (
+  isInterActive && entry.private ? null : (
     <div key={entry.identifier} className="flex flex-col md:flex-row mb-4">
       {!!SvgElement[entry.identifier as keyof typeof SvgElement] && (
         <div
           className={cx(
             "flex justify-center",
-            offlineMode
-              ? "mb-1 min-h-4 h-1 min-w-1 w-1 md:min-h-[2rem] min-w-[2rem] md:mr-2"
-              : "mb-2 min-h-8 h-8 min-w-8 w-8 md:min-h-[4rem] md:min-w-[4rem] md:mr-4"
+            isInterActive
+              ? "mb-2 min-h-8 h-8 min-w-8 w-8 md:min-h-[4rem] md:min-w-[4rem] md:mr-4"
+              : "mb-1 min-h-4 h-1 min-w-1 w-1 md:min-h-[2rem] min-w-[2rem] md:mr-2"
           )}
         >
           <SvgImage

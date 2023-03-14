@@ -26,7 +26,7 @@ export const TopicDescriptionList = ({
   };
   const updateShadowState = () => setHasShadow(false);
 
-  const mainClasses = cx(
+  const wrapperClasses = cx(
     "border-2 rounded-lg text-white p-4",
     titleVerticalOriented && "flex",
     isBouncing && "animate-bounce",
@@ -35,7 +35,7 @@ export const TopicDescriptionList = ({
 
   return (
     <div
-      className={mainClasses}
+      className={wrapperClasses}
       onMouseEnter={updateBounceState}
       onMouseLeave={updateBounceState}
       onAnimationEnd={updateShadowState}

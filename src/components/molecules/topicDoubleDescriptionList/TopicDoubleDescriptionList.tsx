@@ -13,10 +13,10 @@ export const TopicDoubleDescriptionList = ({
 }: TopicDoubleDescriptionListType) => {
   const { title, topicListEntry } = list || {};
 
-  const mainClasses = cx("bg-white rounded-lg text-black", "p-4 h-full");
+  const wrapperClasses = cx("bg-white rounded-lg text-black", "p-4 h-full");
 
   return (
-    <div className={mainClasses}>
+    <div className={wrapperClasses}>
       <div className="rounded-lg mb-4">
         {title && (
           <h3

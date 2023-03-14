@@ -32,13 +32,13 @@ export const TitleBrick = ({
     }
   };
 
-  const mainClasses = cx("flex flex-col");
+  const wrapperClasses = cx("flex flex-col");
   const verticleOrientationClasses = cx(
     verticleOrientation && "writing-vertical-rl text-upright"
   );
 
   return (
-    <div className={mainClasses}>
+    <div className={wrapperClasses}>
       {highestHeaderTag({
         className: cx("text-white", verticleOrientationClasses),
         body: titleBlock?.title,
