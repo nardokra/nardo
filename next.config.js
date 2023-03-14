@@ -20,13 +20,27 @@ module.exports = {
     ],
   },
 
+  env: {
+    HYGRAPH_API_TOKEN: process.env.HYGRAPH_API_TOKEN,
+    NEXT_PUBLIC_GRAPHCMS_URL: process.env.NEXT_PUBLIC_GRAPHCMS_URL,
+    NEXT_PUBLIC_HOST: process.env.NEXT_PUBLIC_HOST,
+  },
+
   webpack(config) {
-    config.resolve.alias["@styles"] = path.resolve(__dirname, "src/styles");
-    config.resolve.alias["@assets"] = path.resolve(__dirname, "src/assets");
-    config.resolve.alias["@components"] = path.resolve(
+    config.resolve.alias["@/cmsTypes"] = path.resolve(
+      __dirname,
+      "src/types/generated/"
+    );
+    config.resolve.alias["@/components"] = path.resolve(
       __dirname,
       "src/components"
     );
+    config.resolve.alias["@/constants"] = path.resolve(
+      __dirname,
+      "src/constants"
+    );
+    config.resolve.alias["@/styles"] = path.resolve(__dirname, "src/styles");
+    config.resolve.alias["@/utils"] = path.resolve(__dirname, "src/utils");
 
     return config;
   },
