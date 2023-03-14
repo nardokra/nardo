@@ -11,13 +11,13 @@ type cvPage = {
 };
 
 export const getServerSideProps: GetServerSideProps<cvPage> = async () => {
-  const props = await cmsClient<cvPage>(cvPageQuery, {
+  const cvPageContent = await cmsClient<cvPage>(cvPageQuery, {
     slug: "cv",
   });
 
-  if (!props) ({ notFound: true });
+  if (!cvPageContent) ({ notFound: true });
 
   return {
-    props,
+    props: cvPageContent,
   };
 };
