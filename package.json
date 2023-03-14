@@ -10,7 +10,7 @@
     "codegen": "graphql-codegen --config codegen.ts -r dotenv/config"
   },
   "dependencies": {
-    "classnames": "^2.2.6",
+    "classnames": "^2.3.2",
     "dotenv": "^16.0.3",
     "graphql": "^16.3.0",
     "graphql-request": "^3.7.0",
@@ -25,7 +25,6 @@
     "@graphql-codegen/cli": "3.2.1",
     "@graphql-codegen/client-preset": "2.1.0",
     "@graphql-codegen/introspection": "3.0.1",
-    "@types/classnames": "^2.3.1",
     "@types/lodash": "^4.14.191",
     "@types/node": "16.11.10",
     "@types/react": "17.0.36",
