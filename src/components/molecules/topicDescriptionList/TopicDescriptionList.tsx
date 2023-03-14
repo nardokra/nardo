@@ -41,7 +41,7 @@ export const TopicDescriptionList = ({
       onAnimationEnd={updateShadowState}
     >
       {title && (
-        <h3
+        <h2
           className={cx(
             "font-bold uppercase",
             titleVerticalOriented &&
@@ -49,12 +49,12 @@ export const TopicDescriptionList = ({
           )}
         >
           {title}
-        </h3>
+        </h2>
       )}
       <div className="w-full grid sm:grid-cols-2">
         {listEntry?.map((entry) => (
           <div className={cx("flex flex-col pb-3")} key={entry.identifier}>
-            <span className="text-theme-primary">{entry.title}</span>
+            <h3 className="text-theme-primary">{entry.title}</h3>
 
             {entry.description.map((descr) => (
               <span key={descr.slice(0, 10)}>{descr}</span>

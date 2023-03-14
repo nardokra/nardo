@@ -39,7 +39,7 @@ export const TopicMediaListItemJSX = ({
         </div>
       )}
       <div className="flex flex-col">
-        <span
+        <h3
           className={cx(
             textColorClass
               ? `${textColorClass} font-bold`
@@ -47,7 +47,7 @@ export const TopicMediaListItemJSX = ({
           )}
         >
           {entry.title}
-        </span>
+        </h3>
         {entry.description.map((descr) => (
           <span
             key={descr.slice(0, 10)}

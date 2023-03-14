@@ -71,7 +71,7 @@ export const TopicMediaList = ({
               : "w-min mb-4"
           )}
         >
-          <h3
+          <h2
             className={cx(
               "font-bold uppercase text-black",
               isSuitableForVerticalTitleOrientation &&
@@ -79,7 +79,7 @@ export const TopicMediaList = ({
             )}
           >
             {title}
-          </h3>
+          </h2>
         </div>
       )}
       {!!listEntry?.length && (

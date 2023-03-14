@@ -19,19 +19,17 @@ export const TopicDoubleDescriptionList = ({
     <div className={wrapperClasses}>
       <div className="rounded-lg mb-4">
         {title && (
-          <h3
+          <h2
             className={cx("font-bold uppercase text-2xl text-justify w-full")}
           >
             {title}
-          </h3>
+          </h2>
         )}
       </div>
       <div className="flex-col">
         {topicListEntry?.map((listEntry) => (
           <div className={"flex flex-col mb-4"} key={listEntry.identifier}>
-            <span className="font-bold text-theme-primary">
-              {listEntry.title}
-            </span>
+            <h3 className="font-bold text-theme-primary">{listEntry.title}</h3>
             <span>{listEntry.description}</span>
             <span className="font-bold mt-2">{listEntry.subtitle}</span>
             <span>{listEntry.subDescription}</span>
