@@ -1,4 +1,5 @@
 const path = require("path");
+require("dotenv").config();
 /** @type {import('next').NextConfig} */
 
 module.exports = {
@@ -23,7 +24,8 @@ module.exports = {
   env: {
     HYGRAPH_API_TOKEN: process.env.HYGRAPH_API_TOKEN,
     NEXT_PUBLIC_GRAPHCMS_URL: process.env.NEXT_PUBLIC_GRAPHCMS_URL,
-    NEXT_PUBLIC_HOST: process.env.NEXT_PUBLIC_HOST,
+    NEXT_PUBLIC_HREF: process.env.NEXT_PUBLIC_HREF,
+    NEXT_PUBLIC_INTERACTIVE: process.env.NEXT_PUBLIC_INTERACTIVE,
   },
 
   webpack(config) {
