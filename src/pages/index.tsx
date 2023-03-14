@@ -65,7 +65,7 @@ const Home = ({
         <Layout>
           <LayoutBlock smColumns2>
             <LayoutBlock smColumns2>
-              <ImageBrick imageBlock={profileImageBlock} priority />
+              <ImageBrick imageBlock={profileImageBlock} />
               <TitleBrick titleBlock={pageTitleBlock} />
             </LayoutBlock>
             <LayoutBlock>
@@ -95,7 +95,6 @@ const Home = ({
                 )}
                 <ImageBrick
                   imageBlock={privateImageBlock}
-                  priority
                   size={SizeVariant[isInterActive ? "Small" : "Medium"]}
                 />
                 <TopicMediaList
