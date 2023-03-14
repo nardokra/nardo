@@ -22,6 +22,6 @@ export const getServerSideProps: GetServerSideProps<cvPage> = async ({
   if (!cvPageContent) ({ notFound: true });
 
   return {
-    props: { ...cvPageContent, pageHref: `${req.headers.host}/${slug}` },
+    props: { ...cvPageContent, pageHref: `www.${req.headers.host}` },
   };
 };
