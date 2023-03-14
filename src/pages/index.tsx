@@ -12,7 +12,6 @@ import cx from "classnames";
 import { getServerSideProps } from "@/utils/api/cv/cvPageAPI";
 
 // Components
-import Head from "next/head";
 import { Layout } from "@/components/templates/layout";
 import { ImageBrick } from "@/components/molecules/imageBrick";
 import { TitleBrick } from "@/components/atoms/titleBrick";
@@ -24,9 +23,11 @@ import { TopicDescriptionList } from "@/components/molecules/topicDescriptionLis
 import { TopicDoubleDescriptionList } from "@/components/molecules/topicDoubleDescriptionList";
 import { TopicMediaList } from "@/components/molecules/topicMediaList";
 import { SizeVariant } from "@/constants/sizeConstants";
+import { DynamicHead } from "@/components/templates/dynamicHead";
 
 const Home = ({
   cvPage,
+  pageHref,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const {
     contactList,
@@ -35,6 +36,7 @@ const Home = ({
     pageTitleBlock,
     privateImageBlock,
     profileImageBlock,
+    seoAndOpenGraph,
     skillsList,
     websiteList,
   } = cvPage;
@@ -45,14 +47,13 @@ const Home = ({
 
   return (
     <>
-      <Head>
-        <title>Nardo Kraaijeveld</title>
-        <meta
-          name="description"
-          content="Welcome to the personal website of Nardo Kraaijeveld."
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <DynamicHead
+        metaDescription={seoAndOpenGraph?.metaDescription}
+        metaTitle={seoAndOpenGraph?.metaTitle}
+        ogImageUrl={profileImageBlock?.imageEntry[0].image.url}
+        ogTwitterCard={seoAndOpenGraph?.twitterCard}
+        ogUrl={pageHref}
+      />
 
       <div
         className={cx(

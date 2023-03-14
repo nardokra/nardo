@@ -1162,6 +1162,27 @@ type CvPage implements Node {
     skip: Int
     where: ScheduledOperationWhereInput
   ): [ScheduledOperation!]!
+  seoAndOpenGraph(
+    """
+    Sets the locale of the parent document as the first locale in the fallback locales in the query's subtree.
+    
+    Note that `seoAndOpenGraph` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+    """
+    forceParentLocale: Boolean
+
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `seoAndOpenGraph` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+  ): SeoAndOpenGraph
   skillsList(
     """
     Sets the locale of the parent document as the first locale in the fallback locales in the query's subtree.
@@ -1270,6 +1291,7 @@ input CvPageCreateInput {
   pageTitleBlock: TitleBlockCreateOneInlineInput
   privateImageBlock: ImageBlockCreateOneInlineInput
   profileImageBlock: ImageBlockCreateOneInlineInput
+  seoAndOpenGraph: SeoAndOpenGraphCreateOneInlineInput
   skillsList: ListCreateOneInlineInput
   slug: String!
   updatedAt: DateTime
@@ -1416,6 +1438,7 @@ input CvPageManyWhereInput {
   scheduledIn_every: ScheduledOperationWhereInput
   scheduledIn_none: ScheduledOperationWhereInput
   scheduledIn_some: ScheduledOperationWhereInput
+  seoAndOpenGraph: SeoAndOpenGraphWhereInput
   skillsList: ListWhereInput
   slug: String
 
@@ -1494,6 +1517,7 @@ input CvPageUpdateInput {
   pageTitleBlock: TitleBlockUpdateOneInlineInput
   privateImageBlock: ImageBlockUpdateOneInlineInput
   profileImageBlock: ImageBlockUpdateOneInlineInput
+  seoAndOpenGraph: SeoAndOpenGraphUpdateOneInlineInput
   skillsList: ListUpdateOneInlineInput
   slug: String
   websiteList: ListUpdateOneInlineInput
@@ -1698,6 +1722,7 @@ input CvPageWhereInput {
   scheduledIn_every: ScheduledOperationWhereInput
   scheduledIn_none: ScheduledOperationWhereInput
   scheduledIn_some: ScheduledOperationWhereInput
+  seoAndOpenGraph: SeoAndOpenGraphWhereInput
   skillsList: ListWhereInput
   slug: String
 
@@ -7437,6 +7462,581 @@ input ScheduledReleaseWhereInput {
 
 """References ScheduledRelease record uniquely"""
 input ScheduledReleaseWhereUniqueInput {
+  id: ID
+}
+
+type SeoAndOpenGraph {
+  """The unique identifier"""
+  id: ID!
+
+  """System Locale field"""
+  locale: Locale!
+
+  """Get the other localizations for this document"""
+  localizations(
+    """Decides if the current locale should be included or not"""
+    includeCurrent: Boolean! = false
+
+    """
+    Potential locales that should be returned. 
+    
+    The order of locales will also override locale fall-backing behaviour in the query's subtree.
+    
+    Note any related model with localized fields in the query's subtree will be affected.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    
+    Consider using this in conjunction with forceParentLocale on the children relation fields.
+    """
+    locales: [Locale!]! = [en, nl]
+  ): [SeoAndOpenGraph!]!
+  metaDescription: String!
+  metaTitle: String!
+
+  """System stage field"""
+  stage: Stage!
+  twitterCard: String
+}
+
+input SeoAndOpenGraphConnectInput {
+  """
+  Allow to specify document position in list of connected documents, will default to appending at end of list
+  """
+  position: ConnectPositionInput
+
+  """Document to connect"""
+  where: SeoAndOpenGraphWhereUniqueInput!
+}
+
+"""A connection to a list of items."""
+type SeoAndOpenGraphConnection {
+  aggregate: Aggregate!
+
+  """A list of edges."""
+  edges: [SeoAndOpenGraphEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+}
+
+input SeoAndOpenGraphCreateInput {
+  """
+  Inline mutations for managing document localizations excluding the default locale
+  """
+  localizations: SeoAndOpenGraphCreateLocalizationsInput
+
+  """metaDescription input for default locale (en)"""
+  metaDescription: String!
+
+  """metaTitle input for default locale (en)"""
+  metaTitle: String!
+  twitterCard: String
+}
+
+input SeoAndOpenGraphCreateLocalizationDataInput {
+  metaDescription: String!
+  metaTitle: String!
+}
+
+input SeoAndOpenGraphCreateLocalizationInput {
+  """Localization input"""
+  data: SeoAndOpenGraphCreateLocalizationDataInput!
+  locale: Locale!
+}
+
+input SeoAndOpenGraphCreateLocalizationsInput {
+  """Create localizations for the newly-created document"""
+  create: [SeoAndOpenGraphCreateLocalizationInput!]
+}
+
+input SeoAndOpenGraphCreateManyInlineInput {
+  """Create and connect multiple existing SeoAndOpenGraph documents"""
+  create: [SeoAndOpenGraphCreateInput!]
+}
+
+input SeoAndOpenGraphCreateOneInlineInput {
+  """Create and connect one SeoAndOpenGraph document"""
+  create: SeoAndOpenGraphCreateInput
+}
+
+input SeoAndOpenGraphCreateWithPositionInput {
+  """Document to create"""
+  data: SeoAndOpenGraphCreateInput!
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+}
+
+"""An edge in a connection."""
+type SeoAndOpenGraphEdge {
+  """A cursor for use in pagination."""
+  cursor: String!
+
+  """The item at the end of the edge."""
+  node: SeoAndOpenGraph!
+}
+
+"""Identifies documents"""
+input SeoAndOpenGraphManyWhereInput {
+  """Logical AND on all given filters."""
+  AND: [SeoAndOpenGraphWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [SeoAndOpenGraphWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [SeoAndOpenGraphWhereInput!]
+
+  """Contains search across all appropriate fields."""
+  _search: String
+  id: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID]
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID]
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+  twitterCard: String
+
+  """All values containing the given string."""
+  twitterCard_contains: String
+
+  """All values ending with the given string."""
+  twitterCard_ends_with: String
+
+  """All values that are contained in given list."""
+  twitterCard_in: [String]
+
+  """All values that are not equal to given value."""
+  twitterCard_not: String
+
+  """All values not containing the given string."""
+  twitterCard_not_contains: String
+
+  """All values not ending with the given string"""
+  twitterCard_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  twitterCard_not_in: [String]
+
+  """All values not starting with the given string."""
+  twitterCard_not_starts_with: String
+
+  """All values starting with the given string."""
+  twitterCard_starts_with: String
+}
+
+enum SeoAndOpenGraphOrderByInput {
+  id_ASC
+  id_DESC
+  metaDescription_ASC
+  metaDescription_DESC
+  metaTitle_ASC
+  metaTitle_DESC
+  twitterCard_ASC
+  twitterCard_DESC
+}
+
+union SeoAndOpenGraphParent = CvPage
+
+input SeoAndOpenGraphParentConnectInput {
+  CvPage: CvPageConnectInput
+}
+
+input SeoAndOpenGraphParentCreateInput {
+  CvPage: CvPageCreateInput
+}
+
+input SeoAndOpenGraphParentCreateManyInlineInput {
+  """Connect multiple existing SeoAndOpenGraphParent documents"""
+  connect: [SeoAndOpenGraphParentWhereUniqueInput!]
+
+  """Create and connect multiple existing SeoAndOpenGraphParent documents"""
+  create: [SeoAndOpenGraphParentCreateInput!]
+}
+
+input SeoAndOpenGraphParentCreateOneInlineInput {
+  """Connect one existing SeoAndOpenGraphParent document"""
+  connect: SeoAndOpenGraphParentWhereUniqueInput
+
+  """Create and connect one SeoAndOpenGraphParent document"""
+  create: SeoAndOpenGraphParentCreateInput
+}
+
+input SeoAndOpenGraphParentUpdateInput {
+  CvPage: CvPageUpdateInput
+}
+
+input SeoAndOpenGraphParentUpdateManyInlineInput {
+  """Connect multiple existing SeoAndOpenGraphParent documents"""
+  connect: [SeoAndOpenGraphParentConnectInput!]
+
+  """Create and connect multiple SeoAndOpenGraphParent documents"""
+  create: [SeoAndOpenGraphParentCreateInput!]
+
+  """Delete multiple SeoAndOpenGraphParent documents"""
+  delete: [SeoAndOpenGraphParentWhereUniqueInput!]
+
+  """Disconnect multiple SeoAndOpenGraphParent documents"""
+  disconnect: [SeoAndOpenGraphParentWhereUniqueInput!]
+
+  """
+  Override currently-connected documents with multiple existing SeoAndOpenGraphParent documents
+  """
+  set: [SeoAndOpenGraphParentWhereUniqueInput!]
+
+  """Update multiple SeoAndOpenGraphParent documents"""
+  update: [SeoAndOpenGraphParentUpdateWithNestedWhereUniqueInput!]
+
+  """Upsert multiple SeoAndOpenGraphParent documents"""
+  upsert: [SeoAndOpenGraphParentUpsertWithNestedWhereUniqueInput!]
+}
+
+input SeoAndOpenGraphParentUpdateManyWithNestedWhereInput {
+  CvPage: CvPageUpdateManyWithNestedWhereInput
+}
+
+input SeoAndOpenGraphParentUpdateOneInlineInput {
+  """Connect existing SeoAndOpenGraphParent document"""
+  connect: SeoAndOpenGraphParentWhereUniqueInput
+
+  """Create and connect one SeoAndOpenGraphParent document"""
+  create: SeoAndOpenGraphParentCreateInput
+
+  """Delete currently connected SeoAndOpenGraphParent document"""
+  delete: Boolean
+
+  """Disconnect currently connected SeoAndOpenGraphParent document"""
+  disconnect: Boolean
+
+  """Update single SeoAndOpenGraphParent document"""
+  update: SeoAndOpenGraphParentUpdateWithNestedWhereUniqueInput
+
+  """Upsert single SeoAndOpenGraphParent document"""
+  upsert: SeoAndOpenGraphParentUpsertWithNestedWhereUniqueInput
+}
+
+input SeoAndOpenGraphParentUpdateWithNestedWhereUniqueInput {
+  CvPage: CvPageUpdateWithNestedWhereUniqueInput
+}
+
+input SeoAndOpenGraphParentUpsertWithNestedWhereUniqueInput {
+  CvPage: CvPageUpsertWithNestedWhereUniqueInput
+}
+
+input SeoAndOpenGraphParentWhereInput {
+  CvPage: CvPageWhereInput
+}
+
+input SeoAndOpenGraphParentWhereUniqueInput {
+  CvPage: CvPageWhereUniqueInput
+}
+
+input SeoAndOpenGraphUpdateInput {
+  """Manage document localizations"""
+  localizations: SeoAndOpenGraphUpdateLocalizationsInput
+
+  """metaDescription input for default locale (en)"""
+  metaDescription: String
+
+  """metaTitle input for default locale (en)"""
+  metaTitle: String
+  twitterCard: String
+}
+
+input SeoAndOpenGraphUpdateLocalizationDataInput {
+  metaDescription: String
+  metaTitle: String
+}
+
+input SeoAndOpenGraphUpdateLocalizationInput {
+  data: SeoAndOpenGraphUpdateLocalizationDataInput!
+  locale: Locale!
+}
+
+input SeoAndOpenGraphUpdateLocalizationsInput {
+  """Localizations to create"""
+  create: [SeoAndOpenGraphCreateLocalizationInput!]
+
+  """Localizations to delete"""
+  delete: [Locale!]
+
+  """Localizations to update"""
+  update: [SeoAndOpenGraphUpdateLocalizationInput!]
+  upsert: [SeoAndOpenGraphUpsertLocalizationInput!]
+}
+
+input SeoAndOpenGraphUpdateManyInlineInput {
+  """Create and connect multiple SeoAndOpenGraph component instances"""
+  create: [SeoAndOpenGraphCreateWithPositionInput!]
+
+  """Delete multiple SeoAndOpenGraph documents"""
+  delete: [SeoAndOpenGraphWhereUniqueInput!]
+
+  """Update multiple SeoAndOpenGraph component instances"""
+  update: [SeoAndOpenGraphUpdateWithNestedWhereUniqueAndPositionInput!]
+
+  """Upsert multiple SeoAndOpenGraph component instances"""
+  upsert: [SeoAndOpenGraphUpsertWithNestedWhereUniqueAndPositionInput!]
+}
+
+input SeoAndOpenGraphUpdateManyInput {
+  """Optional updates to localizations"""
+  localizations: SeoAndOpenGraphUpdateManyLocalizationsInput
+
+  """metaDescription input for default locale (en)"""
+  metaDescription: String
+
+  """metaTitle input for default locale (en)"""
+  metaTitle: String
+  twitterCard: String
+}
+
+input SeoAndOpenGraphUpdateManyLocalizationDataInput {
+  metaDescription: String
+  metaTitle: String
+}
+
+input SeoAndOpenGraphUpdateManyLocalizationInput {
+  data: SeoAndOpenGraphUpdateManyLocalizationDataInput!
+  locale: Locale!
+}
+
+input SeoAndOpenGraphUpdateManyLocalizationsInput {
+  """Localizations to update"""
+  update: [SeoAndOpenGraphUpdateManyLocalizationInput!]
+}
+
+input SeoAndOpenGraphUpdateManyWithNestedWhereInput {
+  """Update many input"""
+  data: SeoAndOpenGraphUpdateManyInput!
+
+  """Document search"""
+  where: SeoAndOpenGraphWhereInput!
+}
+
+input SeoAndOpenGraphUpdateOneInlineInput {
+  """Create and connect one SeoAndOpenGraph document"""
+  create: SeoAndOpenGraphCreateInput
+
+  """Delete currently connected SeoAndOpenGraph document"""
+  delete: Boolean
+
+  """Update single SeoAndOpenGraph document"""
+  update: SeoAndOpenGraphUpdateWithNestedWhereUniqueInput
+
+  """Upsert single SeoAndOpenGraph document"""
+  upsert: SeoAndOpenGraphUpsertWithNestedWhereUniqueInput
+}
+
+input SeoAndOpenGraphUpdateWithNestedWhereUniqueAndPositionInput {
+  """Document to update"""
+  data: SeoAndOpenGraphUpdateInput
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+
+  """Unique component instance search"""
+  where: SeoAndOpenGraphWhereUniqueInput!
+}
+
+input SeoAndOpenGraphUpdateWithNestedWhereUniqueInput {
+  """Document to update"""
+  data: SeoAndOpenGraphUpdateInput!
+
+  """Unique document search"""
+  where: SeoAndOpenGraphWhereUniqueInput!
+}
+
+input SeoAndOpenGraphUpsertInput {
+  """Create document if it didn't exist"""
+  create: SeoAndOpenGraphCreateInput!
+
+  """Update document if it exists"""
+  update: SeoAndOpenGraphUpdateInput!
+}
+
+input SeoAndOpenGraphUpsertLocalizationInput {
+  create: SeoAndOpenGraphCreateLocalizationDataInput!
+  locale: Locale!
+  update: SeoAndOpenGraphUpdateLocalizationDataInput!
+}
+
+input SeoAndOpenGraphUpsertWithNestedWhereUniqueAndPositionInput {
+  """Document to upsert"""
+  data: SeoAndOpenGraphUpsertInput
+
+  """
+  Position in the list of existing component instances, will default to appending at the end of list
+  """
+  position: ConnectPositionInput
+
+  """Unique component instance search"""
+  where: SeoAndOpenGraphWhereUniqueInput!
+}
+
+input SeoAndOpenGraphUpsertWithNestedWhereUniqueInput {
+  """Upsert data"""
+  data: SeoAndOpenGraphUpsertInput!
+
+  """Unique document search"""
+  where: SeoAndOpenGraphWhereUniqueInput!
+}
+
+"""Identifies documents"""
+input SeoAndOpenGraphWhereInput {
+  """Logical AND on all given filters."""
+  AND: [SeoAndOpenGraphWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [SeoAndOpenGraphWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [SeoAndOpenGraphWhereInput!]
+
+  """Contains search across all appropriate fields."""
+  _search: String
+  id: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID]
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID]
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+  metaDescription: String
+
+  """All values containing the given string."""
+  metaDescription_contains: String
+
+  """All values ending with the given string."""
+  metaDescription_ends_with: String
+
+  """All values that are contained in given list."""
+  metaDescription_in: [String]
+
+  """All values that are not equal to given value."""
+  metaDescription_not: String
+
+  """All values not containing the given string."""
+  metaDescription_not_contains: String
+
+  """All values not ending with the given string"""
+  metaDescription_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  metaDescription_not_in: [String]
+
+  """All values not starting with the given string."""
+  metaDescription_not_starts_with: String
+
+  """All values starting with the given string."""
+  metaDescription_starts_with: String
+  metaTitle: String
+
+  """All values containing the given string."""
+  metaTitle_contains: String
+
+  """All values ending with the given string."""
+  metaTitle_ends_with: String
+
+  """All values that are contained in given list."""
+  metaTitle_in: [String]
+
+  """All values that are not equal to given value."""
+  metaTitle_not: String
+
+  """All values not containing the given string."""
+  metaTitle_not_contains: String
+
+  """All values not ending with the given string"""
+  metaTitle_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  metaTitle_not_in: [String]
+
+  """All values not starting with the given string."""
+  metaTitle_not_starts_with: String
+
+  """All values starting with the given string."""
+  metaTitle_starts_with: String
+  twitterCard: String
+
+  """All values containing the given string."""
+  twitterCard_contains: String
+
+  """All values ending with the given string."""
+  twitterCard_ends_with: String
+
+  """All values that are contained in given list."""
+  twitterCard_in: [String]
+
+  """All values that are not equal to given value."""
+  twitterCard_not: String
+
+  """All values not containing the given string."""
+  twitterCard_not_contains: String
+
+  """All values not ending with the given string"""
+  twitterCard_not_ends_with: String
+
+  """All values that are not contained in given list."""
+  twitterCard_not_in: [String]
+
+  """All values not starting with the given string."""
+  twitterCard_not_starts_with: String
+
+  """All values starting with the given string."""
+  twitterCard_starts_with: String
+}
+
+"""References SeoAndOpenGraph record uniquely"""
+input SeoAndOpenGraphWhereUniqueInput {
   id: ID
 }
 

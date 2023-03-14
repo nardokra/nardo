@@ -1,0 +1,1 @@
+export { StaticHead } from "./StaticHead";

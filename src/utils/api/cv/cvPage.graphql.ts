@@ -4,6 +4,11 @@ export const cvPageQuery = gql`
   query cvPageQuery($slug: String) {
     cvPage(where: { slug: $slug }, locales: [en, nl]) {
       slug
+      seoAndOpenGraph(locales: [en, nl]) {
+        metaTitle
+        metaDescription
+        twitterCard
+      }
       pageTitleBlock(locales: [en, nl]) {
         identifier
         title

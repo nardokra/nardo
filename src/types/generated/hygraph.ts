@@ -738,6 +738,7 @@ export type CvPage = Node & {
   /** User that last published this document */
   publishedBy?: Maybe<User>;
   scheduledIn: Array<ScheduledOperation>;
+  seoAndOpenGraph?: Maybe<SeoAndOpenGraph>;
   skillsList?: Maybe<List>;
   slug: Scalars['String'];
   /** System stage field */
@@ -824,6 +825,12 @@ export type CvPageScheduledInArgs = {
 };
 
 
+export type CvPageSeoAndOpenGraphArgs = {
+  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
+  locales?: InputMaybe<Array<Locale>>;
+};
+
+
 export type CvPageSkillsListArgs = {
   forceParentLocale?: InputMaybe<Scalars['Boolean']>;
   locales?: InputMaybe<Array<Locale>>;
@@ -868,6 +875,7 @@ export type CvPageCreateInput = {
   pageTitleBlock?: InputMaybe<TitleBlockCreateOneInlineInput>;
   privateImageBlock?: InputMaybe<ImageBlockCreateOneInlineInput>;
   profileImageBlock?: InputMaybe<ImageBlockCreateOneInlineInput>;
+  seoAndOpenGraph?: InputMaybe<SeoAndOpenGraphCreateOneInlineInput>;
   skillsList?: InputMaybe<ListCreateOneInlineInput>;
   slug: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
@@ -986,6 +994,7 @@ export type CvPageManyWhereInput = {
   scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
   scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
   scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
+  seoAndOpenGraph?: InputMaybe<SeoAndOpenGraphWhereInput>;
   skillsList?: InputMaybe<ListWhereInput>;
   slug?: InputMaybe<Scalars['String']>;
   /** All values containing the given string. */
@@ -1047,6 +1056,7 @@ export type CvPageUpdateInput = {
   pageTitleBlock?: InputMaybe<TitleBlockUpdateOneInlineInput>;
   privateImageBlock?: InputMaybe<ImageBlockUpdateOneInlineInput>;
   profileImageBlock?: InputMaybe<ImageBlockUpdateOneInlineInput>;
+  seoAndOpenGraph?: InputMaybe<SeoAndOpenGraphUpdateOneInlineInput>;
   skillsList?: InputMaybe<ListUpdateOneInlineInput>;
   slug?: InputMaybe<Scalars['String']>;
   websiteList?: InputMaybe<ListUpdateOneInlineInput>;
@@ -1203,6 +1213,7 @@ export type CvPageWhereInput = {
   scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
   scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
   scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
+  seoAndOpenGraph?: InputMaybe<SeoAndOpenGraphWhereInput>;
   skillsList?: InputMaybe<ListWhereInput>;
   slug?: InputMaybe<Scalars['String']>;
   /** All values containing the given string. */
@@ -5550,6 +5561,459 @@ export type ScheduledReleaseWhereInput = {
 
 /** References ScheduledRelease record uniquely */
 export type ScheduledReleaseWhereUniqueInput = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type SeoAndOpenGraph = {
+  __typename?: 'SeoAndOpenGraph';
+  /** The unique identifier */
+  id: Scalars['ID'];
+  /** System Locale field */
+  locale: Locale;
+  /** Get the other localizations for this document */
+  localizations: Array<SeoAndOpenGraph>;
+  metaDescription: Scalars['String'];
+  metaTitle: Scalars['String'];
+  /** System stage field */
+  stage: Stage;
+  twitterCard?: Maybe<Scalars['String']>;
+};
+
+
+export type SeoAndOpenGraphLocalizationsArgs = {
+  includeCurrent?: Scalars['Boolean'];
+  locales?: Array<Locale>;
+};
+
+export type SeoAndOpenGraphConnectInput = {
+  /** Allow to specify document position in list of connected documents, will default to appending at end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+  /** Document to connect */
+  where: SeoAndOpenGraphWhereUniqueInput;
+};
+
+/** A connection to a list of items. */
+export type SeoAndOpenGraphConnection = {
+  __typename?: 'SeoAndOpenGraphConnection';
+  aggregate: Aggregate;
+  /** A list of edges. */
+  edges: Array<SeoAndOpenGraphEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+export type SeoAndOpenGraphCreateInput = {
+  /** Inline mutations for managing document localizations excluding the default locale */
+  localizations?: InputMaybe<SeoAndOpenGraphCreateLocalizationsInput>;
+  /** metaDescription input for default locale (en) */
+  metaDescription: Scalars['String'];
+  /** metaTitle input for default locale (en) */
+  metaTitle: Scalars['String'];
+  twitterCard?: InputMaybe<Scalars['String']>;
+};
+
+export type SeoAndOpenGraphCreateLocalizationDataInput = {
+  metaDescription: Scalars['String'];
+  metaTitle: Scalars['String'];
+};
+
+export type SeoAndOpenGraphCreateLocalizationInput = {
+  /** Localization input */
+  data: SeoAndOpenGraphCreateLocalizationDataInput;
+  locale: Locale;
+};
+
+export type SeoAndOpenGraphCreateLocalizationsInput = {
+  /** Create localizations for the newly-created document */
+  create?: InputMaybe<Array<SeoAndOpenGraphCreateLocalizationInput>>;
+};
+
+export type SeoAndOpenGraphCreateManyInlineInput = {
+  /** Create and connect multiple existing SeoAndOpenGraph documents */
+  create?: InputMaybe<Array<SeoAndOpenGraphCreateInput>>;
+};
+
+export type SeoAndOpenGraphCreateOneInlineInput = {
+  /** Create and connect one SeoAndOpenGraph document */
+  create?: InputMaybe<SeoAndOpenGraphCreateInput>;
+};
+
+export type SeoAndOpenGraphCreateWithPositionInput = {
+  /** Document to create */
+  data: SeoAndOpenGraphCreateInput;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+};
+
+/** An edge in a connection. */
+export type SeoAndOpenGraphEdge = {
+  __typename?: 'SeoAndOpenGraphEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String'];
+  /** The item at the end of the edge. */
+  node: SeoAndOpenGraph;
+};
+
+/** Identifies documents */
+export type SeoAndOpenGraphManyWhereInput = {
+  /** Logical AND on all given filters. */
+  AND?: InputMaybe<Array<SeoAndOpenGraphWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: InputMaybe<Array<SeoAndOpenGraphWhereInput>>;
+  /** Logical OR on all given filters. */
+  OR?: InputMaybe<Array<SeoAndOpenGraphWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  _search?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  /** All values containing the given string. */
+  id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  id_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values that are not equal to given value. */
+  id_not?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are not contained in given list. */
+  id_not_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values not starting with the given string. */
+  id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  id_starts_with?: InputMaybe<Scalars['ID']>;
+  twitterCard?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  twitterCard_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  twitterCard_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  twitterCard_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  twitterCard_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  twitterCard_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  twitterCard_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  twitterCard_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  twitterCard_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  twitterCard_starts_with?: InputMaybe<Scalars['String']>;
+};
+
+export enum SeoAndOpenGraphOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  MetaDescriptionAsc = 'metaDescription_ASC',
+  MetaDescriptionDesc = 'metaDescription_DESC',
+  MetaTitleAsc = 'metaTitle_ASC',
+  MetaTitleDesc = 'metaTitle_DESC',
+  TwitterCardAsc = 'twitterCard_ASC',
+  TwitterCardDesc = 'twitterCard_DESC'
+}
+
+export type SeoAndOpenGraphParent = CvPage;
+
+export type SeoAndOpenGraphParentConnectInput = {
+  CvPage?: InputMaybe<CvPageConnectInput>;
+};
+
+export type SeoAndOpenGraphParentCreateInput = {
+  CvPage?: InputMaybe<CvPageCreateInput>;
+};
+
+export type SeoAndOpenGraphParentCreateManyInlineInput = {
+  /** Connect multiple existing SeoAndOpenGraphParent documents */
+  connect?: InputMaybe<Array<SeoAndOpenGraphParentWhereUniqueInput>>;
+  /** Create and connect multiple existing SeoAndOpenGraphParent documents */
+  create?: InputMaybe<Array<SeoAndOpenGraphParentCreateInput>>;
+};
+
+export type SeoAndOpenGraphParentCreateOneInlineInput = {
+  /** Connect one existing SeoAndOpenGraphParent document */
+  connect?: InputMaybe<SeoAndOpenGraphParentWhereUniqueInput>;
+  /** Create and connect one SeoAndOpenGraphParent document */
+  create?: InputMaybe<SeoAndOpenGraphParentCreateInput>;
+};
+
+export type SeoAndOpenGraphParentUpdateInput = {
+  CvPage?: InputMaybe<CvPageUpdateInput>;
+};
+
+export type SeoAndOpenGraphParentUpdateManyInlineInput = {
+  /** Connect multiple existing SeoAndOpenGraphParent documents */
+  connect?: InputMaybe<Array<SeoAndOpenGraphParentConnectInput>>;
+  /** Create and connect multiple SeoAndOpenGraphParent documents */
+  create?: InputMaybe<Array<SeoAndOpenGraphParentCreateInput>>;
+  /** Delete multiple SeoAndOpenGraphParent documents */
+  delete?: InputMaybe<Array<SeoAndOpenGraphParentWhereUniqueInput>>;
+  /** Disconnect multiple SeoAndOpenGraphParent documents */
+  disconnect?: InputMaybe<Array<SeoAndOpenGraphParentWhereUniqueInput>>;
+  /** Override currently-connected documents with multiple existing SeoAndOpenGraphParent documents */
+  set?: InputMaybe<Array<SeoAndOpenGraphParentWhereUniqueInput>>;
+  /** Update multiple SeoAndOpenGraphParent documents */
+  update?: InputMaybe<Array<SeoAndOpenGraphParentUpdateWithNestedWhereUniqueInput>>;
+  /** Upsert multiple SeoAndOpenGraphParent documents */
+  upsert?: InputMaybe<Array<SeoAndOpenGraphParentUpsertWithNestedWhereUniqueInput>>;
+};
+
+export type SeoAndOpenGraphParentUpdateManyWithNestedWhereInput = {
+  CvPage?: InputMaybe<CvPageUpdateManyWithNestedWhereInput>;
+};
+
+export type SeoAndOpenGraphParentUpdateOneInlineInput = {
+  /** Connect existing SeoAndOpenGraphParent document */
+  connect?: InputMaybe<SeoAndOpenGraphParentWhereUniqueInput>;
+  /** Create and connect one SeoAndOpenGraphParent document */
+  create?: InputMaybe<SeoAndOpenGraphParentCreateInput>;
+  /** Delete currently connected SeoAndOpenGraphParent document */
+  delete?: InputMaybe<Scalars['Boolean']>;
+  /** Disconnect currently connected SeoAndOpenGraphParent document */
+  disconnect?: InputMaybe<Scalars['Boolean']>;
+  /** Update single SeoAndOpenGraphParent document */
+  update?: InputMaybe<SeoAndOpenGraphParentUpdateWithNestedWhereUniqueInput>;
+  /** Upsert single SeoAndOpenGraphParent document */
+  upsert?: InputMaybe<SeoAndOpenGraphParentUpsertWithNestedWhereUniqueInput>;
+};
+
+export type SeoAndOpenGraphParentUpdateWithNestedWhereUniqueInput = {
+  CvPage?: InputMaybe<CvPageUpdateWithNestedWhereUniqueInput>;
+};
+
+export type SeoAndOpenGraphParentUpsertWithNestedWhereUniqueInput = {
+  CvPage?: InputMaybe<CvPageUpsertWithNestedWhereUniqueInput>;
+};
+
+export type SeoAndOpenGraphParentWhereInput = {
+  CvPage?: InputMaybe<CvPageWhereInput>;
+};
+
+export type SeoAndOpenGraphParentWhereUniqueInput = {
+  CvPage?: InputMaybe<CvPageWhereUniqueInput>;
+};
+
+export type SeoAndOpenGraphUpdateInput = {
+  /** Manage document localizations */
+  localizations?: InputMaybe<SeoAndOpenGraphUpdateLocalizationsInput>;
+  /** metaDescription input for default locale (en) */
+  metaDescription?: InputMaybe<Scalars['String']>;
+  /** metaTitle input for default locale (en) */
+  metaTitle?: InputMaybe<Scalars['String']>;
+  twitterCard?: InputMaybe<Scalars['String']>;
+};
+
+export type SeoAndOpenGraphUpdateLocalizationDataInput = {
+  metaDescription?: InputMaybe<Scalars['String']>;
+  metaTitle?: InputMaybe<Scalars['String']>;
+};
+
+export type SeoAndOpenGraphUpdateLocalizationInput = {
+  data: SeoAndOpenGraphUpdateLocalizationDataInput;
+  locale: Locale;
+};
+
+export type SeoAndOpenGraphUpdateLocalizationsInput = {
+  /** Localizations to create */
+  create?: InputMaybe<Array<SeoAndOpenGraphCreateLocalizationInput>>;
+  /** Localizations to delete */
+  delete?: InputMaybe<Array<Locale>>;
+  /** Localizations to update */
+  update?: InputMaybe<Array<SeoAndOpenGraphUpdateLocalizationInput>>;
+  upsert?: InputMaybe<Array<SeoAndOpenGraphUpsertLocalizationInput>>;
+};
+
+export type SeoAndOpenGraphUpdateManyInlineInput = {
+  /** Create and connect multiple SeoAndOpenGraph component instances */
+  create?: InputMaybe<Array<SeoAndOpenGraphCreateWithPositionInput>>;
+  /** Delete multiple SeoAndOpenGraph documents */
+  delete?: InputMaybe<Array<SeoAndOpenGraphWhereUniqueInput>>;
+  /** Update multiple SeoAndOpenGraph component instances */
+  update?: InputMaybe<Array<SeoAndOpenGraphUpdateWithNestedWhereUniqueAndPositionInput>>;
+  /** Upsert multiple SeoAndOpenGraph component instances */
+  upsert?: InputMaybe<Array<SeoAndOpenGraphUpsertWithNestedWhereUniqueAndPositionInput>>;
+};
+
+export type SeoAndOpenGraphUpdateManyInput = {
+  /** Optional updates to localizations */
+  localizations?: InputMaybe<SeoAndOpenGraphUpdateManyLocalizationsInput>;
+  /** metaDescription input for default locale (en) */
+  metaDescription?: InputMaybe<Scalars['String']>;
+  /** metaTitle input for default locale (en) */
+  metaTitle?: InputMaybe<Scalars['String']>;
+  twitterCard?: InputMaybe<Scalars['String']>;
+};
+
+export type SeoAndOpenGraphUpdateManyLocalizationDataInput = {
+  metaDescription?: InputMaybe<Scalars['String']>;
+  metaTitle?: InputMaybe<Scalars['String']>;
+};
+
+export type SeoAndOpenGraphUpdateManyLocalizationInput = {
+  data: SeoAndOpenGraphUpdateManyLocalizationDataInput;
+  locale: Locale;
+};
+
+export type SeoAndOpenGraphUpdateManyLocalizationsInput = {
+  /** Localizations to update */
+  update?: InputMaybe<Array<SeoAndOpenGraphUpdateManyLocalizationInput>>;
+};
+
+export type SeoAndOpenGraphUpdateManyWithNestedWhereInput = {
+  /** Update many input */
+  data: SeoAndOpenGraphUpdateManyInput;
+  /** Document search */
+  where: SeoAndOpenGraphWhereInput;
+};
+
+export type SeoAndOpenGraphUpdateOneInlineInput = {
+  /** Create and connect one SeoAndOpenGraph document */
+  create?: InputMaybe<SeoAndOpenGraphCreateInput>;
+  /** Delete currently connected SeoAndOpenGraph document */
+  delete?: InputMaybe<Scalars['Boolean']>;
+  /** Update single SeoAndOpenGraph document */
+  update?: InputMaybe<SeoAndOpenGraphUpdateWithNestedWhereUniqueInput>;
+  /** Upsert single SeoAndOpenGraph document */
+  upsert?: InputMaybe<SeoAndOpenGraphUpsertWithNestedWhereUniqueInput>;
+};
+
+export type SeoAndOpenGraphUpdateWithNestedWhereUniqueAndPositionInput = {
+  /** Document to update */
+  data?: InputMaybe<SeoAndOpenGraphUpdateInput>;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+  /** Unique component instance search */
+  where: SeoAndOpenGraphWhereUniqueInput;
+};
+
+export type SeoAndOpenGraphUpdateWithNestedWhereUniqueInput = {
+  /** Document to update */
+  data: SeoAndOpenGraphUpdateInput;
+  /** Unique document search */
+  where: SeoAndOpenGraphWhereUniqueInput;
+};
+
+export type SeoAndOpenGraphUpsertInput = {
+  /** Create document if it didn't exist */
+  create: SeoAndOpenGraphCreateInput;
+  /** Update document if it exists */
+  update: SeoAndOpenGraphUpdateInput;
+};
+
+export type SeoAndOpenGraphUpsertLocalizationInput = {
+  create: SeoAndOpenGraphCreateLocalizationDataInput;
+  locale: Locale;
+  update: SeoAndOpenGraphUpdateLocalizationDataInput;
+};
+
+export type SeoAndOpenGraphUpsertWithNestedWhereUniqueAndPositionInput = {
+  /** Document to upsert */
+  data?: InputMaybe<SeoAndOpenGraphUpsertInput>;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+  /** Unique component instance search */
+  where: SeoAndOpenGraphWhereUniqueInput;
+};
+
+export type SeoAndOpenGraphUpsertWithNestedWhereUniqueInput = {
+  /** Upsert data */
+  data: SeoAndOpenGraphUpsertInput;
+  /** Unique document search */
+  where: SeoAndOpenGraphWhereUniqueInput;
+};
+
+/** Identifies documents */
+export type SeoAndOpenGraphWhereInput = {
+  /** Logical AND on all given filters. */
+  AND?: InputMaybe<Array<SeoAndOpenGraphWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: InputMaybe<Array<SeoAndOpenGraphWhereInput>>;
+  /** Logical OR on all given filters. */
+  OR?: InputMaybe<Array<SeoAndOpenGraphWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  _search?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  /** All values containing the given string. */
+  id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  id_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values that are not equal to given value. */
+  id_not?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are not contained in given list. */
+  id_not_in?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  /** All values not starting with the given string. */
+  id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  id_starts_with?: InputMaybe<Scalars['ID']>;
+  metaDescription?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  metaDescription_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  metaDescription_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  metaDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  metaDescription_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  metaDescription_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  metaDescription_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  metaDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  metaDescription_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  metaDescription_starts_with?: InputMaybe<Scalars['String']>;
+  metaTitle?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  metaTitle_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  metaTitle_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  metaTitle_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  metaTitle_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  metaTitle_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  metaTitle_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  metaTitle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  metaTitle_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  metaTitle_starts_with?: InputMaybe<Scalars['String']>;
+  twitterCard?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  twitterCard_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  twitterCard_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  twitterCard_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  twitterCard_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  twitterCard_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  twitterCard_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  twitterCard_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  twitterCard_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  twitterCard_starts_with?: InputMaybe<Scalars['String']>;
+};
+
+/** References SeoAndOpenGraph record uniquely */
+export type SeoAndOpenGraphWhereUniqueInput = {
   id?: InputMaybe<Scalars['ID']>;
 };
 
