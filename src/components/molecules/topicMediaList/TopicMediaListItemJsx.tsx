@@ -26,10 +26,10 @@ export const TopicMediaListItemJSX = ({
       {!!SvgElement[entry.identifier as keyof typeof SvgElement] && (
         <div
           className={cx(
-            "flex justify-center",
+            "flex justify-center mb-1 min-h-8 h-8 min-w-8 w-8",
             isInterActive
-              ? "mb-2 min-h-8 h-8 min-w-8 w-8 md:min-h-[4rem] md:min-w-[4rem] md:mr-4"
-              : "mb-1 min-h-4 h-1 min-w-1 w-1 md:min-h-[2rem] min-w-[2rem] md:mr-2"
+              ? "md:min-h-[4rem] md:min-w-[4rem] md:mr-4"
+              : "md:min-h-[2rem] md:min-w-[2rem] md:mr-2"
           )}
         >
           <SvgImage
@@ -52,6 +52,7 @@ export const TopicMediaListItemJSX = ({
           <span
             key={descr.slice(0, 10)}
             className={cx(
+              "break-all",
               !!isAnchor && "underline",
               textColorClass || "text-white"
             )}
