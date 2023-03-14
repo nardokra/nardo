@@ -39,7 +39,7 @@ const Home = ({
     websiteList,
   } = cvPage;
 
-  const [item, setItem] = useState<keyof typeof SvgElement | undefined>(
+  const [activeSkillItem, setActiveSkillItem] = useState(
     isInterActive ? SvgImageVariants.NEXT : undefined
   );
 
@@ -82,14 +82,14 @@ const Home = ({
             <LayoutBlock smColumns2>
               <HoverList<typeof SvgElement>
                 itemDefault={SvgImageVariants.NEXT}
-                item={item}
+                item={activeSkillItem}
                 list={skillsList}
-                setItem={setItem}
+                setItem={setActiveSkillItem}
               />
               <LayoutBlock>
                 {isInterActive && (
                   <LogoDisplay>
-                    <SvgImage variant={item} />
+                    <SvgImage variant={activeSkillItem} />
                   </LogoDisplay>
                 )}
                 <ImageBrick
