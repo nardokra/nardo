@@ -1,90 +1,90 @@
 import { gql } from "graphql-request";
 
 export const cvPageQuery = gql`
-  query cvPageQuery($slug: String) {
-    cvPage(where: { slug: $slug }, locales: [en, nl]) {
+  query cvPageQuery($slug: String, $locale: [Locale!]!) {
+    cvPage(where: { slug: $slug }, locales: $locale) {
       slug
-      seoAndOpenGraph(locales: [en, nl]) {
+      seoAndOpenGraph {
         metaTitle
         metaDescription
         twitterCard
       }
-      pageTitleBlock(locales: [en, nl]) {
+      pageTitleBlock {
         identifier
         title
         subtitle
         subSubtitle
         titleWeight
       }
-      profileImageBlock(locales: [en, nl]) {
-        imageEntry(locales: [en, nl]) {
-          image(locales: [en, nl]) {
+      profileImageBlock {
+        imageEntry {
+          image {
             url
           }
           altText
           identifier
         }
       }
-      contactList(locales: [en, nl]) {
+      contactList {
         identifier
         title
         anchorList
-        listEntry(locales: [en, nl]) {
+        listEntry {
           identifier
           title
           description
-          href(locales: [en, nl]) {
+          href {
             href
             target
           }
           private
         }
       }
-      websiteList(locales: [en, nl]) {
+      websiteList {
         identifier
         title
         anchorList
-        listEntry(locales: [en, nl]) {
+        listEntry {
           identifier
           title
           description
-          href(locales: [en, nl]) {
+          href {
             href
             target
           }
           private
         }
       }
-      privateImageBlock(locales: [en, nl]) {
-        imageEntry(locales: [en, nl]) {
-          image(locales: [en, nl]) {
+      privateImageBlock {
+        imageEntry {
+          image {
             url
           }
           altText
           identifier
         }
       }
-      skillsList(locales: [en, nl]) {
+      skillsList {
         identifier
         title
-        listEntry(locales: [en, nl]) {
+        listEntry {
           identifier
           title
         }
       }
-      educationList(locales: [en, nl]) {
+      educationList {
         identifier
         title
-        listEntry(locales: [en, nl]) {
+        listEntry {
           identifier
           title
           description
         }
       }
-      experienceList(locales: [en, nl]) {
+      experienceList {
         identifier
         title
-        topicListEntry(locales: [en, nl]) {
+        topicListEntry {
           title
           subtitle
           subDescription

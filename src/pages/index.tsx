@@ -50,7 +50,7 @@ const Home = ({
       <DynamicHead
         metaDescription={seoAndOpenGraph?.metaDescription}
         metaTitle={seoAndOpenGraph?.metaTitle}
-        ogImageUrl={profileImageBlock?.imageEntry[0].image.url}
+        ogImageUrl={profileImageBlock?.imageEntry?.[0]?.image?.url}
         ogTwitterCard={seoAndOpenGraph?.twitterCard}
         ogUrl={pageHref}
       />
