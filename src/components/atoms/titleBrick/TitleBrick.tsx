@@ -1,8 +1,9 @@
 // Types
-import { Maybe, TitleBlock, TitleWeight } from "@/cmsTypes/hygraph";
+import { Maybe, TitleBlock } from "@/cmsTypes/hygraph";
 
 // Utils
 import cx from "classnames";
+import { headerTagOperator } from "@/utils/hooks/operators/headerTagOperator";
 
 type TitleBlockType = {
   titleBlock?: Maybe<TitleBlock>;
@@ -13,25 +14,6 @@ export const TitleBrick = ({
   titleBlock,
   verticleOrientation,
 }: TitleBlockType) => {
-  const highestHeaderTag = ({
-    className,
-    body,
-  }: {
-    className?: string;
-    body?: Maybe<string>;
-  }) => {
-    switch (titleBlock?.titleWeight) {
-      case TitleWeight.H1:
-        return <h1 className={cx(className, "uppercase")}>{body}</h1>;
-      case TitleWeight.H2:
-        return <h2 className={cx(className, "uppercase")}>{body}</h2>;
-      case TitleWeight.H3:
-        return <h3 className={cx(className, "uppercase")}>{body}</h3>;
-      default:
-        return <h4 className={className}>{body}</h4>;
-    }
-  };
-
   const wrapperClasses = cx("flex flex-col");
   const verticleOrientationClasses = cx(
     verticleOrientation && "writing-vertical-rl text-upright"
@@ -39,9 +21,10 @@ export const TitleBrick = ({
 
   return (
     <div className={wrapperClasses}>
-      {highestHeaderTag({
+      {headerTagOperator({
         className: cx("text-white", verticleOrientationClasses),
-        body: titleBlock?.title,
+        headerTag: titleBlock?.titleWeight,
+        text: titleBlock?.title,
       })}
       {!!titleBlock?.subtitle && (
         <span
