@@ -16,9 +16,10 @@ You can start editing the page by modifying `pages/index.tsx`. The page auto-upd
 
 ## API
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:5050/api/hello](http://localhost:5050/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Currently there are no API routes added tot the project.
+But the [API routes](https://nextjs.org/docs/api-routes/introduction) can be added to the `./src/pages/api/` folder and accessed via" http://localhost:5050/api/..".
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+The `./src/pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
 ## Learn More
 
@@ -38,7 +39,6 @@ For performing a check you run the following command.
 
 ```bash
 npm run type-check
-
 # or
 yarn type-check
 ```
@@ -52,7 +52,10 @@ For performing a lint check you run the following command.
 
 ```bash
 npm run lint
-
 # or
 yarn lint
 ```
+
+## Ongoing
+
+This is an ongoing project which is at the moment in progress.
