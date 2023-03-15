@@ -68,7 +68,7 @@ export const TopicMediaList = ({
             "flex items-center p-4 bg-white rounded-lg",
             isSuitableForVerticalTitleOrientation
               ? "mr-4 md:mr-10"
-              : "w-min mb-4"
+              : "w-full mb-4"
           )}
         >
           <h2
