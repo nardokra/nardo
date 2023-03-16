@@ -36,7 +36,7 @@ export const HoverList = <T,>({
       onMouseLeave={resetItems}
     >
       {title && (
-        <h2 className="pb-4 text-theme-primary font-bold">
+        <h2 className="pb-4 text-theme-primary">
           <span>{title}</span>
         </h2>
       )}

@@ -1,10 +1,9 @@
-import { SyntheticEvent, useState } from "react";
-
 // Types
 import { List, Maybe } from "@/cmsTypes/hygraph";
 
 // Utils
 import cx from "classnames";
+import { useSyntheticEventState } from "@/utils/reactHooks/animations";
 
 type TopicDescriptionListType = {
   list?: Maybe<List>;
@@ -16,34 +15,25 @@ export const TopicDescriptionList = ({
   titleVerticalOriented,
 }: TopicDescriptionListType) => {
   const { title, listEntry } = list || {};
-  const [isBouncing, setIsBouncing] = useState(false);
-  const [hasShadow, setHasShadow] = useState(false);
-
-  const updateBounceState = (event: SyntheticEvent) => {
-    const onOffSwitch = event.type === "mouseenter";
-    setIsBouncing(onOffSwitch);
-    setHasShadow(onOffSwitch);
-  };
-  const updateShadowState = () => setHasShadow(false);
+  const { activate, deactivate, isActive } = useSyntheticEventState();
 
   const wrapperClasses = cx(
     "border-2 rounded-lg text-white p-4",
     titleVerticalOriented && "flex",
-    isBouncing && "animate-bounce",
-    hasShadow && "shadow-md shadow-white"
+    isActive && "animate-bounce shadow-md shadow-white"
   );
 
   return (
     <div
       className={wrapperClasses}
-      onMouseEnter={updateBounceState}
-      onMouseLeave={updateBounceState}
-      onAnimationEnd={updateShadowState}
+      onMouseEnter={activate}
+      onMouseLeave={deactivate}
+      onAnimationEnd={deactivate}
     >
       {title && (
         <h2
           className={cx(
-            "font-bold uppercase",
+            "uppercase",
             titleVerticalOriented &&
               "text-xl text-upright writing-vertical-rl mr-4"
           )}

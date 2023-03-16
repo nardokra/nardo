@@ -22,14 +22,14 @@ export const TopicMediaListItemJSX = ({
   textColorClass,
 }: TopicMediaListItemJSXType) =>
   isInterActive && entry.private ? null : (
-    <div key={entry.identifier} className="flex flex-col md:flex-row mb-4">
+    <div key={entry.identifier} className="flex flex-row mb-4">
       {!!SvgElement[entry.identifier as keyof typeof SvgElement] && (
         <div
           className={cx(
             "flex justify-center mb-1 min-h-8 h-8 min-w-8 w-8",
             isInterActive
-              ? "md:min-h-[4rem] md:min-w-[4rem] md:mr-4"
-              : "md:min-h-[2rem] md:min-w-[2rem] md:mr-2"
+              ? "md:min-h-[4rem] md:min-w-[4rem] mr-4"
+              : "md:min-h-[2rem] md:min-w-[2rem] mr-2"
           )}
         >
           <SvgImage

@@ -24,6 +24,7 @@ import { TopicDoubleDescriptionList } from "@/components/molecules/topicDoubleDe
 import { TopicMediaList } from "@/components/molecules/topicMediaList";
 import { SizeVariant } from "@/constants/sizeConstants";
 import { DynamicHead } from "@/components/templates/dynamicHead";
+import { TextCircle } from "@/components/atoms/textCircle/TextCircle";
 
 const Home = ({
   cvPage,
@@ -64,14 +65,28 @@ const Home = ({
       >
         <Layout>
           <LayoutBlock smColumns2>
-            <LayoutBlock smColumns2>
-              <ImageBrick imageBlock={profileImageBlock} />
-              <TitleBrick titleBlock={pageTitleBlock} />
+            <LayoutBlock>
+              <LayoutBlock smColumns2>
+                <ImageBrick imageBlock={profileImageBlock} />
+                <TextCircle
+                  className="hidden sm:flex"
+                  title={pageTitleBlock?.title}
+                />
+              </LayoutBlock>
+              <LayoutBlock>
+                <TitleBrick titleBlock={pageTitleBlock} />
+              </LayoutBlock>
             </LayoutBlock>
             <LayoutBlock>
               <TopicMediaList
                 anchorList
                 list={contactList}
+                titleVerticalOriented
+              />
+              <TopicMediaList
+                anchorList
+                isHighlight
+                list={websiteList}
                 titleVerticalOriented
               />
             </LayoutBlock>
@@ -96,12 +111,6 @@ const Home = ({
                 <ImageBrick
                   imageBlock={privateImageBlock}
                   size={SizeVariant[isInterActive ? "Small" : "Medium"]}
-                />
-                <TopicMediaList
-                  anchorList
-                  isHighlight
-                  list={websiteList}
-                  titleVerticalOriented
                 />
               </LayoutBlock>
             </LayoutBlock>

@@ -40,9 +40,17 @@ module.exports = {
   plugins: [
     plugin(({ addBase, theme }) => {
       addBase({
-        h1: { fontSize: theme("fontSize.2xl"), fontWeight: "semibold" },
-        h2: { fontSize: theme("fontSize.xl"), fontWeight: "medium" },
-        h3: { fontSize: theme("fontSize.lg") },
+        h1: {
+          fontSize: theme("fontSize.2xl"),
+          fontWeight: "semibold",
+          wordBreak: "break-all",
+        },
+        h2: {
+          fontSize: theme("fontSize.xl"),
+          fontWeight: "medium",
+          wordBreak: "break-all",
+        },
+        h3: { fontSize: theme("fontSize.lg"), wordBreak: "break-all" },
       });
     }),
   ],

@@ -1,4 +1,4 @@
-import { SyntheticEvent, useState, useMemo } from "react";
+import { useMemo } from "react";
 
 // Types
 import { List, Maybe } from "@/cmsTypes/hygraph";
@@ -9,6 +9,7 @@ import { isInterActive } from "@/constants/conditionalConstants";
 // Utils
 import cx from "classnames";
 import lodash from "lodash";
+import { useSyntheticEventState } from "@/utils/reactHooks/animations";
 
 // Components
 import { DynamicAnchor } from "../dynamicAnchor";
@@ -28,6 +29,7 @@ export const TopicMediaList = ({
   titleVerticalOriented,
 }: TopicMediaListType) => {
   const { title, listEntry } = list || {};
+  const { activate, deactivate, isActive } = useSyntheticEventState();
 
   const isSuitableForVerticalTitleOrientation = useMemo(() => {
     const privateListEntries = list?.listEntry?.flatMap(
@@ -41,26 +43,20 @@ export const TopicMediaList = ({
     return filteredPrivateListEntries?.length > 1 && titleVerticalOriented;
   }, [list?.listEntry, titleVerticalOriented]);
 
-  const [isRotated, setIsRotated] = useState<boolean>(isInterActive);
-
-  const updateRotation = (event: SyntheticEvent) => {
-    const onOffSwitch = event.type === "mouseenter";
-    setIsRotated(!onOffSwitch);
-  };
-
   const wrapperClasses = cx(
     "flex rounded-lg text-white p-4 max-w-full",
     isSuitableForVerticalTitleOrientation ? "flex-row" : "flex-col",
     isInterActive && "transition",
     !isHighlight ? "border-2" : "bg-theme-secondary",
-    isInterActive && isHighlight && isRotated && "-rotate-6"
+    isInterActive && isHighlight && !isActive && "-rotate-3",
+    !isHighlight && isActive && "animate-bounce shadow-md shadow-white"
   );
 
   return !title && !listEntry ? null : (
     <div
       className={wrapperClasses}
-      onMouseEnter={isInterActive ? updateRotation : undefined}
-      onMouseLeave={isInterActive ? updateRotation : undefined}
+      onMouseEnter={activate}
+      onMouseLeave={deactivate}
     >
       {title && (
         <div
@@ -68,12 +64,12 @@ export const TopicMediaList = ({
             "flex items-center p-4 bg-white rounded-lg",
             isSuitableForVerticalTitleOrientation
               ? "mr-4 md:mr-10"
-              : "w-min mb-4"
+              : "w-full mb-4"
           )}
         >
           <h2
             className={cx(
-              "font-bold uppercase text-black",
+              "uppercase text-black",
               isSuitableForVerticalTitleOrientation &&
                 "text-lg text-upright writing-vertical-rl"
             )}
