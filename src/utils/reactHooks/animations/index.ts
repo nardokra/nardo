@@ -1,0 +1,1 @@
+export { useSyntheticEventState } from "./useSyntheticEventState";

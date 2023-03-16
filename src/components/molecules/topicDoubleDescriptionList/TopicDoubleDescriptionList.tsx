@@ -1,5 +1,6 @@
 // Types
 import { Maybe, TopicList } from "@/cmsTypes/hygraph";
+import { useSyntheticEventState } from "@/utils/reactHooks/animations";
 
 // Utils
 import cx from "classnames";
@@ -12,16 +13,24 @@ export const TopicDoubleDescriptionList = ({
   list,
 }: TopicDoubleDescriptionListType) => {
   const { title, topicListEntry } = list || {};
+  const { activate, deactivate, isActive } = useSyntheticEventState();
 
-  const wrapperClasses = cx("bg-white rounded-lg text-black", "p-4 h-full");
+  const wrapperClasses = cx(
+    "bg-white rounded-lg text-black",
+    "p-4 h-full",
+    isActive && "animate-bounce shadow-md shadow-white"
+  );
 
   return (
-    <div className={wrapperClasses}>
+    <div
+      className={wrapperClasses}
+      onMouseEnter={activate}
+      onMouseLeave={deactivate}
+      onAnimationEnd={deactivate}
+    >
       <div className="rounded-lg mb-4">
         {title && (
-          <h2
-            className={cx("font-bold uppercase text-2xl text-justify w-full")}
-          >
+          <h2 className={cx("uppercase text-2xl text-justify w-full")}>
             {title}
           </h2>
         )}
