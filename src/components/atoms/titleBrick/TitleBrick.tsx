@@ -14,7 +14,7 @@ export const TitleBrick = ({
   titleBlock,
   verticleOrientation,
 }: TitleBlockType) => {
-  const wrapperClasses = cx("flex flex-col");
+  const wrapperClasses = cx("flex flex-col -mb-2");
   const verticleOrientationClasses = cx(
     verticleOrientation && "writing-vertical-rl text-upright"
   );
@@ -22,14 +22,14 @@ export const TitleBrick = ({
   return (
     <div className={wrapperClasses}>
       {headerTagOperator({
-        className: cx("text-white", verticleOrientationClasses),
+        className: cx("text-white mb-2", verticleOrientationClasses),
         headerTag: titleBlock?.titleWeight,
         text: titleBlock?.title,
       })}
       {!!titleBlock?.subtitle && (
         <span
           className={cx(
-            "text-theme-primary text-lg mt-2",
+            "text-theme-primary text-lg mb-2",
             verticleOrientationClasses
           )}
         >
@@ -38,7 +38,7 @@ export const TitleBrick = ({
       )}
       {!!titleBlock?.subSubtitle && (
         <span
-          className={cx("text-white text-lg mt-2", verticleOrientationClasses)}
+          className={cx("text-white text-lg mb-2", verticleOrientationClasses)}
         >
           {titleBlock.subSubtitle}
         </span>
