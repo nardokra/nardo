@@ -1,10 +1,11 @@
 // Utils
 import { GetServerSideProps } from "next";
-import { cmsClient } from "../generic/cmsClient";
+import { cmsClient } from "@/utils/api/generic/cmsClient";
 import { cvPageQuery } from "./cvPage.graphql";
 
 // Types
 import { CvPage } from "@/cmsTypes/hygraph";
+import { localsQueryParams } from "@/utils/api/generic/localsQueryParams";
 
 type cvPage = {
   cvPage: CvPage;
@@ -17,13 +18,10 @@ export const getServerSideProps: GetServerSideProps<cvPage> = async ({
   locales,
 }) => {
   const slug = "cv";
-  const fallBackLocales =
-    locales?.map((loc) => loc.slice(0, 2)).filter((loc) => loc !== locale) ||
-    [];
 
   const cvPageContent = await cmsClient<cvPage>(cvPageQuery, {
     slug,
-    locale: [locale, ...fallBackLocales],
+    locale: localsQueryParams(locale, locales),
   });
 
   if (!cvPageContent) ({ notFound: true });
