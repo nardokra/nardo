@@ -57,6 +57,7 @@ export const TopicMediaList = ({
       className={wrapperClasses}
       onMouseEnter={activate}
       onMouseLeave={deactivate}
+      onAnimationEnd={deactivate}
     >
       {title && (
         <div
